@@ -46,7 +46,9 @@ import {
   setShareBtnColor,
   setLogoUrl,
 } from "../redux/profileInfoSlice.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EditMember = () => {
   let navigate = useNavigate();
@@ -98,7 +100,8 @@ const EditMember = () => {
   }, []);
 
   console.log(singleProfile[uid]);
-
+  const name = useSelector((state) => state.profileInfoSlice.name);
+  const profile = useSelector((state) => state.profileInfoSlice.profileUrl);
   useEffect(() => {
     dispatch(setName(singleProfile[uid]?.name));
     dispatch(setEmail(singleProfile[uid]?.email));
@@ -117,8 +120,8 @@ const EditMember = () => {
     //     linkId: singleProfile?.data?.directLinkId,
     //   })
     // );
-    // dispatch(setQrLogo(singleProfile?.data?.qrLogoUrl));
-    // dispatch(setQrColor(singleProfile?.data?.qrColor));
+    dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
+    dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
     // dispatch(setLead(singleProfile?.data?.leadMode));
     // dispatch(setFormHeader(singleProfile?.data?.leadFields?.formHeader));
     // dispatch(setNameVisible(singleProfile?.data?.leadFields?.nameVisible));
@@ -137,6 +140,10 @@ const EditMember = () => {
     // dispatch(setlinkBgColor(singleProfile?.data?.linkBgColor));
   }, [singleProfile[uid]]);
 
+  let handleCancelQr = () => {
+    dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
+    dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
+  };
   return (
     <div
       className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh]"
@@ -153,11 +160,11 @@ const EditMember = () => {
               />
               <div className="bg-[#B1AEAE] h-[20px] w-[2px]"></div>
               <img
-                src={prfl}
+                src={profile}
                 alt=""
                 className="sm:h-[65px] sm:w-[65px] h-[55px] w-[55px] rounded-full object-cover"
               />
-              <p className="font-[600] text-[16px]">Naruto Uzumaki</p>
+              <p className="font-[600] text-[16px]">{name}</p>
             </div>
 
             <div
@@ -280,12 +287,14 @@ const EditMember = () => {
             <div className="w-[100%] h-[535px]  rounded-[35px] shadow-xl bg-white flex">
               <div className="sm:w-[70%] w-[100%] h-[100%]  flex justify-center items-center">
                 {route?.isAbout === true && <About uid={uid} />}
-                {route?.isContent === true && <Content />}
-                {route?.isQr === true && <Qr />}
-                {route?.isLead === true && <Lead />}
+                {route?.isContent === true && <Content uid={uid} />}
+                {route?.isQr === true && (
+                  <Qr uid={uid} handleCancelQr={handleCancelQr} />
+                )}
+                {route?.isLead === true && <Lead uid={uid} />}
               </div>
               {screen >= 450 ? (
-                <div className="w-[30%] h-[100%]">
+                <div className="w-[30%] h-[100%] border-l">
                   <MobileContainer />
                 </div>
               ) : null}
@@ -294,6 +303,12 @@ const EditMember = () => {
           <br />
         </div>
       </div>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      />
     </div>
   );
 };

@@ -133,6 +133,7 @@ export const createNewCard = async (data, callBack) => {
           username: randNum() + data?.name + user.uid,
           website: "",
           workPlace: "",
+          formHeader: "",
           leadForm: {
             Fname: true,
             company: true,
@@ -142,6 +143,7 @@ export const createNewCard = async (data, callBack) => {
             phone: true,
           },
           isAdmin: false,
+          qrLogoUrl: "",
         }).then(() => {
           toast.success("New user created sucessfuly");
           handleTeamModal();
@@ -174,7 +176,7 @@ export const createNewCard = async (data, callBack) => {
 };
 // ------------------------------------------------Get all child profiles-----------------------------------------------
 
-export const getAllChilds = (callBackFunc) => {
+export const getAllChilds = async (callBackFunc) => {
   const starCountRef = query(
     ref(db, "/Users"),
     orderByChild("parentID"),
@@ -247,81 +249,126 @@ export const updataAbout = async (id, data) => {
     logoUrl,
     coverUrl,
   }).then(() => {
+    if (returnIfHttps(profileUrl) === false) {
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, profileUrl.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              update(ref(db, `Users/${id}`), { profileUrl: URL });
+              // setprflimg("");
+              // window.location.reload();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (returnIfHttps(coverUrl) === false) {
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, coverUrl.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              update(ref(db, `Users/${id}`), { coverUrl: URL });
+              // setBgImg("");
+              // window.location.reload();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (returnIfHttps(logoUrl) === false) {
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, logoUrl.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              update(ref(db, `Users/${id}`), { logoUrl: URL });
+              // setlogoImg("");
+              // window.location.reload();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     toast.success("Information updated sucessfuly");
   });
-  if (returnIfHttps(profileUrl) === false) {
-    let name = new Date().getTime() + id;
-    const storageRef = sRef(storage, name);
-    uploadString(storageRef, profileUrl.slice(23), "base64", {
-      contentType: "image/png",
-    })
-      .then(() => {
-        console.log("img testing");
-        getDownloadURL(storageRef)
-          .then((URL) => {
-            // console.log(URL)
-            update(ref(db, `Users/${id}`), { profileUrl: URL });
-            // setprflimg("");
-            // window.location.reload();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        // setimg(null)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  if (returnIfHttps(coverUrl) === false) {
-    let name = new Date().getTime() + id;
-    const storageRef = sRef(storage, name);
-    uploadString(storageRef, coverUrl.slice(23), "base64", {
-      contentType: "image/png",
-    })
-      .then(() => {
-        console.log("img testing");
-        getDownloadURL(storageRef)
-          .then((URL) => {
-            // console.log(URL)
-            update(ref(db, `Users/${id}`), { coverUrl: URL });
-            // setBgImg("");
-            // window.location.reload();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        // setimg(null)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  if (returnIfHttps(logoUrl) === false) {
-    let name = new Date().getTime() + id;
-    const storageRef = sRef(storage, name);
-    uploadString(storageRef, logoUrl.slice(23), "base64", {
-      contentType: "image/png",
-    })
-      .then(() => {
-        console.log("img testing");
-        getDownloadURL(storageRef)
-          .then((URL) => {
-            // console.log(URL)
-            update(ref(db, `Users/${id}`), { logoUrl: URL });
-            // setlogoImg("");
-            // window.location.reload();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        // setimg(null)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
   // }
+};
+
+// ------------------------------------------------Update Qr Data-----------------------------------------------
+
+export const updateQrInfo = async (id, qrColor, logoimg) => {
+  // if (qrColor || qrLogo) {
+  // toast.success("Information updated successfuly");
+  update(ref(db, `Users/${id}`), { qrColor }).then(() => {
+    if (returnIfHttps(logoimg) === false) {
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, logoimg.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              update(ref(db, `Users/${id}`), { qrLogoUrl: URL });
+              // setlogoimg("");
+              // window.location.reload();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    toast.success("Information updated successfuly");
+  });
+  // console.log("qrrrrr");
+
+  // }
+};
+
+// ------------------------------------------------Update lead Data-----------------------------------------------
+
+export const updateLead = async (id, formHeader, leadForm) => {
+  update(ref(db, `Users/${id}`), { formHeader, leadForm }).then(() => {
+    toast.success("Information updated successfuly");
+  });
 };
