@@ -120,18 +120,17 @@ const EditMember = () => {
     //     linkId: singleProfile?.data?.directLinkId,
     //   })
     // );
+
     dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
     dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
     // dispatch(setLead(singleProfile?.data?.leadMode));
-    // dispatch(setFormHeader(singleProfile?.data?.leadFields?.formHeader));
-    // dispatch(setNameVisible(singleProfile?.data?.leadFields?.nameVisible));
-    // dispatch(setEmailVisible(singleProfile?.data?.leadFields?.emailVisible));
-    // dispatch(setPhoneVisible(singleProfile?.data?.leadFields?.phoneVisible));
-    // dispatch(setJobVisible(singleProfile?.data?.leadFields?.jobVisible));
-    // dispatch(
-    //   setCompanyVisible(singleProfile?.data?.leadFields?.companyVisible)
-    // );
-    // dispatch(setNoteVisible(singleProfile?.data?.leadFields?.noteVisible));
+    dispatch(setFormHeader(singleProfile?.[uid]?.formHeader));
+    dispatch(setNameVisible(singleProfile?.[uid]?.leadForm?.Fname));
+    dispatch(setEmailVisible(singleProfile?.[uid]?.leadForm?.email));
+    dispatch(setPhoneVisible(singleProfile?.[uid]?.leadForm?.phone));
+    dispatch(setJobVisible(singleProfile?.[uid]?.leadForm?.job));
+    dispatch(setCompanyVisible(singleProfile?.[uid]?.leadForm?.company));
+    dispatch(setNoteVisible(singleProfile?.[uid]?.leadForm?.note));
     // dispatch(setPoweredVizz(singleProfile?.data?.poweredVizz));
     // dispatch(setTextColor(singleProfile?.data?.textColor));
     // dispatch(setbtnColor(singleProfile?.data?.saveBtnColor));

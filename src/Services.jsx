@@ -8,12 +8,15 @@ import {
   equalTo,
   onValue,
   orderByChild,
+  push,
   query,
   ref,
+  set,
   update,
 } from "firebase/database";
 import { getDownloadURL, uploadString, ref as sRef } from "firebase/storage";
-let parentuid = localStorage.getItem("connexUid");
+let cnxId = localStorage.getItem("connexUid");
+let conexParent = localStorage.getItem("conexParent");
 // ------------------------------------------------Login User-----------------------------------------------
 
 export const handleLogin = (data, navigate) => {
@@ -87,7 +90,7 @@ export const createNewCard = async (data, callBack) => {
         // Signed in
         const user = userCredential.user;
         // console.log(user.uid)
-        let parentuid = localStorage.getItem("connexUid");
+        let cnxId = localStorage.getItem("connexUid");
         update(ref(db, `Users/${user.uid}`), {
           platform: "web",
           address: "",
@@ -120,7 +123,7 @@ export const createNewCard = async (data, callBack) => {
           language: "en",
           logoUrl: "",
           name: "",
-          parentID: parentuid,
+          parentID: cnxId,
           parentId: "",
           phone: "",
           proVersionExpiryDate: "",
@@ -180,7 +183,7 @@ export const getAllChilds = async (callBackFunc) => {
   const starCountRef = query(
     ref(db, "/Users"),
     orderByChild("parentID"),
-    equalTo(parentuid)
+    equalTo(cnxId)
   );
   onValue(starCountRef, async (snapshot) => {
     const data = await snapshot.val();
@@ -371,4 +374,92 @@ export const updateLead = async (id, formHeader, leadForm) => {
   update(ref(db, `Users/${id}`), { formHeader, leadForm }).then(() => {
     toast.success("Information updated successfuly");
   });
+};
+
+// ------------------------------------------------Create New Team-----------------------------------------------
+
+export const createTeam = async (data, callBack) => {
+  if (data?.name) {
+    // toast.success("Information updated successfuly");
+    let pushKey = push(ref(db, `Teams/`), {
+      teamName: data?.name,
+      companyId: conexParent ? conexParent : cnxId,
+    }).key;
+
+    update(ref(db, `Teams/${pushKey}`), { teamId: pushKey }).then(() => {
+      if (returnIfHttps(data?.img) === false) {
+        let name = new Date().getTime() + pushKey;
+        const storageRef = sRef(storage, name);
+        uploadString(storageRef, data?.img.slice(23), "base64", {
+          contentType: "image/png",
+        })
+          .then(() => {
+            console.log("img testing");
+            getDownloadURL(storageRef)
+              .then((URL) => {
+                // console.log(URL)
+                update(ref(db, `Teams/${pushKey}`), { image: URL });
+                // setlogoimg("");
+                // window.location.reload();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            // setimg(null)
+          })
+          .catch((error) => {
+            console.log(error);
+            callBack();
+          });
+      }
+      toast.success("New team created successfuly");
+      callBack();
+    });
+    // console.log("qrrrrr");
+  } else {
+    toast.error("Team name should not be empty");
+  }
+};
+
+// ------------------------------------------------Get all teams-----------------------------------------------
+
+export const getAllTeams = async (callBackFunc) => {
+  const starCountRef = query(
+    ref(db, "/Teams"),
+    orderByChild("companyId"),
+    equalTo(conexParent ? conexParent : cnxId)
+  );
+  onValue(starCountRef, async (snapshot) => {
+    const data = await snapshot.val();
+    callBackFunc(data);
+    console.log(data);
+    console.log("testing data");
+    MediaKeyStatusMap;
+    // setmylist(Object.values(data));
+
+    // setfiltered(Object.values(data));
+
+    // updateStarCount(postElement, data);
+  });
+};
+
+// ------------------------------------------------Add team member-----------------------------------------------
+
+export const addTeamMember = (team, membersId) => {
+  if (membersId.length > 0) {
+    if (team?.members) {
+      set(ref(db, `User/${team?.Id}/members/`), [
+        ...team?.members,
+        ...membersId,
+      ]).then(() => {
+        toast.success("Team updated successfuly");
+      });
+    } else {
+      set(ref(db, `User/${team?.Id}/members/`), [...membersId]).then(() => {
+        toast.success("Team updated successfuly");
+      });
+    }
+  } else {
+    toast.error("Please add atleast 1 member");
+  }
 };
