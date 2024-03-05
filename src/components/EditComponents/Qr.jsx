@@ -51,6 +51,10 @@ const Qr = ({ uid, handleCancelQr }) => {
     }
   };
 
+
+
+ 
+
   return (
     <div className="w-[90%] h-[90%] flex flex-col justify-center items-center">
       {/* --------------------------------------------croper for profile image------------------------------------------------  */}

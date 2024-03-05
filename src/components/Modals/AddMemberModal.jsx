@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import SelectSearch from "react-select-search";
-import "react-select-search/style.css";
 import { BiSearchAlt } from "react-icons/bi";
 import prsnPlshldr from "../../imgs/prsnPlshldr.png";
 import Checkbox from "@mui/material/Checkbox";
@@ -56,25 +55,38 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
 
   //   console.log("single", singleTeam);
 
-  let addRemoveMember = (e, id) => {
-    if (singleTeam?.members) {
-      let exist = singleTeam?.members?.find((elm) => {
-        return elm === id;
-      });
+  let addRemoveMember = (id) => {
+    let exist = memberIds.find((elm) => {
+      return elm === id;
+    });
 
-      let updatedIds = singleTeam?.members?.filter((elm) => {
-        return elm != id;
-      });
+    let updatedIds = memberIds?.filter((elm) => {
+      return elm != id;
+    });
 
-      if (!exist) {
-        setMemberIds([...memberIds, id]);
-      } else {
-        setMemberIds([...updatedIds]);
-      }
+    if (!exist) {
+      setMemberIds([...memberIds, id]);
+    } else {
+      setMemberIds([...updatedIds]);
     }
   };
 
-  console.log("single", memberIds);
+  console.log(memberIds);
+
+  let ifAdded = (id) => {
+    if (singleTeam?.members) {
+      let added = Object.values(singleTeam?.members)?.some((elm) => {
+        return elm === id;
+      });
+      if (added) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
 
   return (
     <div>
@@ -118,7 +130,15 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                         <p className="mr-3 w-[70%]">{elm?.name}</p>
                       </div>
                       <div className="h-[100%] w-[50px]  flex justify-center items-center">
-                        <Checkbox onClick={() => addRemoveMember(elm?.id)} />
+                        {ifAdded(elm?.id) ? (
+                          <Checkbox
+                            checked={true}
+                            disabled={true}
+                            // onClick={() => addRemoveMember(elm?.id)}
+                          />
+                        ) : (
+                          <Checkbox onClick={() => addRemoveMember(elm?.id)} />
+                        )}
                       </div>
                     </div>
                   );
@@ -135,7 +155,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                 </button> */}
               <button
                 className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                onClick={() => addTeamMember(singleTeam, callBack)}
+                onClick={() => addTeamMember(singleTeam, memberIds)}
               >
                 Add
               </button>
@@ -143,7 +163,12 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
           </div>
         </Box>
       </Modal>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      />
     </div>
   );
 };

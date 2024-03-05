@@ -286,7 +286,7 @@ const About = ({ uid }) => {
         isCircle={false}
       />
 
-      <SocialLinkModal modal={modal} handleClose={handleModal} />
+      <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
       <div className="w-[100%] flex justify-between">
         <div className="sm:w-[55%] w-[70%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center">
           <div className="flex w-[50%] items-center  justify-around ">

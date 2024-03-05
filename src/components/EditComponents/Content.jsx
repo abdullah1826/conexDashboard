@@ -5,8 +5,10 @@ import { PiDotsSixBold } from "react-icons/pi";
 import behance from "../../imgs/Behance.png";
 import Linkedin from "../../imgs/Linkedin.png";
 import Snapchat from "../../imgs/Snapchat.png";
+import { useSelector } from "react-redux";
+import { returnIcons } from "../../assets/ReturnSocialIcons";
 
-const Content = () => {
+const Content = ({ uid }) => {
   const IOSSwitch = styled((props) => (
     <Switch
       focusVisibleClassName=".Mui-focusVisible"
@@ -67,6 +69,8 @@ const Content = () => {
       }),
     },
   }));
+
+  const links = useSelector((state) => state.profileInfoSlice.links);
   return (
     <div className="w-[90%] h-[90%]">
       <div className="w-[100%] ">
@@ -83,97 +87,33 @@ const Content = () => {
           </div>
         </div>
 
-        <div className="w-[100%] flex justify-between flex-wrap mt-2">
-          <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-            <div className="w-[100%] flex justify-center items-center mt-3">
-              <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-            </div>
-            <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-              <img
-                src={behance}
-                alt=""
-                className="h-[45px] w-[45px] object-cover"
-              />
-              <h2 className="font-[500] text-[15px] mt-2">Behance</h2>
-            </div>
+        <div className="w-[100%]  flex justify-between flex-wrap mt-2">
+          {links?.map((elm) => {
+            return (
+              <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
+                <div className="w-[100%] flex justify-center items-center mt-3">
+                  <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
+                </div>
+                <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+                  <img
+                    src={returnIcons(elm?.linkID)}
+                    alt=""
+                    className="h-[45px] w-[45px] object-cover"
+                  />
+                  <h2 className="font-[500] text-[15px] mt-2">{elm?.name}</h2>
+                </div>
 
-            <div className="w-[100%] flex justify-center items-center mt-4">
-              <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
-                Remove Link
-              </button>
-              <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
-                Open Link
-              </button>
-            </div>
-          </div>
-          <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-            <div className="w-[100%] flex justify-center items-center mt-3">
-              <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-            </div>
-            <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-              <img
-                src={Snapchat}
-                alt=""
-                className="h-[45px] w-[45px] object-cover"
-              />
-              <h2 className="font-[500] text-[15px] mt-2">Snapchat</h2>
-            </div>
-
-            <div className="w-[100%] flex justify-center items-center mt-4">
-              <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
-                Remove Link
-              </button>
-              <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
-                Open Link
-              </button>
-            </div>
-          </div>
-
-          <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-            <div className="w-[100%] flex justify-center items-center mt-3">
-              <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-            </div>
-            <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-              <img
-                src={Linkedin}
-                alt=""
-                className="h-[45px] w-[45px] object-cover"
-              />
-              <h2 className="font-[500] text-[15px] mt-2">Linkedin</h2>
-            </div>
-
-            <div className="w-[100%] flex justify-center items-center mt-4">
-              <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
-                Remove Link
-              </button>
-              <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
-                Open Link
-              </button>
-            </div>
-          </div>
-
-          <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-            <div className="w-[100%] flex justify-center items-center mt-3">
-              <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-            </div>
-            <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-              <img
-                src={behance}
-                alt=""
-                className="h-[45px] w-[45px] object-cover"
-              />
-              <h2 className="font-[500] text-[15px] mt-2">Behance</h2>
-            </div>
-
-            <div className="w-[100%] flex justify-center items-center mt-4">
-              <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
-                Remove Link
-              </button>
-              <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
-                Open Link
-              </button>
-            </div>
-          </div>
+                <div className="w-[100%] flex justify-center items-center mt-4">
+                  <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
+                    Remove Link
+                  </button>
+                  <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
+                    Open Link
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

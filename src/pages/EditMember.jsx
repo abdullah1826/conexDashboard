@@ -113,7 +113,10 @@ const EditMember = () => {
     dispatch(setDesignation(singleProfile[uid]?.title));
     dispatch(setAddress(singleProfile[uid]?.address));
     dispatch(setBio(singleProfile[uid]?.bio));
-    dispatch(setLinks(singleProfile[uid]?.links));
+    if (typeof singleProfile[uid]?.links === "object") {
+      dispatch(setLinks(Object.values(singleProfile[uid]?.links)));
+    }
+
     // dispatch(
     //   setDirect({
     //     status: singleProfile?.data?.directMode,

@@ -103,7 +103,7 @@ const CreateNewTeam = ({ modal, handleModal }) => {
               setmyimg={setmybgimg}
               setcrop={setCropbg}
               crop={cropbg}
-              aspect={330 / 150}
+              aspect={370 / 150}
               setReduxState={getImg}
               isCircle={false}
               isNotRedux={true}

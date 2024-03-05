@@ -134,12 +134,6 @@ function App() {
             /> */}
           </Routes>
         </BrowserRouter>
-        <ToastContainer
-          position="bottom-left"
-          autoClose={1000}
-          theme="colored"
-          hideProgressBar
-        />
       </div>
     </>
   );

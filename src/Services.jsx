@@ -448,18 +448,111 @@ export const getAllTeams = async (callBackFunc) => {
 export const addTeamMember = (team, membersId) => {
   if (membersId.length > 0) {
     if (team?.members) {
-      set(ref(db, `User/${team?.Id}/members/`), [
-        ...team?.members,
+      let memberArray = Object.values(team?.members);
+      set(ref(db, `Teams/${team?.teamId}/members/`), [
+        ...team?.memberArray,
         ...membersId,
       ]).then(() => {
         toast.success("Team updated successfuly");
       });
     } else {
-      set(ref(db, `User/${team?.Id}/members/`), [...membersId]).then(() => {
-        toast.success("Team updated successfuly");
-      });
+      set(ref(db, `Teams/${team?.teamId}/members/`), [...membersId]).then(
+        () => {
+          toast.success("Team updated successfuly");
+        }
+      );
     }
   } else {
     toast.error("Please add atleast 1 member");
   }
+};
+
+// ------------------------------------------------Get single child profile-----------------------------------------------
+
+export const getAllTeamMembers = (arr, callBack, members) => {
+  arr?.map((elm) => {
+    const starCountRef = query(
+      ref(db, "/Users"),
+      orderByChild("id"),
+      equalTo(elm)
+    );
+    onValue(starCountRef, async (snapshot) => {
+      const data = await snapshot.val();
+      callBack([...members, ...Object.values(data)]);
+      console.log(data);
+      console.log("testing data");
+      MediaKeyStatusMap;
+    });
+  });
+};
+
+// ----------------------------------------------------Add link to database---------------------------------------------
+
+export const addNewLink = (linkData, id, allLinks) => {
+  if (linkData?.value) {
+    if (allLinks) {
+      set(ref(db, `Users/${id}/links/`), [...allLinks, linkData]).then(() => {
+        toast.success("Link added successfuly");
+      });
+    } else {
+      set(ref(db, `Users/${id}/links/`), [linkData]).then(() => {
+        toast.success("Link added successfuly");
+      });
+    }
+  }
+
+  // if (theLink.value && theLink.name) {
+  //   if (
+  //     title.includes("Link") ||
+  //     title.includes("link") ||
+  //     title.includes("Url")
+  //   ) {
+  //     if (isURL(theLink.value)) {
+  //       if (link) {
+  //       }
+  //     } else {
+  //       toast.error("Invalid url or link");
+  //     }
+  //   }
+
+  // else {
+  //   if (link) {
+  //     set(ref(db, `User/${user?.id}/links/`), [...link, theLink]).then(
+  //       () => {
+  //         toast.success("Link added successfuly");
+  //         dispatch(openLinkModal());
+  //         dispatch(removeLink());
+  //         dispatch(setLinkHighlight(false));
+  //         dispatch(setLinkDescription(""));
+  //         settheLink({
+  //           isHide: false,
+  //           isHighLighted: false,
+  //           name: singlelink.name,
+  //           title: "",
+  //           value: "",
+  //           description: "",
+  //         });
+  //       }
+  //     );
+  //   }
+  // }
+  // }
+};
+
+// ----------------------------------------------------Update link to database---------------------------------------------
+
+export const updateNewLink = (linkData, id, allLinks) => {
+  // if (linkData?.value) {
+  if (allLinks) {
+    let linksWithoutCrnt = allLinks?.filter((elm) => {
+      return elm?.linkID != linkData?.linkID;
+    });
+
+    set(ref(db, `Users/${id}/links/`), [...linksWithoutCrnt, linkData]).then(
+      () => {
+        toast.success("Link added successfuly");
+      }
+    );
+  }
+  // }
 };

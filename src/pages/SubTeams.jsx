@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getAllTeams } from "../Services";
 import bgplhldr from "../imgs/bgplhldr.png";
 import AddMemberModal from "../components/Modals/AddMemberModal";
+import SingleTeamModal from "../components/Modals/SingleTeamModal";
 
 const SubTeams = () => {
   var screen = window.innerWidth;
@@ -20,10 +21,10 @@ const SubTeams = () => {
   let [teams, setTeams] = useState([]);
   let [singleTeam, setSingleTeam] = useState({});
 
+  // console.log(singleTeam);
   let handleModal = () => {
     setModal(!modal);
   };
-
   let getTeams = (value) => {
     setTeams(Object.values(value));
   };
@@ -37,6 +38,12 @@ const SubTeams = () => {
     setAddModal(!addModal);
   };
 
+  let [teamModal, setTeamModal] = useState(false);
+
+  let handleTeamModal = () => {
+    setTeamModal(!teamModal);
+  };
+
   console.log(teams);
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
@@ -46,6 +53,11 @@ const SubTeams = () => {
         <AddMemberModal
           addModal={addModal}
           handleAddModal={handleAddModal}
+          singleTeam={singleTeam}
+        />
+        <SingleTeamModal
+          teamModal={teamModal}
+          handleTeamModal={handleTeamModal}
           singleTeam={singleTeam}
         />
         <div className="w-[90%] ">
@@ -106,13 +118,13 @@ const SubTeams = () => {
           <div className="w-[100%] mt-[50px] h-[68%] overflow-y-scroll ">
             {teams?.map((team) => {
               return (
-                <div
-                  className="w-[100%] sm:h-[153px] h-[100px] shadow-xl sm:rounded-[50px] rounded-[32px] bg-white flex justify-between mt-[20px]"
-                  onClick={() => setSingleTeam(team)}
-                >
+                <div className="w-[100%] sm:h-[153px] h-[100px] shadow-xl sm:rounded-[50px] rounded-[32px] bg-white flex justify-between mt-[20px]">
                   <div
-                    className="w-[55%] h-[100%]  rounded-[50px] flex justify-between items-center "
+                    className="w-[65%] h-[100%]  rounded-[50px] flex justify-between items-center border cursor-pointer"
                     style={screen <= 450 ? { alignItems: "end" } : null}
+                    onClick={() => {
+                      handleTeamModal(), setSingleTeam(team);
+                    }}
                   >
                     <div className="w-[47%] h-[92%] rounded-[45px]  ml-[7px]">
                       <img
@@ -144,7 +156,9 @@ const SubTeams = () => {
                   <div className="h-[100%] w-[23%] flex justify-around  items-center">
                     <div
                       className="sm:h-[43px] h-[25px] sm:w-[115px] w-[94px] bg-[#F3F3F3] rounded-[21px] cursor-pointer flex justify-center items-center"
-                      onClick={() => handleAddModal()}
+                      onClick={() => {
+                        handleAddModal(), setSingleTeam(team);
+                      }}
                     >
                       <p
                         style={
@@ -166,12 +180,12 @@ const SubTeams = () => {
             })}
           </div>
         </div>
-        <ToastContainer
+        {/* <ToastContainer
           position="bottom-left"
           autoClose={1000}
           theme="colored"
           hideProgressBar
-        />
+        /> */}
       </div>
       <br />
       <br />
