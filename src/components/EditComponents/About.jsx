@@ -27,14 +27,19 @@ import {
   setLogoUrl,
 } from "../../redux/profileInfoSlice.js";
 import Cropper from "../Cropper.jsx";
-import { updataAbout } from "../../Services.jsx";
+import {
+  handleChangeDirect,
+  updataAbout,
+  updateLeadMode,
+} from "../../Services.jsx";
 import SocialLinkModal from "../Modals/SocialLinkModal.jsx";
 
 const About = ({ uid }) => {
   const IOSSwitch = styled((props) => (
     <Switch
       focusVisibleClassName=".Mui-focusVisible"
-      disableRipple
+      // disableRipple
+
       {...props}
     />
   ))(({ theme }) => ({
@@ -98,14 +103,13 @@ const About = ({ uid }) => {
   const name = useSelector((state) => state.profileInfoSlice.name);
   const email = useSelector((state) => state.profileInfoSlice.email);
   const color = useSelector((state) => state.profileInfoSlice.color);
+  const textColor = useSelector((state) => state.profileInfoSlice.textColor);
   const phone = useSelector((state) => state.profileInfoSlice.phone);
   const cover = useSelector((state) => state.profileInfoSlice.coverUrl);
   const profile = useSelector((state) => state.profileInfoSlice.profileUrl);
   const logo = useSelector((state) => state.profileInfoSlice.logoUrl);
   const address = useSelector((state) => state.profileInfoSlice.address);
   const bio = useSelector((state) => state.profileInfoSlice.bio);
-  const textColor = useSelector((state) => state.profileInfoSlice.textColor);
-  const btnColor = useSelector((state) => state.profileInfoSlice.btnColor);
   const shareBtnColor = useSelector(
     (state) => state.profileInfoSlice.shareBtnColor
   );
@@ -116,10 +120,14 @@ const About = ({ uid }) => {
   const poweredVizz = useSelector(
     (state) => state.profileInfoSlice.poweredVizz
   );
+  const leadMode = useSelector((state) => state.profileInfoSlice.leadMode);
+  const links = useSelector((state) => state.profileInfoSlice.links);
+  const directMode = useSelector((state) => state.profileInfoSlice.directMode);
 
   const designation = useSelector(
     (state) => state.profileInfoSlice.designation
   );
+
   console.log(name);
 
   // ----------------------------------------------------State setup for profile img crop---------------------------------------------
@@ -157,7 +165,7 @@ const About = ({ uid }) => {
     }
   };
 
-  // ----------------------------------------------------State setup for profile img crop---------------------------------------------
+  // ----------------------------------------------------State setup for logo img crop---------------------------------------------
   let [logoimg, setlogoimg] = useState(null);
   let [cropLogoModal, setcroplogoModal] = useState(false);
   let [mylogolimg, setmylogolimg] = useState(null);
@@ -229,13 +237,15 @@ const About = ({ uid }) => {
 
   let data = {
     name,
-    email,
+    job: designation,
     address,
     coverUrl: cover,
     phone,
     bio,
     profileUrl: profile,
     logoUrl: logo,
+    color,
+    textColor,
   };
 
   let [modal, setModal] = useState(false);
@@ -244,7 +254,7 @@ const About = ({ uid }) => {
   };
 
   return (
-    <div className="w-[90%] h-[90%] ">
+    <div className="w-[90%] h-[90%] overflow-y-scroll">
       {/* --------------------------------------------croper for logo image------------------------------------------------  */}
       <Cropper
         cropModal={cropLogoModal}
@@ -281,27 +291,40 @@ const About = ({ uid }) => {
         setmyimg={setmybgimg}
         setcrop={setCropbg}
         crop={cropbg}
-        aspect={330 / 115}
+        aspect={253 / 150}
         setReduxState={setCoverUrl}
         isCircle={false}
       />
 
       <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
-      <div className="w-[100%] flex justify-between">
-        <div className="sm:w-[55%] w-[70%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center">
+      <div className="w-[100%] flex justify-between ">
+        <div className="sm:w-[55%] w-[70%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center ">
           <div className="flex w-[50%] items-center  justify-around ">
             <p className="font-[500] sm:text-[14px] text-[10px] whitespace-nowrap ml-2">
               Lead Mode {"\u00A0"} {"\u00A0"} {"\u00A0"}
             </p>
-            <FormControlLabel control={<IOSSwitch defaultChecked />} />
+            <FormControlLabel
+              control={
+                <IOSSwitch
+                  checked={leadMode}
+                  onChange={() => updateLeadMode(leadMode, uid)}
+                />
+              }
+            />
           </div>
 
           <div className="flex w-[50%] items-center  justify-around ">
             <p className="font-[500]  sm:text-[14px] text-[10px] whitespace-nowrap ml-2">
-              Lead Mode {"\u00A0"}
+              Direct Mode {"\u00A0"}
             </p>
             <FormControlLabel
-              control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
+              control={
+                <IOSSwitch
+                  sx={{ m: 1 }}
+                  checked={directMode}
+                  onChange={() => handleChangeDirect(directMode, uid, links)}
+                />
+              }
             />
           </div>
         </div>
@@ -317,30 +340,330 @@ const About = ({ uid }) => {
       </div>
 
       <div className="w-[100%] mt-5">
-        <div className="sm:w-[55%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2]">
+        <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
           <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center">
             Card Color
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
             <div className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center">
-              <MdColorize className="text-[white] text-[14px] cursor-pointer" />
+              <label
+                htmlFor="textclr"
+                className="h-[100%] w-[100%] rounded-full flex justify-center items-center"
+              >
+                <div>
+                  <MdColorize className="text-[white] text-[14px] cursor-pointer" />
+                </div>
+                <input
+                  type="color"
+                  id="textclr"
+                  style={{
+                    opacity: "0px",
+                    height: "0px",
+                    width: "0px",
+                    // backgroundColor: "black",
+                    // color: "black",
+                  }}
+                  onChange={(e) => dispatch(setColor(e.target.value))}
+                  value={color}
+                />
+              </label>
             </div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#E70A0A] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#0ED416] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#3076FF] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#F439D6] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#6732FF] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#FCE410] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#1BE4FF] cursor-pointer"></div>
-            <div className="h-[18px] w-[18px] rounded-full bg-[#DEA527] cursor-pointer"></div>
+            <div
+              style={{
+                border: color === "#E70A0A" ? "1px solid #E70A0A" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#E70A0A] cursor-pointer"
+                onClick={() => dispatch(setColor("#E70A0A"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#0ED416" ? "1px solid #0ED416" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#0ED416] cursor-pointer"
+                onClick={() => dispatch(setColor("#0ED416"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#3076FF" ? "1px solid #3076FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#3076FF] cursor-pointer"
+                onClick={() => dispatch(setColor("#3076FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#F439D6" ? "1px solid #F439D6" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#F439D6] cursor-pointer"
+                onClick={() => dispatch(setColor("#F439D6"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#6732FF" ? "1px solid #6732FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#6732FF] cursor-pointer"
+                onClick={() => dispatch(setColor("#6732FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#FCE410" ? "1px solid #FCE410" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#FCE410] cursor-pointer"
+                onClick={() => dispatch(setColor("#FCE410"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#1BE4FF" ? "1px solid #1BE4FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#1BE4FF] cursor-pointer"
+                onClick={() => dispatch(setColor("#1BE4FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: color === "#DEA527" ? "1px solid #DEA527" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#DEA527] cursor-pointer"
+                onClick={() => dispatch(setColor("#DEA527"))}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center">
+            Text Color
+          </div>
+
+          <div className="w-[78%] h-[100%] flex justify-evenly items-center ">
+            <div className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center">
+              <label
+                htmlFor="textclr"
+                className="h-[100%] w-[100%] rounded-full flex justify-center items-center"
+              >
+                <div>
+                  <MdColorize className="text-[white] text-[14px] cursor-pointer" />
+                </div>
+                <input
+                  type="color"
+                  id="textclr"
+                  style={{
+                    opacity: "0px",
+                    height: "0px",
+                    width: "0px",
+                    // backgroundColor: "black",
+                    // color: "black",
+                  }}
+                  onChange={(e) => dispatch(setTextColor(e.target.value))}
+                  value={textColor}
+                />
+              </label>
+            </div>
+            <div
+              style={{
+                border: textColor === "#E70A0A" ? "1px solid #E70A0A" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#E70A0A] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#E70A0A"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#0ED416" ? "1px solid #0ED416" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#0ED416] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#0ED416"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#3076FF" ? "1px solid #3076FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#3076FF] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#3076FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#F439D6" ? "1px solid #F439D6" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#F439D6] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#F439D6"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#6732FF" ? "1px solid #6732FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#6732FF] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#6732FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#FCE410" ? "1px solid #FCE410" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#FCE410] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#FCE410"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#1BE4FF" ? "1px solid #1BE4FF" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#1BE4FF] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#1BE4FF"))}
+              ></div>
+            </div>
+            <div
+              style={{
+                border: textColor === "#DEA527" ? "1px solid #DEA527" : null,
+                height: "18px",
+                width: "18px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "100%",
+              }}
+            >
+              <div
+                className="h-[14px] w-[14px] rounded-full bg-[#DEA527] cursor-pointer"
+                onClick={() => dispatch(setTextColor("#DEA527"))}
+              ></div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="w-[100%] mt-4">
-        <div className="w-[100%] flex cursor-pointer ">
-          <div className=" flex flex-col whitespace-nowrap justify-center items-center sm:text-[13px] text-[8px] ">
+        <div className="w-[100%] flex cursor-pointer">
+          <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px]">
             <span className="flex justify-center items-center mb-1  ">
               Logo {"\u00A0"}
               <RiErrorWarningLine />
@@ -381,7 +704,7 @@ const About = ({ uid }) => {
             )}
           </div>
           {"\u00A0"}
-          <div className=" flex flex-col whitespace-nowrap justify-center items-center sm:text-[13px] text-[8px]">
+          <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%] ">
             <span className="flex justify-center items-center mb-1 ">
               Profile Picture {"\u00A0"}
               <RiErrorWarningLine />
@@ -423,13 +746,13 @@ const About = ({ uid }) => {
             )}
           </div>
           {"\u00A0"}
-          <div className=" flex flex-col whitespace-nowrap justify-center items-center sm:text-[13px] text-[8px]">
+          <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%]">
             <span className="flex justify-center items-center mb-1 ">
               Cover Picture {"\u00A0"}
               <RiErrorWarningLine />
             </span>
             {cover ? (
-              <div className="sm:w-[330px] w-[166px] sm:h-[115px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
+              <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
                   className="absolute right-[0px] top-[-3px]"
@@ -442,7 +765,7 @@ const About = ({ uid }) => {
                 />
               </div>
             ) : (
-              <div className="sm:w-[330px] w-[166px] sm:h-[115px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
+              <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
                 <label htmlFor="cvrImg" className="absolute right-[3px] top-0">
                   <GrAddCircle style={{ fontSize: "20px" }} />
 
@@ -486,9 +809,9 @@ const About = ({ uid }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Email"
-              onChange={(e) => dispatch(setEmail(e.target.value))}
-              value={email}
+              placeholder="Designation"
+              onChange={(e) => dispatch(setDesignation(e.target.value))}
+              value={designation}
             />
 
             <input
@@ -508,6 +831,7 @@ const About = ({ uid }) => {
             className="w-[100%] h-[60px] rounded-[22px] bg-[#F2F2F2] outline-none resize-none pl-2 pt-2"
             onChange={(e) => dispatch(setBio(e.target.value))}
             value={bio}
+            placeholder="bio"
           ></textarea>
         </div>
 

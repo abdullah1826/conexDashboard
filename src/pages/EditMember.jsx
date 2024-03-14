@@ -45,10 +45,19 @@ import {
   setlinkBgColor,
   setShareBtnColor,
   setLogoUrl,
+  setDirectMode,
+  setProfilePictureLock,
+  setlogoLock,
+  setcoverLock,
+  setnameLock,
+  setphoneLock,
+  setbioLock,
+  setlocationLock,
 } from "../redux/profileInfoSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import prsnPlshldr from "../imgs/prsnPlshldr.png";
 
 const EditMember = () => {
   let navigate = useNavigate();
@@ -105,28 +114,37 @@ const EditMember = () => {
   useEffect(() => {
     dispatch(setName(singleProfile[uid]?.name));
     dispatch(setEmail(singleProfile[uid]?.email));
-    dispatch(setColor(singleProfile[uid]?.backgroundColor));
+    dispatch(setColor(singleProfile[uid]?.color));
+    dispatch(setTextColor(singleProfile[uid]?.textColor));
     dispatch(setPhone(singleProfile[uid]?.phone));
     dispatch(setCoverUrl(singleProfile[uid]?.coverUrl));
     dispatch(setProfileurl(singleProfile[uid]?.profileUrl));
     dispatch(setLogoUrl(singleProfile[uid]?.logoUrl));
-    dispatch(setDesignation(singleProfile[uid]?.title));
+    dispatch(setDesignation(singleProfile[uid]?.job));
     dispatch(setAddress(singleProfile[uid]?.address));
     dispatch(setBio(singleProfile[uid]?.bio));
+    dispatch(setProfilePictureLock(singleProfile[uid]?.profilePictureLock));
+    dispatch(setlogoLock(singleProfile[uid]?.logoLock));
+    dispatch(setcoverLock(singleProfile[uid]?.coverLock));
+    dispatch(setnameLock(singleProfile[uid]?.nameLock));
+    dispatch(setphoneLock(singleProfile[uid]?.phoneLock));
+    dispatch(setbioLock(singleProfile[uid]?.bioLock));
+    dispatch(setlocationLock(singleProfile[uid]?.locationLock));
     if (typeof singleProfile[uid]?.links === "object") {
       dispatch(setLinks(Object.values(singleProfile[uid]?.links)));
     }
 
-    // dispatch(
-    //   setDirect({
-    //     status: singleProfile?.data?.directMode,
-    //     linkId: singleProfile?.data?.directLinkId,
-    //   })
-    // );
-
+    dispatch(
+      setDirect({
+        name: singleProfile[uid]?.direct?.name,
+        value: singleProfile[uid]?.direct?.value,
+        linkID: singleProfile[uid]?.direct?.linkID,
+      })
+    );
+    dispatch(setDirectMode(singleProfile?.[uid]?.directMode));
     dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
     dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
-    // dispatch(setLead(singleProfile?.data?.leadMode));
+    dispatch(setLead(singleProfile?.[uid]?.leadMode));
     dispatch(setFormHeader(singleProfile?.[uid]?.formHeader));
     dispatch(setNameVisible(singleProfile?.[uid]?.leadForm?.Fname));
     dispatch(setEmailVisible(singleProfile?.[uid]?.leadForm?.email));
@@ -162,7 +180,7 @@ const EditMember = () => {
               />
               <div className="bg-[#B1AEAE] h-[20px] w-[2px]"></div>
               <img
-                src={profile}
+                src={profile ? profile : prsnPlshldr}
                 alt=""
                 className="sm:h-[65px] sm:w-[65px] h-[55px] w-[55px] rounded-full object-cover"
               />
@@ -243,6 +261,11 @@ const EditMember = () => {
                 <div
                   className="w-[25%] h-[100%]  sm:rounded-tl-[35px] sm:rounded-[0px] rounded-[44px]  sm:border-r cursor-pointer hover:bg-black hover:text-white flex justify-center items-center"
                   onClick={() => handleRoute("about")}
+                  style={
+                    route?.isAbout
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
                 >
                   <FaUser className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
@@ -255,6 +278,11 @@ const EditMember = () => {
                 <div
                   className="w-[25%] h-[100%]  sm:rounded-[0px] rounded-[44px]   sm:border-r cursor-pointer hover:bg-black flex items-center justify-center hover:text-white text-black"
                   onClick={() => handleRoute("content")}
+                  style={
+                    route?.isContent
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
                 >
                   <IoMdMenu className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
@@ -267,6 +295,11 @@ const EditMember = () => {
                 <div
                   className="w-[25%] h-[100%]   sm:rounded-[0px] rounded-[44px]   sm:border-r cursor-pointer hover:bg-black flex items-center justify-center hover:text-white text-black"
                   onClick={() => handleRoute("qr")}
+                  style={
+                    route?.isQr
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
                 >
                   <BsQrCode className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
@@ -277,6 +310,11 @@ const EditMember = () => {
                 <div
                   className="w-[25%] h-[100%]  sm:rounded-tr-[35px] sm:rounded-[0px] rounded-[44px] cursor-pointer hover:bg-black flex items-center justify-center hover:text-white text-black"
                   onClick={() => handleRoute("lead")}
+                  style={
+                    route?.isLead
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
                 >
                   <FaFilter className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">

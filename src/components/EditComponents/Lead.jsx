@@ -14,7 +14,7 @@ import {
 } from "../../redux/profileInfoSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { updateLead } from "../../Services";
+import { updateLead, updateLeadMode } from "../../Services";
 const Lead = ({ uid }) => {
   const IOSSwitch = styled((props) => (
     <Switch
@@ -98,6 +98,8 @@ const Lead = ({ uid }) => {
     (state) => state.profileInfoSlice.phoneVisible
   );
 
+  const leadMode = useSelector((state) => state.profileInfoSlice.leadMode);
+
   console.log(phoneVisible);
   let changeVisibility = (cb, value) => {
     let noteVisibles = [
@@ -143,7 +145,14 @@ const Lead = ({ uid }) => {
           </p>
         </div>
         <div className="sm:w-[15%] w-[2%]  flex justify-center items-center">
-          <FormControlLabel control={<IOSSwitch defaultChecked />} />
+          <FormControlLabel
+            control={
+              <IOSSwitch
+                checked={leadMode}
+                onChange={() => updateLeadMode(leadMode, uid)}
+              />
+            }
+          />
         </div>
       </div>
       <div className="mt-5">
@@ -162,8 +171,8 @@ const Lead = ({ uid }) => {
         <div className="w-[75%]">
           <h2 className="text-[15px] font-[500]">Input Fields</h2>
           <p className="font-[400] text-[11px] text-[#7D7C7C] sm:w-[90%] w-[127%]">
-            When lead capture mode is enabled, the lead form will popup as soon
-            as your profile is shared
+            Select or unselect the fields that you want your leads to complete
+            on your lead capture form
           </p>
 
           <div className="sm:w-[429px] w-[132%] h-[163px] border rounded-[26px] shadow-xl mt-3 flex flex-col justify-center items-center">

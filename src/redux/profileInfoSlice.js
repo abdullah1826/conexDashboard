@@ -9,12 +9,22 @@ const initialState = {
   logoUrl: "",
   coverUrl: "",
   phone: "",
-  color: "#DEA527",
+  color: "#eeeded",
   links: [],
   direct: {
-    status: 0,
-    linkId: "",
+    name: "",
+    value: "",
+    linkID: "",
   },
+  profilePictureLock: false,
+  logoLock: false,
+  coverLock: false,
+  nameLock: false,
+  phoneLock: false,
+  locationLock: false,
+  bioLock: false,
+  directMode: false,
+
   formHeader: "",
   nameVisible: false,
   emailVisible: false,
@@ -23,8 +33,8 @@ const initialState = {
   noteVisible: false,
   phoneVisible: false,
   qrLogo: "",
-  qrColor: "black",
-  textColor: "black",
+  qrColor: "#000000",
+  textColor: "#ffffff",
   shareBtnColor: "black",
   btnColor: "black",
   linkBgColor: "black",
@@ -83,9 +93,13 @@ export const profileInfoSlice = createSlice({
     },
     setDirect: (state, action) => {
       state.direct = {
-        status: action.payload?.status,
-        linkId: action.payload?.linkId,
+        name: action.payload?.name,
+        value: action.payload?.value,
+        linkID: action.payload?.linkID,
       };
+    },
+    setDirectMode: (state, action) => {
+      state.directMode = action.payload;
     },
 
     setFormHeader: (state, action) => {
@@ -164,6 +178,29 @@ export const profileInfoSlice = createSlice({
       state.organizationLogo = action.payload;
     },
 
+    setProfilePictureLock: (state, action) => {
+      state.profilePictureLock = action.payload;
+    },
+    setlogoLock: (state, action) => {
+      state.logoLock = action.payload;
+    },
+    setcoverLock: (state, action) => {
+      state.coverLock = action.payload;
+    },
+    setnameLock: (state, action) => {
+      state.nameLock = action.payload;
+    },
+    setphoneLock: (state, action) => {
+      state.phoneLock = action.payload;
+    },
+
+    setlocationLock: (state, action) => {
+      state.locationLock = action.payload;
+    },
+    setbioLock: (state, action) => {
+      state.bioLock = action.payload;
+    },
+
     // ----------------------------------------------------
 
     setAllNull: (state) => {
@@ -196,6 +233,7 @@ export const {
   setLinks,
   setAllNull,
   setDirect,
+  setDirectMode,
   setFormHeader,
   setNameVisible,
   setEmailVisible,
@@ -220,6 +258,13 @@ export const {
   setOrgSharebtnColor,
   setOrgTextColor,
   setOrganizationCover,
+  setProfilePictureLock,
+  setlogoLock,
+  setcoverLock,
+  setnameLock,
+  setphoneLock,
+  setbioLock,
+  setlocationLock,
 } = profileInfoSlice.actions;
 
 export default profileInfoSlice.reducer;

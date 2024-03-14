@@ -76,12 +76,12 @@ const Home = () => {
               >
                 Members{" "}
                 <span className="font-[500] sm:text-[10px] text-[15px] text-[#9B9B9B]">
-                  (120)
+                  ({allProfiles?.length})
                 </span>
               </p>
             </div>
             {screen >= 450 ? (
-              <div className="sm:w-[80%] w-[60%]  h-[100%] flex justify-between">
+              <div className="sm:w-[66%] w-[60%]  h-[100%] flex justify-between">
                 <div className="w-[254px] h-[100%] flex items-center rounded-[36px] bg-white shadow-xl">
                   <input
                     type="text"
@@ -100,7 +100,11 @@ const Home = () => {
                   onClick={handleClickListItem}
                   className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer"
                 >
-                  <img src={uk} alt="" className="h-[30px] w-[30px]" />
+                  <img
+                    src={uk}
+                    alt=""
+                    className="h-[30px] w-[30px] object-cover"
+                  />
                   <p className="font-[500] text-[15px]">English</p>
                   <MdArrowDropDown className="text-2xl" />
                 </div>
@@ -149,10 +153,10 @@ const Home = () => {
                     <p className="font-[500] ml-2 text-base">French</p>
                   </MenuItem>
                 </Menu>
-                <div className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer">
+                {/* <div className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer">
                   <p className="font-[500] text-[15px] ml-2">Members</p>
                   <MdArrowDropDown className="text-2xl ml-1" />
-                </div>
+                </div> */}
                 <div
                   className="w-[185px] h-[100%] rounded-[36px] bg-black shadow-xl flex justify-center items-center cursor-pointer"
                   onClick={() => handleModal()}
@@ -190,7 +194,7 @@ const Home = () => {
             ) : null}
           </div>
 
-          <div className="w-[100%] flex justify-between flex-wrap sm:mt-[40px] mt-[20px] sm:h-[78%] h-[68%] overflow-y-scroll">
+          <div className="w-[100%] flex justify-start gap-x-[6%] flex-wrap sm:mt-[40px] mt-[20px] sm:h-[78%] h-[68%] overflow-y-scroll">
             {allProfiles?.map((profile) => {
               return <MemberCard profile={profile} />;
             })}

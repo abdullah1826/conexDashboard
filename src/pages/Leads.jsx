@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { BiSearchAlt } from "react-icons/bi";
 import { MdArrowDropDown } from "react-icons/md";
 import { Menu } from "@mui/material";
-import { FaSquarePlus } from "react-icons/fa6";
+import { FaEye, FaSquarePlus } from "react-icons/fa6";
 import csv from "../imgs/csv.png";
 import zap from "../imgs/zap.png";
 import { TfiDownload } from "react-icons/tfi";
@@ -18,12 +18,65 @@ import NavbarFooter from "./NavbarFooter";
 import CreateNewTeam from "../components/Modals/CreateNewTeam";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { getContacts } from "../Services";
+import prsnPlshldr from "../imgs/prsnPlshldr.png";
+import SingleLeadModal from "../components/Modals/SingleLeadModal";
+// import DeleteContact from "../components/Modals/DeleteContactModal";
+import DeleteContactModal from "../components/Modals/DeleteContactModal";
+import DownloadCsv from "../components/DownloadCsv";
 
 const Leads = () => {
+  let [leads, setLeads] = useState([]);
   var screen = window.innerWidth;
+
+  let connexUid = localStorage.getItem("connexUid");
+  useEffect(() => {
+    getContacts(connexUid, setLeads);
+  }, []);
+
+  let [leadModal, setleadModal] = useState(false);
+  let handleLeadModal = () => {
+    setleadModal(!leadModal);
+  };
+  let [lead, setLead] = useState({});
+  let [deleteModal, setdeleteModal] = useState(false);
+
+  const handleDeleteModal = () => {
+    setdeleteModal(!deleteModal);
+  };
+
+  let [filtered, setfiltered] = useState([{}]);
+  useEffect(() => {
+    setfiltered(leads);
+  }, [leads]);
+
+  //---------------------------------------------------(search functionality)-----------------------------------------------
+
+  console.log(filtered);
+
+  let [search, setsearch] = useState("");
+
+  useEffect(() => {
+    const result = leads?.filter((contact) => {
+      return contact?.name.toLowerCase().match(search.toLowerCase());
+    });
+
+    setfiltered(result);
+  }, [search]);
 
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
+      <DeleteContactModal
+        deleteModal={deleteModal}
+        handledeleteModal={handleDeleteModal}
+        lead={lead}
+      />
+      <SingleLeadModal
+        leadModal={leadModal}
+        handleLeadModal={handleLeadModal}
+        singleLead={lead}
+      />
+
       {screen >= 450 ? <Sidebar /> : null}
 
       <div className="sm:w-[80%] w-[100%] flex justify-center overflow-y-scroll">
@@ -51,7 +104,7 @@ const Leads = () => {
               >
                 Leads Generated{" "}
                 <span className="font-[500] sm:text-[10px] text-[12px] text-[#9B9B9B]">
-                  (120)
+                  ({leads?.length})
                 </span>
               </p>
             </div>
@@ -66,6 +119,8 @@ const Leads = () => {
                   className="h-[100%] sm:w-[77%] w-[40px] outline-none rounded-[36px] sm:pl-[10px] pl-[0px] sm:ml-2 "
                   style={screen <= 450 ? { fontSize: "11px" } : null}
                   placeholder="Search"
+                  onChange={(e) => setsearch(e.target.value)}
+                  value={search}
                 />
                 {screen >= 450 ? (
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
@@ -87,7 +142,7 @@ const Leads = () => {
                       : null
                   }
                 >
-                  Export CSV
+                  {filtered ? <DownloadCsv data={filtered} /> : "Export CSV"}
                 </p>
                 {screen >= 450 ? (
                   <TfiDownload className="text-lg mr-2" />
@@ -136,7 +191,7 @@ const Leads = () => {
                     : null
                 }
               >
-                Contacted with
+                Connected with
               </p>
             </div>
             {screen >= 450 ? (
@@ -148,136 +203,54 @@ const Leads = () => {
               <p className="font-[500] sm:text-[16px] text-[12px]">Actions</p>
             </div>
           </div>
+          {filtered?.map((contact) => {
+            return (
+              <div
+                className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer"
+                onClick={() => setLead(contact)}
+              >
+                <div className="flex items-center w-[16%] ">
+                  <img
+                    src={prsnPlshldr}
+                    alt=""
+                    className="h-[46px] w-[46px] rounded-full object-cover"
+                  />
+                  <p className="text-[12px] font-[500] ml-[5px]">
+                    {contact?.name}
+                  </p>
+                </div>
+                {screen >= 450 ? (
+                  <div className="w-[15%] ml-2">
+                    <p className="font-[500] text-[12px]">{contact?.email}</p>
+                  </div>
+                ) : null}
+                <div className="flex items-center w-[16%] ">
+                  <img
+                    src={prsnPlshldr}
+                    alt=""
+                    className="h-[46px] w-[46px] rounded-full object-cover"
+                  />
+                  <p className="text-[12px] font-[500] ml-[5px]">
+                    {contact?.connectedWith}
+                  </p>
+                </div>
+                {screen >= 450 ? (
+                  <div className="w-[15%]">
+                    <p className="font-[500] text-[12px]">January 25, 2023</p>
+                  </div>
+                ) : null}
+                <div className="flex w-[15%]">
+                  <div onClick={() => handleDeleteModal()}>
+                    <FaRegTrashCan className="text-2xl ml-3" />
+                  </div>
+                  <div className=" flex" onClick={() => handleLeadModal()}>
+                    <FaEye className="text-2xl ml-3" />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
 
-          <div className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer">
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c3}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Kakashi Hatake</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%] ml-2">
-                <p className="font-[500] text-[12px]">Name@gmail.com</p>
-              </div>
-            ) : null}
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c4}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Gaara</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%]">
-                <p className="font-[500] text-[12px]">January 25, 2023</p>
-              </div>
-            ) : null}
-            <div className="w-[15%] flex ">
-              <FaRegTrashCan className="text-2xl ml-3" />
-            </div>
-          </div>
-
-          <div className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer">
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c2}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Hinata Hyuga</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%] ml-2">
-                <p className="font-[500] text-[12px]">Name@gmail.com</p>
-              </div>
-            ) : null}
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c5}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Sakura Haruno</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%]">
-                <p className="font-[500] text-[12px]">January 25, 2023</p>
-              </div>
-            ) : null}
-            <div className="w-[15%] flex ">
-              <FaRegTrashCan className="text-2xl ml-3" />
-            </div>
-          </div>
-
-          <div className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer">
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c1}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">
-                Hiruzen Sarutobi
-              </p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%] ml-2">
-                <p className="font-[500] text-[12px]">Name@gmail.com</p>
-              </div>
-            ) : null}
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c3}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Kakashi Hatake</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%]">
-                <p className="font-[500] text-[12px]">January 25, 2023</p>
-              </div>
-            ) : null}
-            <div className="w-[15%] flex ">
-              <FaRegTrashCan className="text-2xl ml-3" />
-            </div>
-          </div>
-
-          <div className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer">
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={prfl}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Naruto Uzumaki</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%] ml-2">
-                <p className="font-[500] text-[12px]">Name@gmail.com</p>
-              </div>
-            ) : null}
-            <div className="flex items-center w-[16%] ">
-              <img
-                src={c5}
-                alt=""
-                className="h-[46px] w-[46px] rounded-full object-cover"
-              />
-              <p className="text-[12px] font-[500] ml-[5px]">Sakura Haruno</p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%]">
-                <p className="font-[500] text-[12px]">January 25, 2023</p>
-              </div>
-            ) : null}
-            <div className="w-[15%] flex ">
-              <FaRegTrashCan className="text-2xl ml-3" />
-            </div>
-          </div>
           <br />
         </div>
         <ToastContainer position="top-center" autoClose={2000} />

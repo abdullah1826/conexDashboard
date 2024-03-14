@@ -1,6 +1,6 @@
 import { Box, Modal } from "@mui/material";
 import { push, ref, update } from "firebase/database";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsFillPersonFill } from "react-icons/bs";
 import team1 from "../../imgs/team1.png";
 import { BsFillPeopleFill } from "react-icons/bs";
@@ -8,12 +8,12 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
-import { createNewCard, createTeam } from "../../Services";
+import { createNewCard, createTeam, updateTeam } from "../../Services";
 import { GrAddCircle } from "react-icons/gr";
 import Cropper from "../Cropper";
 import bgplhldr from "../../imgs/bgplhldr.png";
 
-const CreateNewTeam = ({ modal, handleModal }) => {
+const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
 
   const style2 = {
@@ -32,10 +32,18 @@ const CreateNewTeam = ({ modal, handleModal }) => {
     // p: "32px",
   };
 
+  console.log(singleTeam);
+
   let [data, setData] = useState({
     name: "",
     img: "",
   });
+
+  useEffect(() => {
+    if (singleTeam) {
+      setData({ name: singleTeam?.teamName, img: singleTeam?.image });
+    }
+  }, [singleTeam]);
 
   let getImg = (value) => {
     setData({ ...data, img: value });
@@ -145,18 +153,29 @@ const CreateNewTeam = ({ modal, handleModal }) => {
                 >
                   Cancel
                 </button>
-                <button
-                  className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                  onClick={() => createTeam(data, callBack)}
-                >
-                  Create
-                </button>
+                {singleTeam === null ? (
+                  <button
+                    className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
+                    onClick={() => createTeam(data, callBack)}
+                  >
+                    Create
+                  </button>
+                ) : (
+                  <button
+                    className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
+                    onClick={() =>
+                      updateTeam(data, callBack, singleTeam?.teamId)
+                    }
+                  >
+                    Update
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </Box>
       </Modal>
-      <ToastContainer position="top-center" autoClose={2000} />
+      {/* <ToastContainer position="top-center" autoClose={2000} /> */}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import bg from "../imgs/bg.jpg";
 import primg from "../imgs/nlogo.jpg";
 import { FaBriefcase } from "react-icons/fa6";
 import { BsFillInfoSquareFill } from "react-icons/bs";
-import { CiLock } from "react-icons/ci";
+import { CiLock, CiUnlock } from "react-icons/ci";
 import { FiEdit } from "react-icons/fi";
 import { FiShare2 } from "react-icons/fi";
 import { IoTrashOutline } from "react-icons/io5";
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import bgplhldr from "../imgs/bgplhldr.png";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import lgoplchldr from "../imgs/lgoplchldr.jpg";
+import { changeProfileStatus } from "../Services";
 
 const MemberCard = ({ profile }) => {
   let navigate = useNavigate();
@@ -72,10 +73,20 @@ const MemberCard = ({ profile }) => {
           <div className="h-[114px] w-[48%]  flex justify-center items-center">
             <div className="h-[100%] w-[90%] flex flex-col justify-between">
               <div className="w-[100%] flex justify-between">
-                <div className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center">
-                  <CiLock className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
+                <div
+                  className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center cursor-pointer"
+                  onClick={() =>
+                    changeProfileStatus(profile?.profileOn, profile?.id)
+                  }
+                >
+                  {profile?.profileOn === 1 ? (
+                    <CiLock className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
+                  ) : (
+                    <CiUnlock className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
+                  )}
+
                   <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                    Lock
+                    {profile?.profileOn === 1 ? "Lock" : "Un Lock"}
                   </p>
                 </div>
                 <div

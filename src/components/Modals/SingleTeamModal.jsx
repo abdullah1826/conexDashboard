@@ -7,8 +7,15 @@ import SelectSearch from "react-select-search";
 import { BiSearchAlt } from "react-icons/bi";
 import prsnPlshldr from "../../imgs/prsnPlshldr.png";
 import Checkbox from "@mui/material/Checkbox";
-import { addTeamMember, getAllChilds, getAllTeamMembers } from "../../Services";
+import {
+  addTeamMember,
+  getAllChilds,
+  getAllTeamMembers,
+  removeTeamMember,
+  splitString,
+} from "../../Services";
 import bgplhldr from "../../imgs/bgplhldr.png";
+import { MdOutlineCancel } from "react-icons/md";
 
 const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
   const style2 = {
@@ -40,6 +47,14 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
     }
   }, [singleTeam?.members]);
   console.log(members);
+
+  let removeMemberLocaly = (id) => {
+    let remainingMembers = members?.filter((elm) => {
+      return id != elm?.id;
+    });
+    setmembers(remainingMembers);
+  };
+
   return (
     <div>
       <Modal
@@ -50,7 +65,13 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
       >
         <Box sx={style2}>
           <div className="h-[100%] w-[100%]">
-            <div className="w-[100%] flex justify-center mt-4">
+            <div className="w-[99%] flex justify-end mt-1">
+              <MdOutlineCancel
+                className="text-2xl cursor-pointer"
+                onClick={() => onCloseAction()}
+              />
+            </div>
+            <div className="w-[100%] flex justify-center mt-1">
               <div className="h-[200px] w-[90%] border rounded-[40px] relative flex justify-center">
                 <div className="w-[300px] h-[75px] rounded-[25px] border border-black absolute bottom-[-40px] bg-white flex justify-center items-center">
                   <p className="text-[32px] font-[500]">
@@ -67,7 +88,7 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
             <div className="h-[250px] w-[100%] mt-[50px] flex justify-evenly items-center flex-wrap overflow-y-scroll">
               {members?.map((elm) => {
                 return (
-                  <div className="w-[30%] h-[240px] rounded-[50px] border mt-5 ">
+                  <div className="w-[30%] h-[240px] rounded-[50px] border mt-5 relative">
                     <div className="w-[100%] rounded-t-[50px] h-[40%] relative flex justify-center">
                       <img
                         src={elm?.profileUrl ? elm?.profileUrl : prsnPlshldr}
@@ -84,12 +105,25 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
                     <div className="w-[100%] flex items-center flex-col mt-9">
                       <h2 className="text-[12px] font-[500]">{elm?.name}</h2>
                       <p className="text-[10px] font-[400] w-[90%] text-center">
-                        {elm?.bio}
+                        {splitString(elm?.bio, 70)}
                       </p>
                     </div>
 
-                    <div className="w-[100%] flex justify-center items-center mt-[20px] ">
-                      <div className="h-[30px] w-[90px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white">
+                    <div className="w-[100%] flex justify-center items-center absolute bottom-3 ">
+                      <div
+                        className="h-[30px] w-[70px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white mr-1"
+                        onClick={() =>
+                          removeTeamMember(
+                            elm?.id,
+                            singleTeam?.teamId,
+                            Object.values(singleTeam?.members),
+                            removeMemberLocaly
+                          )
+                        }
+                      >
+                        Delete
+                      </div>
+                      <div className="h-[30px] w-[70px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white">
                         Open
                       </div>
                     </div>

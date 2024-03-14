@@ -18,7 +18,8 @@ import messenger from "./socialLink/messenger.png";
 import instagram from "./socialLink/instagram.png";
 import facebook from "./socialLink/facebook.png";
 import tiktok from "./socialLink/tiktok.png";
-import twitter from "./socialLink/twitter.png";
+import twitter from "./socialLink/x.png";
+import threads from "./socialLink/threads.png";
 
 import linkedin from "./socialLink/linkedin.png";
 import twitch from "./socialLink/twitch.png";
@@ -197,12 +198,13 @@ export const socialIcons = [
     linkID: 4,
   },
 
-  // {
-  //     name:'Reddit',
-  //     title:'Reddit',
-  //     img:reddit,
-  //     placeholder:'reddit profile Url*'
-  // },
+  {
+    name: "Threads",
+    title: "Threads",
+    img: threads,
+    placeholder: "Threads user name*",
+    linkID: 58,
+  },
   {
     name: "Discord",
     title: "Discord",
@@ -367,10 +369,10 @@ export const more = [
     linkID: 41,
   },
   {
-    name: "Amazone",
-    title: "Amazone",
+    name: "Amazon",
+    title: "Amazon",
     img: amazone,
-    placeholder: "Amazone link*",
+    placeholder: "Amazon link*",
     linkID: 41,
   },
 ];
@@ -512,5 +514,7 @@ export const returnIcons = (linkID) => {
     return appstore;
   } else if (linkID === 41) {
     return amazone;
+  } else if (linkID === 58) {
+    return threads;
   }
 };

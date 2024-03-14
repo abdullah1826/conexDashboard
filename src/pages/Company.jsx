@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { MdArrowDropDown } from "react-icons/md";
 import { Tab, Tabs } from "@mui/material";
@@ -7,6 +7,43 @@ import AccountLinks from "../components/SettingsComponents/AccountLinks";
 import Organization from "../components/SettingsComponents/Organization";
 import CompanyProfile from "../components/SettingsComponents/CompanyProfile";
 import NavbarFooter from "./NavbarFooter";
+import { getSingleChild } from "../Services";
+import { useDispatch } from "react-redux";
+import {
+  setAddress,
+  setBio,
+  setColor,
+  setCompanyVisible,
+  setCoverUrl,
+  setDesignation,
+  setDirect,
+  setDirectMode,
+  setEmail,
+  setEmailVisible,
+  setFormHeader,
+  setJobVisible,
+  setLead,
+  setLinks,
+  setLogoUrl,
+  setName,
+  setNameVisible,
+  setNoteVisible,
+  setPhone,
+  setPhoneVisible,
+  setProfilePictureLock,
+  setProfileurl,
+  setQrColor,
+  setQrLogo,
+  setTextColor,
+  setbioLock,
+  setcoverLock,
+  setlinkBgColor,
+  setlocationLock,
+  setlogoLock,
+  setnameLock,
+  setphoneLock,
+} from "../redux/profileInfoSlice";
+import { CiLock } from "react-icons/ci";
 
 const Company = () => {
   let [value, setValue] = useState(0);
@@ -14,31 +51,95 @@ const Company = () => {
   let handleTabs = (e, val) => {
     setValue(val);
   };
-  var screen=window.innerWidth
+
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSingleChild(companyId, setCompanyProfile);
+  }, [companyId]);
+
+  let dispatch = useDispatch();
+
+  useEffect(() => {
+    if (companyProfile[companyId]) {
+      dispatch(setName(companyProfile[companyId]?.name));
+      dispatch(setEmail(companyProfile[companyId]?.email));
+      dispatch(setColor(companyProfile[companyId]?.color));
+      dispatch(setTextColor(companyProfile[companyId]?.textColor));
+      dispatch(setPhone(companyProfile[companyId]?.phone));
+      dispatch(setCoverUrl(companyProfile[companyId]?.coverUrl));
+      dispatch(setProfileurl(companyProfile[companyId]?.profileUrl));
+      dispatch(setLogoUrl(companyProfile[companyId]?.logoUrl));
+      dispatch(setDesignation(companyProfile[companyId]?.title));
+      dispatch(setAddress(companyProfile[companyId]?.address));
+      dispatch(setBio(companyProfile[companyId]?.bio));
+      if (typeof companyProfile[companyId]?.links === "object") {
+        dispatch(setLinks(Object.values(companyProfile[companyId]?.links)));
+      }
+
+      dispatch(
+        setDirect({
+          name: companyProfile[companyId]?.direct?.name,
+          value: companyProfile[companyId]?.direct?.value,
+          linkID: companyProfile[companyId]?.direct?.linkID,
+        })
+      );
+      dispatch(setDirectMode(companyProfile[companyId]?.directMode));
+      dispatch(setQrLogo(companyProfile[companyId]?.qrLogoUrl));
+      dispatch(setQrColor(companyProfile[companyId]?.qrColor));
+      dispatch(setLead(companyProfile[companyId]?.leadMode));
+      dispatch(setFormHeader(companyProfile[companyId]?.formHeader));
+      dispatch(setNameVisible(companyProfile[companyId]?.leadForm?.Fname));
+      dispatch(setEmailVisible(companyProfile[companyId]?.leadForm?.email));
+      dispatch(setPhoneVisible(companyProfile[companyId]?.leadForm?.phone));
+      dispatch(setJobVisible(companyProfile[companyId]?.leadForm?.job));
+      dispatch(setCompanyVisible(companyProfile[companyId]?.leadForm?.company));
+      dispatch(
+        setProfilePictureLock(companyProfile[companyId]?.profilePictureLock)
+      );
+      dispatch(setlogoLock(companyProfile[companyId]?.logoLock));
+      dispatch(setcoverLock(companyProfile[companyId]?.coverLock));
+      dispatch(setnameLock(companyProfile[companyId]?.nameLock));
+      dispatch(setphoneLock(companyProfile[companyId]?.phoneLock));
+      dispatch(setbioLock(companyProfile[companyId]?.bioLock));
+      dispatch(setlocationLock(companyProfile[companyId]?.locationLock));
+    }
+    // dispatch(setPoweredVizz(singleProfile?.data?.poweredVizz));
+    // dispatch(setlinkBgColor(companyProfile[companyId]?.linkBgColor));
+    // dispatch(setbtnColor(singleProfile?.data?.saveBtnColor));
+    // dispatch(setShareBtnColor(singleProfile?.data?.shareBtnColor));
+    // dispatch(setlinkColor(singleProfile?.data?.linkColor));
+  }, [companyProfile?.[companyId]]);
+
+  console.log(companyProfile);
+
+  var screen = window.innerWidth;
   return (
-    <div className="w-[100%] flex  bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative" style={screen <= 450 ? {  justifyContent:'center' }:null}>
-    {screen>=450 ? <Sidebar />:null}
+    <div
+      className="w-[100%] flex  bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative"
+      style={screen <= 450 ? { justifyContent: "center" } : null}
+    >
+      {screen >= 450 ? <Sidebar /> : null}
       <div className="sm:w-[80%] w-[90%] flex flex-col items-center overflow-y-scroll overflow-x-hidden">
         <div className="sm:w-[90%] w-[100%] ">
           <div className="w-[100%] flex justify-between h-[50px]  mt-[30px]">
             <div className="sm:w-[15%] w-[35%] h-[100%] flex items-center">
               <p className="font-[600] sm:text-[20px] text-[16px]">Company </p>
             </div>
-            <div className="w-[80%] h-[100%] flex justify-end" style={screen <= 450 ? {  width:'70%' } : null}>
-              <div
-                // component="nav"
-                // aria-label="Device settings"
-                // id="lang-button"
-                // aria-haspopup="listbox"
-                // aria-controls="lang-menu"
-                // aria-expanded={openMenu ? "true" : undefined}
-                // onClick={handleClickListItem}
-                className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer mr-4"
-              >
-                {/* <img src={uk} alt="" className="h-[30px] w-[30px]" /> */}
-                <p className="font-[400] text-[12px]">January,2024</p>
-                {/* <MdArrowDropDown className="text-2xl" /> */}
-              </div>
+            <div
+              className="w-[80%] h-[100%] flex justify-end"
+              style={screen <= 450 ? { width: "70%" } : null}
+            >
               {/* <Menu
                 id="lang-menu"
                 anchorEl={anchorEl}
@@ -85,8 +186,8 @@ const Company = () => {
                 </MenuItem>
               </Menu> */}
               <div className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer">
-                <p className="font-[500] sm:text-[15px] text-[12px] ">Select User</p>
-                <MdArrowDropDown className="text-2xl ml-1" />
+                <p className="font-[500] sm:text-[15px] text-[12px] ">Help ?</p>
+                {/* <MdArrowDropDown className="text-2xl ml-1" /> */}
               </div>
             </div>
           </div>
@@ -103,9 +204,10 @@ const Company = () => {
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
-                
-                ...(screen <= 450 ? { width: '50px',
-                whiteSpace: 'nowrap',fontSize: "8px",} : {}),
+
+                ...(screen <= 450
+                  ? { width: "50px", whiteSpace: "nowrap", fontSize: "8px" }
+                  : {}),
               }}
             />
             {/* <div className="w-[10px]"></div> */}
@@ -114,9 +216,10 @@ const Company = () => {
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
-                
-                ...(screen <= 450 ? { width: '50px',
-                whiteSpace: 'nowrap',fontSize: "8px",} : {}),
+
+                ...(screen <= 450
+                  ? { width: "50px", whiteSpace: "nowrap", fontSize: "8px" }
+                  : {}),
               }}
             />
             {/* <div className="w-[10px]"></div> */}
@@ -125,9 +228,10 @@ const Company = () => {
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
-                
-                ...(screen <= 450 ? { width: '50px',
-                whiteSpace: 'nowrap',fontSize: "8px",} : {}),
+
+                ...(screen <= 450
+                  ? { width: "50px", whiteSpace: "nowrap", fontSize: "8px" }
+                  : {}),
               }}
             />
             {/* <div className="w-[10px]"></div> */}
@@ -136,28 +240,31 @@ const Company = () => {
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
-                
-                ...(screen <= 450 ? { width: '50px',
-                whiteSpace: 'nowrap',fontSize: "8px",} : {}),
+
+                ...(screen <= 450
+                  ? { width: "50px", whiteSpace: "nowrap", fontSize: "8px" }
+                  : {}),
               }}
             />
           </Tabs>
           <Tabpanel value={value} index={0}>
-            <AccountSettings />
+            {companyProfile && (
+              <AccountSettings companyProfile={companyProfile[companyId]} />
+            )}
           </Tabpanel>
 
           <Tabpanel value={value} index={1}>
-            <AccountLinks />
+            <AccountLinks uid={companyId} />
           </Tabpanel>
           <Tabpanel value={value} index={2}>
-            <Organization />
+            <Organization uid={companyId} />
           </Tabpanel>
           <Tabpanel value={value} index={3}>
-            <CompanyProfile />
+            <CompanyProfile uid={companyId} />
           </Tabpanel>
         </div>
       </div>
-      {screen <= 450 ? <NavbarFooter/> : null}
+      {screen <= 450 ? <NavbarFooter /> : null}
     </div>
   );
 };

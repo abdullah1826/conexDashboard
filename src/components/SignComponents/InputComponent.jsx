@@ -5,6 +5,8 @@ import img1 from "../../imgs/signup.png";
 import img2 from "../../imgs/signin.png";
 import img3 from "../../imgs/forget.png";
 import { useNavigate } from "react-router-dom";
+import { PiEye } from "react-icons/pi";
+import { PiEyeClosed } from "react-icons/pi";
 
 const InputComponent = ({ type, handleSubmit }) => {
   let navigate = useNavigate();
@@ -17,6 +19,8 @@ const InputComponent = ({ type, handleSubmit }) => {
     password: "",
     userName: "",
   });
+
+  let [showPass, setShowPass] = useState(false);
 
   let imgSrc;
 
@@ -35,7 +39,7 @@ const InputComponent = ({ type, handleSubmit }) => {
         <img src={logo} alt="" className="w-[189px] h-[46px]" />
         <p className="font-[400] text-[12px]">
           {}
-          Get started with #1 digital bussiness card platform
+          Connect Smarter and Grow Faster
         </p>
         {imgSrc && (
           <img
@@ -62,15 +66,26 @@ const InputComponent = ({ type, handleSubmit }) => {
           onChange={(e) => setData({ ...data, email: e.target.value })}
           value={data?.email}
         />
-
-        <input
-          type="text"
-          className="sm:w-[83%] w-[90%] sm:h-[60px] h-[50px] rounded-[46px]  bg-[#F7F7F7] outline-none pl-[15px] mt-5"
-          placeholder="Password"
-          onChange={(e) => setData({ ...data, password: e.target.value })}
-          value={data?.password}
-        />
-
+        <div className="sm:w-[83%] w-[90%] sm:h-[60px] h-[50px] flex justify-center items-center relative mt-5">
+          <input
+            type={showPass ? "text" : "password"}
+            className="h-[100%] w-[100%] rounded-[46px]  bg-[#F7F7F7] outline-none pl-[15px] "
+            placeholder="Password"
+            onChange={(e) => setData({ ...data, password: e.target.value })}
+            value={data?.password}
+          />
+          {showPass ? (
+            <PiEye
+              className="absolute right-4 text-[22px] cursor-pointer"
+              onClick={() => setShowPass(false)}
+            />
+          ) : (
+            <PiEyeClosed
+              className="absolute right-4 text-[22px] cursor-pointer"
+              onClick={() => setShowPass(true)}
+            />
+          )}
+        </div>
         {type === "signin" ? (
           <div
             className="sm:w-[75%] w-[80%] flex justify-end"
@@ -100,13 +115,16 @@ const InputComponent = ({ type, handleSubmit }) => {
                 className="font-[600] text-[14px] cursor-pointer"
                 onClick={() => navigate("/signup")}
               >
-                Signup
+                Sign Up
               </span>
             </>
           ) : type === "signup" ? (
             <>
               Already have an account?
-              <span className="font-[600] text-[14px] cursor-pointer">
+              <span
+                className="font-[600] text-[14px] cursor-pointer"
+                onClick={() => navigate("/signin")}
+              >
                 Login
               </span>
             </>

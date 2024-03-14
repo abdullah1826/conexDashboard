@@ -26,7 +26,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 // import { setLinkDescription, setLinkHighlight } from "../Redux/UserinfoSlice";
 import { useMediaQuery } from "react-responsive";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { addNewLink, updateNewLink } from "../../Services";
+import { addNewLink, renoveLink, updateNewLink } from "../../Services";
+import Mobile from "../Mobile";
 
 // import { removeLink } from "../Redux/Singlelinkslice";
 
@@ -61,7 +62,10 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
   //   shareable: true,
   // });
 
-  let [linkValue, setLinkValue] = useState("");
+  let [linkValue, setLinkValue] = useState({
+    value: "",
+    shareable: true,
+  });
 
   let handleLinkEditModal = () => {
     setLinkEdit(!linkEdit);
@@ -73,7 +77,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: linkEdit ? 900 : 1000,
-    height: linkEdit ? 500 : 600,
+    height: linkEdit ? 550 : 600,
     bgcolor: "white",
     borderRadius: "18px",
     // overflow: 'auto',
@@ -107,6 +111,28 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
         return elm?.linkID === linkid;
       });
       return ifAdded;
+    }
+  };
+
+  let addAlreadyExist = (link, index) => {
+    setLinkValue({ value: "", shareable: true });
+    let addedLink = links.find((elm) => {
+      return elm?.linkID === link?.linkID;
+    });
+    if (addedLink) {
+      setLinkValue({
+        value: addedLink?.value,
+        shareable: addedLink?.shareable,
+        index,
+      });
+      setLinkInfo({
+        name: link?.name,
+        img: link?.img,
+        linkID: link?.linkID,
+        placeholder: link?.placeholder,
+      });
+    } else {
+      setLinkInfo(link);
     }
   };
 
@@ -187,32 +213,57 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                     <input
                       type="text"
                       className="mt-2 outline-none border-none w-[90%]  h-[50px] bg-[#f7f7f7] rounded-lg p-5 placeholder:text-sm"
-                      onChange={(e) => setLinkValue(e.target.value)}
-                      value={linkValue}
+                      onChange={(e) =>
+                        setLinkValue({ ...linkValue, value: e.target.value })
+                      }
+                      value={linkValue?.value}
                     />
                     <div className="w-[90%] flex justify-center items-center mt-5">
                       <div className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center mr-1 bg-[#f0f0f0]">
                         Cancel
                       </div>
                       {checkAdded(linkInfo?.linkID) ? (
-                        <div
-                          className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-1 bg-black text-white"
-                          onClick={() =>
-                            updateNewLink(
-                              {
-                                image: "",
-                                linkID: linkInfo?.linkID,
-                                name: linkInfo?.name,
-                                value: linkValue,
-                                shareable: true,
-                              },
-                              uid,
-                              links
-                            )
-                          }
-                        >
-                          Update
-                        </div>
+                        <>
+                          <div
+                            className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-1 bg-black text-white"
+                            onClick={() =>
+                              updateNewLink(
+                                {
+                                  image: "",
+                                  linkID: linkInfo?.linkID,
+                                  name: linkInfo?.name,
+                                  value: linkValue?.value,
+                                  shareable: linkValue?.shareable,
+                                },
+                                uid,
+                                links,
+                                linkValue?.index
+                              )
+                            }
+                          >
+                            Update
+                          </div>
+
+                          <div
+                            className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-2 border border-red-500 text-red-500"
+                            onClick={() =>
+                              renoveLink(
+                                {
+                                  image: "",
+                                  linkID: linkInfo?.linkID,
+                                  name: linkInfo?.name,
+                                  value: linkValue?.value,
+                                  shareable: linkValue?.shareable,
+                                },
+                                uid,
+                                links,
+                                () => setLinkEdit(false)
+                              )
+                            }
+                          >
+                            Delete
+                          </div>
+                        </>
                       ) : (
                         <div
                           className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-1 bg-black text-white"
@@ -222,8 +273,8 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                                 image: "",
                                 linkID: linkInfo?.linkID,
                                 name: linkInfo?.name,
-                                value: linkValue,
-                                shareable: true,
+                                value: linkValue?.value,
+                                shareable: linkValue?.shareable,
                               },
                               uid,
                               links
@@ -233,28 +284,15 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                           Add
                         </div>
                       )}
-                      <div
-                        className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-1 bg-black text-white"
-                        onClick={() =>
-                          addNewLink(
-                            {
-                              image: "",
-                              linkID: linkInfo?.linkID,
-                              name: linkInfo?.name,
-                              value: linkValue,
-                              shareable: true,
-                            },
-                            uid,
-                            links
-                          )
-                        }
-                      >
-                        Add
-                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="w-[34%] h-[100%]"></div>
+                <div className="w-[34%] h-[100%]">
+                  <Mobile
+                    linkInfo={linkInfo}
+                    ifAdded={checkAdded(linkInfo?.linkID)}
+                  />
+                </div>
               </div>
             ) : (
               <>
@@ -266,12 +304,12 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                   <h2 className="font-medium text-[#4F4F4F]">Contact</h2>
                   <div className="grid sm:grid-cols-3 grid-cols-1 gap-x-4 ">
                     {/* flex justify-around flex-wrap */}
-                    {contactIcons.map((elm) => {
+                    {contactIcons.map((elm, i) => {
                       return (
                         <div
                           className=" h-[70px] shadow-sm w-[270px] rounded-xl  bg-[#f7f7f7] hover:bg-white hover:shadow-xl cursor-pointer p-2 flex items-center mt-5  relative"
                           onClick={() => {
-                            handleLinkEditModal(), setLinkInfo(elm);
+                            handleLinkEditModal(), addAlreadyExist(elm, i);
                           }}
                           // onClick={
                           //   checkAdded(elm?.name)

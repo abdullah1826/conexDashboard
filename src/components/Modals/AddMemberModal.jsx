@@ -56,9 +56,10 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
   //   console.log("single", singleTeam);
 
   let addRemoveMember = (id) => {
-    let exist = memberIds.find((elm) => {
+    let exist = memberIds?.some((elm) => {
       return elm === id;
     });
+    console.log(exist);
 
     let updatedIds = memberIds?.filter((elm) => {
       return elm != id;
@@ -137,7 +138,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                             // onClick={() => addRemoveMember(elm?.id)}
                           />
                         ) : (
-                          <Checkbox onClick={() => addRemoveMember(elm?.id)} />
+                          <Checkbox onChange={() => addRemoveMember(elm?.id)} />
                         )}
                       </div>
                     </div>
@@ -147,15 +148,17 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
             </div>
 
             <div className="w-[100%] h-[45px] flex justify-evenly items-center">
-              {/* <button
-                  className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                  onClick={() => callBack()}
-                >
-                  Cancel
-                </button> */}
               <button
                 className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                onClick={() => addTeamMember(singleTeam, memberIds)}
+                onClick={() => handleAddModal()}
+              >
+                Cancel
+              </button>
+              <button
+                className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
+                onClick={() =>
+                  addTeamMember(singleTeam, memberIds, handleAddModal)
+                }
               >
                 Add
               </button>
