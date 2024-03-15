@@ -587,11 +587,11 @@ export const updateNewLink = (linkData, id, allLinks) => {
 export const renoveLink = (linkData, id, allLinks, cb) => {
   // if (linkData?.value) {
   if (allLinks) {
-    let index = allLinks?.findIndex((elm) => {
-      return elm?.linkID === linkData?.linkID;
+    let remainingLinks = allLinks?.filter((elm) => {
+      return elm?.linkID != linkData?.linkID;
     });
 
-    remove(ref(db, `Users/${id}/links/${index}`)).then(() => {
+    set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
       toast.success("Link deleted successfuly");
       cb();
     });
@@ -697,27 +697,31 @@ export const updataCompanyAbout = async (id, data) => {
     bioLock,
     bio,
   }).then(() => {
-    const starCountRef = query(
-      ref(db, "/Users"),
-      orderByChild("parentID"),
-      equalTo(id)
-    );
-    onValue(starCountRef, async (snapshot) => {
-      const data = await snapshot.val();
-      if (data) {
-        Object.keys(data).map((elm) => {
-          update(ref(db, `Users/${elm}`), {
-            nameLock,
-            phoneLock,
-            locationLock,
-            bioLock,
-          });
-        });
-      }
-      console.log(data);
-      MediaKeyStatusMap;
-    });
+    // const starCountRef = query(
+    //   ref(db, "/Users"),
+    //   orderByChild("parentID"),
+    //   equalTo(id)
+    // );
+    // onValue(starCountRef, async (snapshot) => {
+    //   const thedata = await snapshot.val();
+    //   if (thedata) {
+    //     // let allChilds = Object.keys(thedata);
+    //     Object.keys(thedata)?.forEach(async (elm) => {
+    //       await update(ref(db, `Users/${elm}`), {
+    //         nameLock,
+    //         phoneLock,
+    //         locationLock,
+    //         bioLock,
+    //       });
+    //     });
+    //   }
 
+    //   toast.success("Information updated sucessfuly");
+
+    //   // console.log(data);
+    //   // MediaKeyStatusMap;
+    // });
+    // updateBulkData(id, nameLock, phoneLock, locationLock, bioLock);
     toast.success("Information updated sucessfuly");
   });
 
@@ -748,26 +752,6 @@ export const updateCompanyProfile = async (id, data) => {
     logoLock,
     profilePictureLock,
   }).then(() => {
-    const starCountRef = query(
-      ref(db, "/Users"),
-      orderByChild("parentID"),
-      equalTo(id)
-    );
-    onValue(starCountRef, async (snapshot) => {
-      const data = await snapshot.val();
-      if (data) {
-        Object.keys(data)?.map((elm) => {
-          update(ref(db, `Users/${elm}`), {
-            coverLock,
-            logoLock,
-            profilePictureLock,
-          });
-        });
-      }
-      console.log(data);
-      MediaKeyStatusMap;
-    });
-
     if (returnIfHttps(profileUrl) === false) {
       let name = new Date().getTime() + id;
       const storageRef = sRef(storage, name);
@@ -903,6 +887,8 @@ export const removeTeamMember = (userId, teamId, allMembers, cb) => {
   // }
 };
 
+// ----------------------------------------------------Split String---------------------------------------------
+
 export const splitString = (str, num) => {
   if (str) {
     if (str?.length > num) {
@@ -912,4 +898,49 @@ export const splitString = (str, num) => {
       return str;
     }
   }
+};
+
+// ----------------------------------------------------Split String---------------------------------------------
+
+export const updateLinkShareAble = async (id, linkID, shareable, link) => {
+  // shareable,allLinks
+  // Find the index of the object with the given ID
+  const objectIndex = link?.findIndex((obj) => obj.linkID === linkID);
+
+  // Check if the object exists
+  if (objectIndex !== -1) {
+    // Create a copy of the object
+    const updatedObject = { ...link[objectIndex] };
+
+    // Update the value of the desired property
+    updatedObject.shareable = !shareable;
+
+    // Create a new array with the updated object
+    const updatedArray = [...link];
+    updatedArray[objectIndex] = updatedObject;
+    set(ref(db, `Users/${id}/links/`), [...updatedArray]);
+  }
+
+  // const starCountRef = query(
+  //   ref(db, `/Users/${id}/links`),
+  //   orderByChild("linkID"),
+  //   equalTo(linkID)
+  // );
+  // onValue(starCountRef, async (snapshot) => {
+  //   const data = await snapshot.val();
+  //   // cb(Object.values(data));
+  //   console.log(data);
+  //   console.log(Object.keys(data)[0]);
+  //   if (data) {
+  //     let index = Object.keys(data)[0];
+
+  //     update(ref(db, `Users/${id}/links/${index}`), {
+  //       shareable: !shareable,
+  //     }).then(() => {
+  //       // toast.success("Link deleted successfuly");
+  //       // cb();
+  //     });
+  //   }
+  //   MediaKeyStatusMap;
+  // });
 };

@@ -14,14 +14,20 @@ import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { changeProfileStatus } from "../Services";
 
-const MemberCard = ({ profile }) => {
+const MemberCard = ({ profile, companyProfile }) => {
   let navigate = useNavigate();
   var screen = window.innerWidth;
   return (
     <div className="sm:w-[265px] w-[100%] sm:h-[290px] h-[300px]  rounded-3xl mt-[20px] bg-[white] ">
       <div className="rounded-t-3xl h-[154px]  w-[100%] relative ">
         <img
-          src={profile?.logoUrl ? profile?.logoUrl : lgoplchldr}
+          src={
+            profile?.logoUrl
+              ? profile?.logoUrl
+              : companyProfile?.logoUrl
+              ? companyProfile?.logoUrl
+              : lgoplchldr
+          }
           alt="prfl"
           className="h-[42px] w-[42px] rounded-full absolute bottom-[10px] left-[18px]  object-cover "
           style={{ zIndex: "1" }}
@@ -29,14 +35,26 @@ const MemberCard = ({ profile }) => {
         <div className="h-[85px] w-[85px] absolute bottom-[0px] left-[90px]">
           <div className="h-[85px] w-[85px] relative">
             <img
-              src={profile?.profileUrl ? profile?.profileUrl : prsnPlshldr}
+              src={
+                profile?.profileUrl
+                  ? profile?.profileUrl
+                  : companyProfile?.profileUrl
+                  ? companyProfile?.profileUrl
+                  : prsnPlshldr
+              }
               alt="prfl"
               className="h-[85px] w-[85px] rounded-full object-cover"
             />
           </div>
         </div>
         <img
-          src={profile?.coverUrl ? profile?.coverUrl : bgplhldr}
+          src={
+            profile?.coverUrl
+              ? profile?.coverUrl
+              : companyProfile?.coverUrl
+              ? companyProfile?.coverUrl
+              : bgplhldr
+          }
           alt="bg"
           className="h-[124px] w-[100%] object-cover rounded-t-3xl"
         />
@@ -53,7 +71,7 @@ const MemberCard = ({ profile }) => {
                   className="font-[500] sm:text-[9px] text-[11px] ml-[4px] text-[#3D3C3C]"
                   style={screen <= 450 ? { marginTop: "-1px" } : null}
                 >
-                  {profile?.title}
+                  {profile?.job}
                 </p>
               </div>
               <div className="flex mt-[5px]">

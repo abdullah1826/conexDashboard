@@ -106,8 +106,8 @@ const SubTeams = () => {
           deleteModal={deleteModal}
           handledeleteModal={handledeleteModal}
           text="Are you sure to delete this Team?"
-          func={deleteCompany}
-          id={teamId}
+          func={() => deleteCompany(teamId)}
+          // id={teamId}
         />
         <div className="w-[90%] ">
           <div className="w-[100%] flex justify-between h-[50px]  mt-[30px]">
@@ -324,12 +324,12 @@ const SubTeams = () => {
             })}
           </div>
         </div>
-        <ToastContainer
+        {/* <ToastContainer
           position="bottom-left"
           autoClose={1000}
           theme="colored"
           hideProgressBar
-        />
+        /> */}
       </div>
       <br />
       <br />

@@ -160,6 +160,33 @@ const EditMember = () => {
     // dispatch(setlinkBgColor(singleProfile?.data?.linkBgColor));
   }, [singleProfile[uid]]);
 
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSingleChild(companyId, setCompanyProfile);
+  }, [companyId]);
+
+  useEffect(() => {
+    dispatch(
+      setProfilePictureLock(companyProfile?.[companyId]?.profilePictureLock)
+    );
+    dispatch(setlogoLock(companyProfile?.[companyId]?.logoLock));
+    dispatch(setcoverLock(companyProfile?.[companyId]?.coverLock));
+    dispatch(setnameLock(companyProfile?.[companyId]?.nameLock));
+    dispatch(setphoneLock(companyProfile?.[companyId]?.phoneLock));
+    dispatch(setbioLock(companyProfile?.[companyId]?.bioLock));
+  }, [companyProfile?.[companyId]]);
+
   let handleCancelQr = () => {
     dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
     dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import bgplhldr from "../imgs/bgplhldr.png";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { useSelector } from "react-redux";
 import { returnIcons } from "../assets/ReturnSocialIcons";
+import { getSingleChild } from "../Services";
 
 const Mobile = ({ linkInfo, ifAdded }) => {
   const name = useSelector((state) => state.profileInfoSlice.name);
@@ -72,6 +73,23 @@ const Mobile = ({ linkInfo, ifAdded }) => {
   );
   const logoLock = useSelector((state) => state.profileInfoSlice.logoLock);
   const coverLock = useSelector((state) => state.profileInfoSlice.coverLock);
+  console.log(locationLock);
+
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSingleChild(companyId, setCompanyProfile);
+  }, [companyId]);
 
   return (
     <div
@@ -132,9 +150,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         </div>
       )}
       <div className="w-[100%] h-[150px] rounded-t-[35px] relative">
-        {logoLock ? (
+        {!logoLock ? (
           <img
-            src={logo ? logo : lgoplchldr}
+            src={
+              logo
+                ? logo
+                : companyProfile?.[companyId]?.logoUrl
+                ? companyProfile?.[companyId]?.logoUrl
+                : lgoplchldr
+            }
             alt=""
             className="h-[45px] w-[45px] rounded-full absolute bottom-[-20px] left-3"
           />
@@ -149,7 +173,13 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         <div className="w-[100%] flex justify-center absolute bottom-[-30px]">
           {!profilePictureLock ? (
             <img
-              src={profile ? profile : prsnPlshldr}
+              src={
+                profile
+                  ? profile
+                  : companyProfile?.[companyId]?.profileUrl
+                  ? companyProfile?.[companyId]?.profileUrl
+                  : prsnPlshldr
+              }
               alt=""
               className="h-[82px] w-[82px] rounded-full"
             />
@@ -163,7 +193,13 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         </div>
         {!coverLock ? (
           <img
-            src={cover ? cover : bgplhldr}
+            src={
+              cover
+                ? cover
+                : companyProfile?.[companyId]?.coverUrl
+                ? companyProfile?.[companyId]?.coverUrl
+                : bgplhldr
+            }
             alt=""
             className="w-[100%] h-[150px] rounded-t-[35px] object-cover"
           />
@@ -207,7 +243,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
           </p>
         )}
 
-        {!locationLock && (
+        {locationLock && (
           <p
             className=" font-[400] text-[11px] w-[90%] text-center"
             style={{ color: textColor }}

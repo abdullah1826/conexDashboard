@@ -4,8 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Switch } from "@mui/material";
 import {
+  setProfilePictureLock,
   setbioLock,
+  setcoverLock,
   setlocationLock,
+  setlogoLock,
   setnameLock,
   setphoneLock,
 } from "../../redux/profileInfoSlice";
@@ -30,15 +33,32 @@ const AccountSettings = ({ companyProfile }) => {
   }, [companyProfile]);
   console.log(companyProfile);
 
+  const resetLockValues = () => {
+    dispatch(setProfilePictureLock(companyProfile?.profilePictureLock));
+    dispatch(setlogoLock(companyProfile?.logoLock));
+    dispatch(setcoverLock(companyProfile?.coverLock));
+    dispatch(setnameLock(companyProfile?.nameLock));
+    dispatch(setphoneLock(companyProfile?.phoneLock));
+    dispatch(setbioLock(companyProfile?.bioLock));
+    dispatch(setlocationLock(companyProfile?.locationLock));
+  };
+
   let dispatch = useDispatch();
   const nameLock = useSelector((state) => state.profileInfoSlice.nameLock);
   const phoneLock = useSelector((state) => state.profileInfoSlice.phoneLock);
   const locationLock = useSelector(
     (state) => state.profileInfoSlice.locationLock
   );
-
-  console.log(phoneLock);
   const bioLock = useSelector((state) => state.profileInfoSlice.bioLock);
+
+  console.log(
+    "name lock: ",
+    nameLock,
+    "phone lock: ",
+    phoneLock,
+    "location lock: ",
+    locationLock
+  );
 
   return (
     <div className="h-[300px] sm:w-[600px] mt-7">
@@ -137,6 +157,7 @@ const AccountSettings = ({ companyProfile }) => {
                 phoneLock,
                 locationLock,
                 bioLock,
+                resetLockValues,
               })
             }
           >

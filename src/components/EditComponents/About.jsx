@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { FormControlLabel, Switch } from "@mui/material";
 import { MdColorize, MdOutlineCancel } from "react-icons/md";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiImage } from "react-icons/bi";
 import { PiUserRectangleFill } from "react-icons/pi";
 import { IoImageOutline } from "react-icons/io5";
@@ -28,6 +28,7 @@ import {
 } from "../../redux/profileInfoSlice.js";
 import Cropper from "../Cropper.jsx";
 import {
+  getSingleChild,
   handleChangeDirect,
   updataAbout,
   updateLeadMode,
@@ -252,6 +253,22 @@ const About = ({ uid }) => {
   let handleModal = () => {
     setModal(!modal);
   };
+
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSingleChild(companyId, setCompanyProfile);
+  }, [companyId]);
 
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
@@ -668,7 +685,7 @@ const About = ({ uid }) => {
               Logo {"\u00A0"}
               <RiErrorWarningLine />
             </span>
-            {logo ? (
+            {logo || companyProfile?.[companyId]?.logoUrl ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
@@ -676,7 +693,7 @@ const About = ({ uid }) => {
                   onClick={() => dispatch(setLogoUrl(""))}
                 />
                 <img
-                  src={logo}
+                  src={logo ? logo : companyProfile?.[companyId]?.logoUrl}
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-full"
                 />
@@ -710,7 +727,7 @@ const About = ({ uid }) => {
               <RiErrorWarningLine />
             </span>
 
-            {profile ? (
+            {profile || companyProfile?.[companyId]?.profileUrl ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
@@ -718,7 +735,9 @@ const About = ({ uid }) => {
                   onClick={() => dispatch(setProfileurl(""))}
                 />
                 <img
-                  src={profile}
+                  src={
+                    profile ? profile : companyProfile?.[companyId]?.profileUrl
+                  }
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-full"
                 />
@@ -751,7 +770,7 @@ const About = ({ uid }) => {
               Cover Picture {"\u00A0"}
               <RiErrorWarningLine />
             </span>
-            {cover ? (
+            {cover || companyProfile?.[companyId]?.coverUrl ? (
               <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
@@ -759,7 +778,7 @@ const About = ({ uid }) => {
                   onClick={() => dispatch(setCoverUrl(""))}
                 />
                 <img
-                  src={cover}
+                  src={cover ? cover : companyProfile?.[companyId]?.coverUrl}
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-[36px]"
                 />

@@ -18,7 +18,7 @@ import { IoMdAdd } from "react-icons/io";
 
 import NavbarFooter from "./NavbarFooter";
 import CreateNewCard from "../components/Modals/CreateNewCard";
-import { getAllChilds } from "../Services";
+import { getAllChilds, getSingleChild } from "../Services";
 
 const Home = () => {
   let [openMenu, setopenMenu] = useState(false);
@@ -48,6 +48,22 @@ const Home = () => {
   useEffect(() => {
     getAllChilds(getAllProfiles);
   }, []);
+
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSingleChild(companyId, setCompanyProfile);
+  }, [companyId]);
 
   console.log(allProfiles);
   return (
@@ -196,7 +212,12 @@ const Home = () => {
 
           <div className="w-[100%] flex justify-start gap-x-[6%] flex-wrap sm:mt-[40px] mt-[20px] sm:h-[78%] h-[68%] overflow-y-scroll">
             {allProfiles?.map((profile) => {
-              return <MemberCard profile={profile} />;
+              return (
+                <MemberCard
+                  profile={profile}
+                  companyProfile={companyProfile?.[companyId]}
+                />
+              );
             })}
             {/* <MemberCard img={prfl} name="Naruto" />
             <MemberCard img={c1} name="Hiruzen Sarutobi" />
