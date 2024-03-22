@@ -58,6 +58,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
+import QrContainer from "../components/EditComponents/QrContainer.jsx";
+import ShareCardModal from "../components/Modals/ShareCardModal.jsx";
 
 const EditMember = () => {
   let navigate = useNavigate();
@@ -191,6 +193,11 @@ const EditMember = () => {
     dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
     dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
   };
+  let [shareModal, setshareModal] = useState(false);
+  let [userId, setuserId] = useState("");
+  let handleShareModal = () => {
+    setshareModal(!shareModal);
+  };
   return (
     <div
       className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh]"
@@ -198,6 +205,11 @@ const EditMember = () => {
     >
       {screen >= 450 ? <Sidebar /> : null}
       <div className="sm:w-[80%] w-[90%] flex justify-center overflow-y-scroll">
+        <ShareCardModal
+          shareModal={shareModal}
+          handleShareModal={handleShareModal}
+          userId={uid}
+        />
         <div className="sm:w-[90%] w-[100%] ">
           <div className="w-[100%] flex justify-between   mt-[30px]  items-center">
             <div className="sm:w-[27%] w-[70%] h-[65px] flex justify-evenly items-center">
@@ -221,6 +233,7 @@ const EditMember = () => {
               <div
                 className="sm:h-[47px] h-[30px] w-[149px] bg-[white] rounded-[36px] cursor-pointer flex items-center shadow-xl  justify-center"
                 style={screen <= 450 ? { marginTop: "8px" } : null}
+                onClick={() => handleShareModal()}
               >
                 <p className="sm:text-[17px] text-[12px] ">share</p>
                 {"\u00A0"}{" "}
@@ -362,7 +375,7 @@ const EditMember = () => {
               </div>
               {screen >= 450 ? (
                 <div className="w-[30%] h-[100%] border-l">
-                  <MobileContainer />
+                  {route?.isQr ? <QrContainer /> : <MobileContainer />}
                 </div>
               ) : null}
             </div>

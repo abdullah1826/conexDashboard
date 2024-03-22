@@ -56,6 +56,13 @@ const AccountLinks = ({ uid }) => {
     set(ref(db, `Users/${uid}/links/`), [...updatedItems]).then(() => {});
   };
 
+  let updateLinks = () => {
+    if (links?.length < 2) {
+      setLinks([]);
+      setItems([]);
+    }
+  };
+
   return (
     <div className="h-[400px] w-[100%]  mt-7 flex flex-col  relative">
       <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
@@ -70,89 +77,94 @@ const AccountLinks = ({ uid }) => {
             },
             uid,
             links,
-            () => {}
+            updateLinks
           )
         }
-        // id={teamId}
       />
+      <div className="overflow-y-scroll min-h-[80%]">
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          // className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2"
+        >
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="w-[100%]  "
+              >
+                {/* allLinks */}
+                {items?.map((elm, index) => (
+                  <Draggable
+                    key={elm.name}
+                    draggableId={elm.name}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                        // className="w-[30%]"
+                      >
+                        <>
+                          <div className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center mt-4">
+                            <div className="w-[95%] h-[80%] flex justify-between">
+                              <div className="w-[129px] flex items-center ">
+                                <MdDragIndicator className="text-[#E1E1E1] text-xl" />
+                                <div className="w-[30px]">
+                                  <img
+                                    src={returnIcons(elm?.linkID)}
+                                    alt=""
+                                    className="h-[29px]  w-[29px]"
+                                  />
+                                </div>
 
-      <DragDropContext
-        onDragEnd={handleDragEnd}
-        // className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2"
-      >
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="w-[100%]  "
-            >
-              {/* allLinks */}
-              {items?.map((elm, index) => (
-                <Draggable key={elm.name} draggableId={elm.name} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                      // className="w-[30%]"
-                    >
-                      <>
-                        <div className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center mt-4">
-                          <div className="w-[95%] h-[80%] flex justify-between">
-                            <div className="w-[129px] flex items-center ">
-                              <MdDragIndicator className="text-[#E1E1E1] text-xl" />
-                              <div className="w-[30px]">
-                                <img
-                                  src={returnIcons(elm?.linkID)}
-                                  alt=""
-                                  className="h-[29px]  w-[29px]"
-                                />
+                                <p className="font-[600] text-[14px] ml-2">
+                                  {elm?.name}
+                                </p>
                               </div>
-
-                              <p className="font-[600] text-[14px] ml-2">
-                                {elm?.name}
-                              </p>
-                            </div>
-                            <div className="w-[155px] flex items-center justify-around">
-                              <div
-                                className="w-[74px] h-[30px] rounded-[36px] shadow-lg font-[600] text-[8px] flex justify-center items-center cursor-pointer border"
-                                onClick={() => {
-                                  handledeleteModal(), setteamId(elm?.linkID);
-                                }}
-                              >
-                                Remove Link
-                              </div>
-                              {/* <div className="w-[74px] h-[30px] rounded-[36px] shadow-lg bg-black text-white font-[600] text-[8px] flex justify-center items-center cursor-pointer border">
+                              <div className="w-[155px] flex items-center justify-around">
+                                <div
+                                  className="w-[74px] h-[30px] rounded-[36px] shadow-lg font-[600] text-[8px] flex justify-center items-center cursor-pointer border"
+                                  onClick={() => {
+                                    handledeleteModal(), setteamId(elm?.linkID);
+                                  }}
+                                >
+                                  Remove Link
+                                </div>
+                                {/* <div className="w-[74px] h-[30px] rounded-[36px] shadow-lg bg-black text-white font-[600] text-[8px] flex justify-center items-center cursor-pointer border">
                   Open Link
                 </div> */}
-                              <Switch
-                                // size="small"
-                                checked={elm?.shareable}
-                                onChange={() =>
-                                  updateLinkShareAble(
-                                    uid,
-                                    elm?.linkID,
-                                    elm?.shareable,
-                                    links
-                                  )
-                                }
-                                // inputProps={{ 'aria-label': 'controlled' }}
-                                className="ml-1"
-                              />
+                                <Switch
+                                  // size="small"
+                                  checked={elm?.shareable}
+                                  onChange={() =>
+                                    updateLinkShareAble(
+                                      uid,
+                                      elm?.linkID,
+                                      elm?.shareable,
+                                      links
+                                    )
+                                  }
+                                  // inputProps={{ 'aria-label': 'controlled' }}
+                                  className="ml-1"
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                        </>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <br />
+      </div>
       {/* {links?.map((elm) => {
         return (
           <div className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center mt-4">
@@ -195,7 +207,7 @@ const AccountLinks = ({ uid }) => {
       })} */}
 
       <div
-        className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center  absolute bottom-2"
+        className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center  absolute bottom-2 cursor-pointer"
         onClick={() => handleModal()}
       >
         <IoMdAdd className="text-[#878787] " />

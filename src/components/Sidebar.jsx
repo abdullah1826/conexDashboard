@@ -12,6 +12,8 @@ import { FaFilter } from "react-icons/fa6";
 import { SiGoogleanalytics } from "react-icons/si";
 import { BsFillBuildingsFill } from "react-icons/bs";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { handleLogout } from "../Services";
+import DeleteModal from "./Modals/DeleteModal";
 
 const Sidebar = () => {
   let navigate = useNavigate();
@@ -52,8 +54,19 @@ const Sidebar = () => {
 
   let currentPath = window.location.href;
 
+  let [deleteModal, setdeleteModal] = useState(false);
+  let handledeleteModal = () => {
+    setdeleteModal(!deleteModal);
+  };
+
   return (
     <div className="w-[20%] h-[100vh]  flex flex-col sticky shadow-2xl bg-white">
+      <DeleteModal
+        deleteModal={deleteModal}
+        handledeleteModal={handledeleteModal}
+        text="Are you sure to logout ? "
+        func={() => handleLogout(navigate("/signin"))}
+      />
       <div className="h-[94vh]  w-[100%] flex flex-col justify-between items-center">
         <div className="h-[75%]  w-[90%] flex flex-col">
           <div className="h-[15%]  w-[100%] flex items-center justify-center mt-3">
@@ -142,7 +155,7 @@ const Sidebar = () => {
         <div className="h-[10%]  w-[90%] flex flex-col justify-end">
           <div
             className="h-[36px]  w-[95px]  flex items-center pl-[10px] rounded-[34px] cursor-pointer ml-2 border bg-black"
-            // onClick={() => logOut()}
+            onClick={() => handledeleteModal()}
           >
             <RiLogoutCircleLine className="text-white text-lg " />
             <p className="font-[600] text-[12px] text-white ml-2">Logout</p>

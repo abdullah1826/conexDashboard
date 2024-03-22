@@ -5,6 +5,11 @@ import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { useSelector } from "react-redux";
 import { returnIcons } from "../assets/ReturnSocialIcons";
 import { getSingleChild } from "../Services";
+import {
+  setOrgLogo,
+  setOrganizationCover,
+  setOrganizationProfile,
+} from "../redux/profileInfoSlice";
 
 const Mobile = ({ linkInfo, ifAdded }) => {
   const name = useSelector((state) => state.profileInfoSlice.name);
@@ -73,6 +78,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
   );
   const logoLock = useSelector((state) => state.profileInfoSlice.logoLock);
   const coverLock = useSelector((state) => state.profileInfoSlice.coverLock);
+  const organizationProfile = useSelector(
+    (state) => state.profileInfoSlice.organizationProfile
+  );
+  const organizationLogo = useSelector(
+    (state) => state.profileInfoSlice.organizationLogo
+  );
+  const organizationCover = useSelector(
+    (state) => state.profileInfoSlice.organizationCover
+  );
   console.log(locationLock);
 
   let [companyId, setCompanyId] = useState("");
@@ -87,8 +101,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
     }
   }, []);
 
+  let getCompanyData = (data) => {
+    dispatch(setOrganizationCover(data?.[companyId]?.coverUrl));
+    dispatch(setOrgLogo(data?.[companyId]?.logoUrl));
+    dispatch(setOrganizationProfile(data?.[companyId]?.profileUrl));
+    setCompanyProfile(data);
+  };
+
   useEffect(() => {
-    getSingleChild(companyId, setCompanyProfile);
+    getSingleChild(companyId, getCompanyData);
   }, [companyId]);
 
   return (
@@ -152,15 +173,9 @@ const Mobile = ({ linkInfo, ifAdded }) => {
       <div className="w-[100%] h-[150px] rounded-t-[35px] relative">
         {!logoLock ? (
           <img
-            src={
-              logo
-                ? logo
-                : companyProfile?.[companyId]?.logoUrl
-                ? companyProfile?.[companyId]?.logoUrl
-                : lgoplchldr
-            }
+            src={logo ? logo : organizationLogo ? organizationLogo : lgoplchldr}
             alt=""
-            className="h-[45px] w-[45px] rounded-full absolute bottom-[-20px] left-3"
+            className="h-[45px] w-[45px] rounded-full absolute bottom-[-20px] left-3 object-cover"
           />
         ) : (
           <img
@@ -176,12 +191,12 @@ const Mobile = ({ linkInfo, ifAdded }) => {
               src={
                 profile
                   ? profile
-                  : companyProfile?.[companyId]?.profileUrl
-                  ? companyProfile?.[companyId]?.profileUrl
+                  : organizationProfile
+                  ? organizationProfile
                   : prsnPlshldr
               }
               alt=""
-              className="h-[82px] w-[82px] rounded-full"
+              className="h-[82px] w-[82px] rounded-full object-cover"
             />
           ) : (
             <img
@@ -194,11 +209,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         {!coverLock ? (
           <img
             src={
-              cover
-                ? cover
-                : companyProfile?.[companyId]?.coverUrl
-                ? companyProfile?.[companyId]?.coverUrl
-                : bgplhldr
+              cover ? cover : organizationCover ? organizationCover : bgplhldr
             }
             alt=""
             className="w-[100%] h-[150px] rounded-t-[35px] object-cover"
@@ -243,7 +254,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
           </p>
         )}
 
-        {locationLock && (
+        {!locationLock && (
           <p
             className=" font-[400] text-[11px] w-[90%] text-center"
             style={{ color: textColor }}
@@ -275,7 +286,10 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         <div className="w-[90%] grid grid-cols-4 ml-6 gap-y-3">
           {links?.map((elm) => {
             return (
-              <div className="w-[35px] h-[50px] flex flex-col items-center">
+              <div
+                className="w-[35px] h-[50px] flex flex-col items-center"
+                style={{ display: !elm?.shareable ? "none" : null }}
+              >
                 <img
                   src={returnIcons(elm?.linkID)}
                   alt=""

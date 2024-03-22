@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db, storage } from "./firebase";
@@ -16,8 +17,11 @@ import {
   update,
 } from "firebase/database";
 import { getDownloadURL, uploadString, ref as sRef } from "firebase/storage";
-let cnxId = localStorage.getItem("connexUid");
+let cnxUid = localStorage.getItem("connexUid");
 let conexParent = localStorage.getItem("conexParent");
+
+let cnxId = conexParent ? conexParent : cnxUid;
+
 // ------------------------------------------------Login User-----------------------------------------------
 
 export const handleLogin = (data, navigate) => {
@@ -27,9 +31,36 @@ export const handleLogin = (data, navigate) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        localStorage.setItem("connexUid", user?.uid);
-        navigate("/home");
-        window.location.reload();
+        console.log("user", user);
+        if (user) {
+          const starCountRef = query(
+            ref(db, "/Users"),
+            orderByChild("id"),
+            equalTo(user?.uid)
+          );
+          onValue(starCountRef, async (snapshot) => {
+            const data = await snapshot.val();
+            console.log("data", data);
+            let dataArray = Object.values(data)?.[0];
+            console.log(dataArray);
+            if (dataArray?.isAdmin === true) {
+              localStorage.setItem("connexUid", user?.uid);
+              localStorage.setItem("conexParent", dataArray?.parentID);
+              navigate("/home");
+              window.location.reload();
+            } else {
+              toast.warn("Access Denied!");
+            }
+            // console.log(data);
+            // console.log("testing data");
+            MediaKeyStatusMap;
+            // setmylist(Object.values(data));
+
+            // setfiltered(Object.values(data));
+
+            // updateStarCount(postElement, data);
+          });
+        }
 
         //   const starCountRef = ref(db, `/User/${user?.uid}`);
         //   onValue(starCountRef, async (snapshot) => {
@@ -77,6 +108,28 @@ export const handleLogin = (data, navigate) => {
       });
   } else {
     toast.error("Email and password should not be empty!");
+  }
+};
+
+// ------------------------------------------------Forget Password-----------------------------------------------
+
+export const forgetPassword = (email) => {
+  if (!email) {
+    toast.error("Email field is requirde");
+  } else {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        toast.success(
+          "An email have been sent to you, please verify to change password"
+        );
+        // ..
+      })
+      .catch((error) => {
+        console.log(error.message);
+        if (error.message === "Firebase: Error (auth/user-not-found).") {
+          toast.error("User not found!");
+        }
+      });
   }
 };
 
@@ -150,13 +203,6 @@ export const createNewCard = async (data, callBack) => {
           isAdmin: false,
           qrLogoUrl: "",
           leadMode: false,
-          profilePictureLock: false,
-          logoLock: false,
-          coverLock: false,
-          nameLock: false,
-          phoneLock: false,
-          locationLock: false,
-          bioLock: false,
         }).then(() => {
           toast.success("New user created sucessfuly");
           handleTeamModal();
@@ -189,7 +235,8 @@ export const createNewCard = async (data, callBack) => {
 };
 // ------------------------------------------------Get all child profiles-----------------------------------------------
 
-export const getAllChilds = async (callBackFunc) => {
+export const getAllChilds = async (callBackFunc, setloading) => {
+  setloading(true);
   const starCountRef = query(
     ref(db, "/Users"),
     orderByChild("parentID"),
@@ -199,6 +246,7 @@ export const getAllChilds = async (callBackFunc) => {
     const data = await snapshot.val();
     callBackFunc(data);
     console.log(data);
+    setloading(false);
     console.log("testing data");
     MediaKeyStatusMap;
     // setmylist(Object.values(data));
@@ -211,7 +259,7 @@ export const getAllChilds = async (callBackFunc) => {
 
 // ------------------------------------------------Get single child profile-----------------------------------------------
 
-export const getSingleChild = (id, callBackFunc) => {
+export const getSingleChild = (id, callBackFunc, setloading) => {
   const starCountRef = query(
     ref(db, "/Users"),
     orderByChild("id"),
@@ -234,8 +282,8 @@ export const getSingleChild = (id, callBackFunc) => {
 // ------------------------------------------------Update About Data-----------------------------------------------
 
 let returnIfHttps = (string) => {
-  if (string != "") {
-    if (string.slice(0, 4) === "http") {
+  if (string != "" && string) {
+    if (string?.slice(0, 4) === "http") {
       return true;
     } else {
       return false;
@@ -358,7 +406,9 @@ export const updataAbout = async (id, data) => {
 export const updateQrInfo = async (id, qrColor, logoimg) => {
   // if (qrColor || qrLogo) {
   // toast.success("Information updated successfuly");
-  update(ref(db, `Users/${id}`), { qrColor }).then(() => {
+  console.log("qr testing", logoimg);
+  console.log("qrlogo", logoimg);
+  update(ref(db, `Users/${id}`), { qrColor, qrLogoUrl: logoimg }).then(() => {
     if (returnIfHttps(logoimg) === false) {
       let name = new Date().getTime() + id;
       const storageRef = sRef(storage, name);
@@ -405,7 +455,7 @@ export const createTeam = async (data, callBack) => {
     // toast.success("Information updated successfuly");
     let pushKey = push(ref(db, `Teams/`), {
       teamName: data?.name,
-      companyId: conexParent ? conexParent : cnxId,
+      companyId: cnxId,
     }).key;
 
     update(ref(db, `Teams/${pushKey}`), { teamId: pushKey }).then(() => {
@@ -420,7 +470,10 @@ export const createTeam = async (data, callBack) => {
             getDownloadURL(storageRef)
               .then((URL) => {
                 // console.log(URL)
-                update(ref(db, `Teams/${pushKey}`), { image: URL });
+                update(ref(db, `Teams/${pushKey}`), { image: URL }).then(() => {
+                  toast.success("New team created successfuly");
+                  callBack();
+                });
                 // setlogoimg("");
                 // window.location.reload();
               })
@@ -433,9 +486,10 @@ export const createTeam = async (data, callBack) => {
             console.log(error);
             callBack();
           });
+      } else {
+        toast.success("New team created successfuly");
+        callBack();
       }
-      toast.success("New team created successfuly");
-      callBack();
     });
     // console.log("qrrrrr");
   } else {
@@ -445,15 +499,20 @@ export const createTeam = async (data, callBack) => {
 
 // ------------------------------------------------Get all teams-----------------------------------------------
 
-export const getAllTeams = async (callBackFunc) => {
+export const getAllTeams = async (callBackFunc, setloading) => {
+  setloading(true);
   const starCountRef = query(
     ref(db, "/Teams"),
     orderByChild("companyId"),
-    equalTo(conexParent ? conexParent : cnxId)
+    equalTo(cnxId)
   );
   onValue(starCountRef, async (snapshot) => {
     const data = await snapshot.val();
-    callBackFunc(data);
+    if (data) {
+      callBackFunc(data);
+      setloading(false);
+    }
+
     console.log(data);
     console.log("testing data");
     MediaKeyStatusMap;
@@ -515,15 +574,17 @@ export const getAllTeamMembers = (arr, callBack, members) => {
 
 // ----------------------------------------------------Add link to database---------------------------------------------
 
-export const addNewLink = (linkData, id, allLinks) => {
+export const addNewLink = (linkData, id, allLinks, handleLinkEditModal) => {
   if (linkData?.value) {
     if (allLinks) {
       set(ref(db, `Users/${id}/links/`), [...allLinks, linkData]).then(() => {
         toast.success("Link added successfuly");
+        handleLinkEditModal();
       });
     } else {
       set(ref(db, `Users/${id}/links/`), [linkData]).then(() => {
         toast.success("Link added successfuly");
+        handleLinkEditModal();
       });
     }
   }
@@ -568,7 +629,7 @@ export const addNewLink = (linkData, id, allLinks) => {
 
 // ----------------------------------------------------Update link to database---------------------------------------------
 
-export const updateNewLink = (linkData, id, allLinks) => {
+export const updateNewLink = (linkData, id, allLinks, handleLinkEditModal) => {
   // if (linkData?.value) {
   if (allLinks) {
     let index = allLinks?.findIndex((elm) => {
@@ -576,6 +637,7 @@ export const updateNewLink = (linkData, id, allLinks) => {
     });
 
     update(ref(db, `Users/${id}/links/${index}`), { ...linkData }).then(() => {
+      handleLinkEditModal();
       toast.success("Link updated successfuly");
     });
   }
@@ -592,8 +654,8 @@ export const renoveLink = (linkData, id, allLinks, cb) => {
     });
 
     set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
-      toast.success("Link deleted successfuly");
       cb();
+      toast.success("Link deleted successfuly");
     });
   }
   // }
@@ -637,8 +699,9 @@ export const addtoDirect = (name, linkID, value, id) => {
 };
 
 // ---------------------------------------Handle delete company----------------------------------
-export const deleteCompany = (id) => {
+export const deleteCompany = (id, callBack) => {
   remove(ref(db, `Teams/${id}`)).then(() => {
+    callBack();
     toast.success("Team deleted successfuly");
   });
 };
@@ -943,4 +1006,34 @@ export const updateLinkShareAble = async (id, linkID, shareable, link) => {
   //   }
   //   MediaKeyStatusMap;
   // });
+};
+
+// ------------------------------------------------Get single child profile-----------------------------------------------
+
+export const getSingleChildAnalytics = (id, callBackFunc, setloading) => {
+  setloading(true);
+  const starCountRef = query(
+    ref(db, "/Analytic"),
+    orderByChild("userid"),
+    equalTo(id)
+  );
+  onValue(starCountRef, async (snapshot) => {
+    const data = await snapshot.val();
+    callBackFunc(data);
+    setloading(false);
+    // console.log(data);
+    // console.log("testing data");
+    MediaKeyStatusMap;
+    // setmylist(Object.values(data));
+
+    // setfiltered(Object.values(data));
+
+    // updateStarCount(postElement, data);
+  });
+};
+
+export const handleLogout = (cb) => {
+  localStorage.removeItem("connexUid");
+  localStorage.removeItem("conexParent");
+  cb();
 };

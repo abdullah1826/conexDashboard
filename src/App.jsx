@@ -17,9 +17,13 @@ import "react-toastify/dist/ReactToastify.css";
 // import Users from "./pages/Users";
 
 function App() {
-  let theToken = localStorage.getItem("conexdash");
+  let cnxUid = localStorage.getItem("connexUid");
+  let conexParent = localStorage.getItem("conexParent");
+
+  let theToken = conexParent ? conexParent : cnxUid;
+
   const RequireAuth = ({ children }) => {
-    return theToken ? children : <Navigate to="/Login" />;
+    return theToken ? children : <Navigate to="/signin" />;
   };
 
   const RequireAuthlogin = ({ children }) => {
@@ -42,52 +46,52 @@ function App() {
             <Route
               path="/home"
               element={
-                // <RequireAuth>
-                <Home />
-                // </RequireAuth>
+                <RequireAuth>
+                  <Home />
+                </RequireAuth>
               }
             />
 
             <Route
               path="/subteams"
               element={
-                // <RequireAuth>
-                <SubTeams />
-                // </RequireAuth>
+                <RequireAuth>
+                  <SubTeams />
+                </RequireAuth>
               }
             />
             <Route
               path="/leads"
               element={
-                // <RequireAuth>
-                <Leads />
-                // </RequireAuth>
+                <RequireAuth>
+                  <Leads />
+                </RequireAuth>
               }
             />
             <Route
               path="/analytics"
               element={
-                // <RequireAuth>
-                <Analytics />
-                // </RequireAuth>
+                <RequireAuth>
+                  <Analytics />
+                </RequireAuth>
               }
             />
 
             <Route
               path="/edit/:uid"
               element={
-                // <RequireAuth>
-                <EditMember />
-                // </RequireAuth>
+                <RequireAuth>
+                  <EditMember />
+                </RequireAuth>
               }
             />
 
             <Route
               path="/company"
               element={
-                // <RequireAuth>
-                <Company />
-                // </RequireAuth>
+                <RequireAuth>
+                  <Company />
+                </RequireAuth>
               }
             />
 
@@ -99,23 +103,16 @@ function App() {
                 // </RequireAuth>
               }
             />
-            <Route
+            {/* <Route
               path="/signup"
               element={
-                // <RequireAuth>
+                <RequireAuth>
                 <SignUp />
-                // </RequireAuth>
+                 </RequireAuth>
               }
-            />
+            /> */}
 
-            <Route
-              path="/forgetpassword"
-              element={
-                // <RequireAuth>
-                <ForgetPassword />
-                // </RequireAuth>
-              }
-            />
+            <Route path="/forgetpassword" element={<ForgetPassword />} />
             {/* <Route
               path="/allusers"
               element={

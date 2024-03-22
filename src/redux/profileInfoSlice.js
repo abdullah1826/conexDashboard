@@ -41,6 +41,7 @@ const initialState = {
   linkColor: "white",
   poweredVizz: 1,
   leadMode: 0,
+  organizationProfile: "",
   organizationLogo: "",
   organizationCover: "",
   orgColor: "#DEA527",
@@ -174,6 +175,9 @@ export const profileInfoSlice = createSlice({
     setOrganizationCover: (state, action) => {
       state.organizationCover = action.payload;
     },
+    setOrganizationProfile: (state, action) => {
+      state.organizationProfile = action.payload;
+    },
     setOrgLogo: (state, action) => {
       state.organizationLogo = action.payload;
     },
@@ -258,6 +262,7 @@ export const {
   setOrgSharebtnColor,
   setOrgTextColor,
   setOrganizationCover,
+  setOrganizationProfile,
   setProfilePictureLock,
   setlogoLock,
   setcoverLock,

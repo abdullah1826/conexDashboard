@@ -1,7 +1,7 @@
 import { Box, Modal } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import SelectSearch from "react-select-search";
 import { BiSearchAlt } from "react-icons/bi";
@@ -38,12 +38,14 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
 
   let onCloseAction = () => {
     handleTeamModal();
-    setmembers([]);
+    // setmembers([]);
   };
 
   useEffect(() => {
     if (singleTeam?.members) {
       getAllTeamMembers(singleTeam?.members, setmembers, members);
+    } else {
+      setmembers([]);
     }
   }, [singleTeam?.members]);
   console.log(members);

@@ -23,7 +23,7 @@ import { useSelector } from "react-redux";
 import { CgColorPicker } from "react-icons/cg";
 import { updateCompanyProfile } from "../../Services";
 import MobilePreviewModal from "../Modals/MobilePreviewModal";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CiLock } from "react-icons/ci";
 import { BiLockAlt } from "react-icons/bi";
@@ -155,6 +155,8 @@ const CompanyProfile = ({ uid }) => {
   let handleModal = () => {
     setModal(!modal);
   };
+
+  let shareUrl = `profile.connexcard.com/${uid}`;
 
   return (
     <div className="w-[100%]  mt-7 flex flex-col ml-[30px]">
@@ -492,7 +494,13 @@ const CompanyProfile = ({ uid }) => {
               style={screen <= 450 ? { justifyContent: "center" } : null}
             >
               <div className="w-[93%] flex justify-between">
-                <div className="sm:w-[160px] w-[210px] sm:h-[47px] h-[37px]  shadow-lg rounded-[36px] bg-white flex justify-center items-center cursor-pointer">
+                <div
+                  className="sm:w-[160px] w-[210px] sm:h-[47px] h-[37px]  shadow-lg rounded-[36px] bg-white flex justify-center items-center cursor-pointer"
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareUrl),
+                      toast.success("Copied to clipboard");
+                  }}
+                >
                   <p className="font-[500] text-[16px] mr-1">Copy</p>
                   <IoIosCopy className="ml-1" />
                 </div>

@@ -166,12 +166,12 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
           </div>
         </Box>
       </Modal>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-left"
         autoClose={1000}
         theme="colored"
         hideProgressBar
-      />
+      /> */}
     </div>
   );
 };

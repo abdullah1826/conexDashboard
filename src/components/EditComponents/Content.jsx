@@ -12,12 +12,15 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   addtoDirect,
   handleChangeDirect,
+  renoveLink,
   updateLeadMode,
+  updateLinkShareAble,
 } from "../../Services";
 import { ref, set } from "firebase/database";
 import { db } from "../../firebase";
 import { setLinks } from "../../redux/profileInfoSlice";
 import { useDispatch } from "react-redux";
+import DeleteModal from "../Modals/DeleteModal";
 
 const Content = ({ uid }) => {
   const IOSSwitch = styled((props) => (
@@ -100,30 +103,48 @@ const Content = ({ uid }) => {
     if (!result.destination) {
       return;
     }
-
     const updatedItems = [...items];
     const [movedItem] = updatedItems.splice(result.source.index, 1);
     updatedItems.splice(result.destination.index, 0, movedItem);
     // dispatch(Addlinks(updatedItems))
     setItems(updatedItems);
     dispatch(setLinks(updatedItems));
-    // Convert array of object into object of object
-    // const objectOfObjects = {};
-
-    // updatedItems.forEach((obj,index)  => {
-    //   const { title, ...rest } = obj;
-    //   objectOfObjects[title] = {title,...rest,index};
-    // });
-
-    // updating at firebase
-
     set(ref(db, `Users/${uid}/links/`), [...updatedItems]).then(() => {});
+  };
+
+  let [deleteModal, setdeleteModal] = useState(false);
+  let [teamId, setteamId] = useState("");
+
+  let handledeleteModal = () => {
+    setdeleteModal(!deleteModal);
+  };
+
+  let updateLinks = () => {
+    if (links?.length < 2) {
+      setLinks([]);
+      setItems([]);
+    }
   };
 
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
       <div className="w-[100%] ">
         <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
+        <DeleteModal
+          deleteModal={deleteModal}
+          handledeleteModal={handledeleteModal}
+          text="Are you sure to delete this link?"
+          func={() =>
+            renoveLink(
+              {
+                linkID: teamId,
+              },
+              uid,
+              links,
+              updateLinks
+            )
+          }
+        />
         <div className="w-[100%] flex justify-between">
           <div className="sm:w-[55%] w-[100%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center">
             <div className="flex w-[50%] items-center  justify-around ">
@@ -278,12 +299,31 @@ const Content = ({ uid }) => {
                               </div>
 
                               <div className="w-[100%] flex justify-center items-center mt-4">
-                                <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
+                                <button
+                                  className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]"
+                                  onClick={() => {
+                                    handledeleteModal(), setteamId(elm?.linkID);
+                                  }}
+                                >
                                   Remove Link
                                 </button>
-                                <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
+                                <Switch
+                                  // size="small"
+                                  checked={elm?.shareable}
+                                  onChange={() =>
+                                    updateLinkShareAble(
+                                      uid,
+                                      elm?.linkID,
+                                      elm?.shareable,
+                                      links
+                                    )
+                                  }
+                                  // inputProps={{ 'aria-label': 'controlled' }}
+                                  className="ml-1"
+                                />
+                                {/* <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
                                   Open Link
-                                </button>
+                                </button> */}
                               </div>
                             </div>
                           </>

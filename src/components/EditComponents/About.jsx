@@ -25,6 +25,9 @@ import {
   setlinkColor,
   setlinkBgColor,
   setLogoUrl,
+  setOrganizationCover,
+  setOrgLogo,
+  setOrganizationProfile,
 } from "../../redux/profileInfoSlice.js";
 import Cropper from "../Cropper.jsx";
 import {
@@ -114,13 +117,16 @@ const About = ({ uid }) => {
   const shareBtnColor = useSelector(
     (state) => state.profileInfoSlice.shareBtnColor
   );
-  const linkBgColor = useSelector(
-    (state) => state.profileInfoSlice.linkBgColor
+  const organizationProfile = useSelector(
+    (state) => state.profileInfoSlice.organizationProfile
   );
-  const linkColor = useSelector((state) => state.profileInfoSlice.linkColor);
-  const poweredVizz = useSelector(
-    (state) => state.profileInfoSlice.poweredVizz
+  const organizationLogo = useSelector(
+    (state) => state.profileInfoSlice.organizationLogo
   );
+  const organizationCover = useSelector(
+    (state) => state.profileInfoSlice.organizationCover
+  );
+
   const leadMode = useSelector((state) => state.profileInfoSlice.leadMode);
   const links = useSelector((state) => state.profileInfoSlice.links);
   const directMode = useSelector((state) => state.profileInfoSlice.directMode);
@@ -266,8 +272,15 @@ const About = ({ uid }) => {
     }
   }, []);
 
+  let getCompanyData = (data) => {
+    dispatch(setOrganizationCover(data?.[companyId]?.coverUrl));
+    dispatch(setOrgLogo(data?.[companyId]?.logoUrl));
+    dispatch(setOrganizationProfile(data?.[companyId]?.profileUrl));
+    setCompanyProfile(data);
+  };
+
   useEffect(() => {
-    getSingleChild(companyId, setCompanyProfile);
+    getSingleChild(companyId, getCompanyData);
   }, [companyId]);
 
   return (
@@ -685,15 +698,17 @@ const About = ({ uid }) => {
               Logo {"\u00A0"}
               <RiErrorWarningLine />
             </span>
-            {logo || companyProfile?.[companyId]?.logoUrl ? (
+            {logo || organizationLogo ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
                   className="absolute right-[15px] top-0"
-                  onClick={() => dispatch(setLogoUrl(""))}
+                  onClick={() => {
+                    dispatch(setLogoUrl("")), dispatch(setOrgLogo(""));
+                  }}
                 />
                 <img
-                  src={logo ? logo : companyProfile?.[companyId]?.logoUrl}
+                  src={logo ? logo : organizationLogo}
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-full"
                 />
@@ -727,17 +742,18 @@ const About = ({ uid }) => {
               <RiErrorWarningLine />
             </span>
 
-            {profile || companyProfile?.[companyId]?.profileUrl ? (
+            {profile || organizationProfile ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
                   className="absolute right-[15px] top-0"
-                  onClick={() => dispatch(setProfileurl(""))}
+                  onClick={() => {
+                    dispatch(setProfileurl("")),
+                      dispatch(setOrganizationProfile(""));
+                  }}
                 />
                 <img
-                  src={
-                    profile ? profile : companyProfile?.[companyId]?.profileUrl
-                  }
+                  src={profile ? profile : organizationProfile}
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-full"
                 />
@@ -770,15 +786,18 @@ const About = ({ uid }) => {
               Cover Picture {"\u00A0"}
               <RiErrorWarningLine />
             </span>
-            {cover || companyProfile?.[companyId]?.coverUrl ? (
+            {cover || organizationCover ? (
               <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
                 <MdOutlineCancel
                   style={{ fontSize: "25px" }}
                   className="absolute right-[0px] top-[-3px]"
-                  onClick={() => dispatch(setCoverUrl(""))}
+                  onClick={() => {
+                    dispatch(setCoverUrl("")),
+                      dispatch(setOrganizationCover(""));
+                  }}
                 />
                 <img
-                  src={cover ? cover : companyProfile?.[companyId]?.coverUrl}
+                  src={cover ? cover : organizationCover}
                   alt=""
                   className="h-[100%] w-[100%] object-cover rounded-[36px]"
                 />
@@ -864,7 +883,10 @@ const About = ({ uid }) => {
             </button>
             <button
               className="w-[120px] h-[40px] border rounded-[16px] bg-black text-[12px] font-[600] text-white"
-              onClick={() => updataAbout(uid, data)}
+              onClick={() => {
+                updataAbout(uid, data),
+                  getSingleChild(companyId, getCompanyData);
+              }}
             >
               Update
             </button>

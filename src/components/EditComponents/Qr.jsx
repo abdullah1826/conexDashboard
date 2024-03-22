@@ -16,6 +16,8 @@ const Qr = ({ uid, handleCancelQr }) => {
   const qrColor = useSelector((state) => state.profileInfoSlice.qrColor);
 
   let dispatch = useDispatch();
+
+  console.log(qrLogo);
   // ----------------------------------------------------State setup for profile img crop---------------------------------------------
   let [prflimg, setprflimg] = useState(null);
   let [cropModal, setcropModal] = useState(false);
@@ -50,10 +52,6 @@ const Qr = ({ uid, handleCancelQr }) => {
       });
     }
   };
-
-
-
- 
 
   return (
     <div className="w-[90%] h-[90%] flex flex-col justify-center items-center">
@@ -212,12 +210,6 @@ const Qr = ({ uid, handleCancelQr }) => {
           Update
         </button>
       </div>
-      <ToastContainer
-        position="bottom-left"
-        autoClose={1000}
-        theme="colored"
-        hideProgressBar
-      />
     </div>
   );
 };

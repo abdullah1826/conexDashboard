@@ -44,6 +44,7 @@ import {
   setphoneLock,
 } from "../redux/profileInfoSlice";
 import { CiLock } from "react-icons/ci";
+import HelpModal from "../components/Modals/HelpModal";
 
 const Company = () => {
   let [value, setValue] = useState(0);
@@ -124,11 +125,16 @@ const Company = () => {
   console.log(companyProfile);
 
   var screen = window.innerWidth;
+  let [helpModal, sethelpModal] = useState(false);
+  let handlehelpModal = () => {
+    sethelpModal(!helpModal);
+  };
   return (
     <div
       className="w-[100%] flex  bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative"
       style={screen <= 450 ? { justifyContent: "center" } : null}
     >
+      <HelpModal helpModal={helpModal} handlehelpModal={handlehelpModal} />
       {screen >= 450 ? <Sidebar /> : null}
       <div className="sm:w-[80%] w-[90%] flex flex-col items-center overflow-y-scroll overflow-x-hidden">
         <div className="sm:w-[90%] w-[100%] ">
@@ -185,7 +191,10 @@ const Company = () => {
                   <p className="font-[500] ml-2 text-base">French</p>
                 </MenuItem>
               </Menu> */}
-              <div className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer">
+              <div
+                className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer"
+                onClick={() => handlehelpModal()}
+              >
                 <p className="font-[500] sm:text-[15px] text-[12px] ">Help ?</p>
                 {/* <MdArrowDropDown className="text-2xl ml-1" /> */}
               </div>

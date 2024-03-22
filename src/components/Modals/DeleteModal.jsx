@@ -55,7 +55,7 @@ const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
           </div>
         </Box>
       </Modal>
-      <ToastContainer position="top-center" autoClose={2000} />
+      {/* <ToastContainer position="top-center" autoClose={2000} /> */}
     </div>
   );
 };

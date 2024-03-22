@@ -28,6 +28,7 @@ import { useMediaQuery } from "react-responsive";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { addNewLink, renoveLink, updateNewLink } from "../../Services";
 import Mobile from "../Mobile";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 // import { removeLink } from "../Redux/Singlelinkslice";
 
@@ -155,12 +156,31 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
           <div className="overflow-y-scroll h-[100%] scrollbar-hide">
             <div className="w-[100%] flex justify-between ">
               {linkEdit ? (
-                <div
-                  className="flex items-center cursor-pointer"
-                  onClick={() => handleLinkEditModal()}
-                >
-                  <MdArrowBackIosNew className="text-xl" />
-                  <p className="ml-1 text-lg">Back</p>
+                <div className="w-[60%] flex justify-between items-center">
+                  <div
+                    className="flex items-center cursor-pointer"
+                    onClick={() => handleLinkEditModal()}
+                  >
+                    <MdArrowBackIosNew className="text-xl" />
+                    <p className="ml-1 text-lg">Back</p>
+                  </div>
+                  <FaRegTrashAlt
+                    className="text-2xl hover:text-red-500 cursor-pointer"
+                    onClick={() =>
+                      renoveLink(
+                        {
+                          image: "",
+                          linkID: linkInfo?.linkID,
+                          name: linkInfo?.name,
+                          value: linkValue?.value,
+                          shareable: linkValue?.shareable,
+                        },
+                        uid,
+                        links,
+                        () => setLinkEdit(false)
+                      )
+                    }
+                  />
                 </div>
               ) : (
                 <div></div>
@@ -190,11 +210,11 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
             {linkEdit ? (
               <div className="w-[100%] h-[93%] flex">
                 <div className="w-[64%] h-[100%]">
-                  <div className="mt-10">
+                  <div className="mt-10 w-[90%] flex justify-center">
                     <img
                       src={linkInfo?.img}
                       alt=""
-                      className="h-[70px] w-[70px]"
+                      className="h-[120px] w-[120px]"
                     />
                   </div>
 
@@ -207,7 +227,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                   </div> */}
 
                   <div className="mt-8">
-                    <h2 className="text-sm font-medium">
+                    <h2 className="text-sm font-medium ">
                       {linkInfo?.placeholder}
                     </h2>
                     <input
@@ -237,14 +257,15 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                                 },
                                 uid,
                                 links,
-                                linkValue?.index
+
+                                () => setLinkEdit(false)
                               )
                             }
                           >
                             Update
                           </div>
 
-                          <div
+                          {/* <div
                             className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-2 border border-red-500 text-red-500"
                             onClick={() =>
                               renoveLink(
@@ -262,7 +283,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                             }
                           >
                             Delete
-                          </div>
+                          </div> */}
                         </>
                       ) : (
                         <div
@@ -277,7 +298,8 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                                 shareable: linkValue?.shareable,
                               },
                               uid,
-                              links
+                              links,
+                              handleLinkEditModal
                             )
                           }
                         >
@@ -560,9 +582,14 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
               isDesktopOrLaptop={isDesktopOrLaptop}
             />
           )} */}
+          <ToastContainer
+            position="bottom-left"
+            autoClose={1000}
+            theme="colored"
+            hideProgressBar
+          />
         </Box>
       </Modal>
-      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

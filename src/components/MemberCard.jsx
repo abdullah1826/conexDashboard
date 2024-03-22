@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import bg from "../imgs/bg.jpg";
 // import prfl from "../imgs/nlogo.jpeg";
 import primg from "../imgs/nlogo.jpg";
@@ -13,12 +13,23 @@ import bgplhldr from "../imgs/bgplhldr.png";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { changeProfileStatus } from "../Services";
+import ShareCardModal from "./Modals/ShareCardModal";
 
 const MemberCard = ({ profile, companyProfile }) => {
   let navigate = useNavigate();
   var screen = window.innerWidth;
+  let [shareModal, setshareModal] = useState(false);
+  let [userId, setuserId] = useState("");
+  let handleShareModal = () => {
+    setshareModal(!shareModal);
+  };
   return (
-    <div className="sm:w-[265px] w-[100%] sm:h-[290px] h-[300px]  rounded-3xl mt-[20px] bg-[white] ">
+    <div className="sm:w-[265px] w-[100%] sm:h-[290px] h-[300px]  rounded-3xl mt-[20px] bg-[white]">
+      <ShareCardModal
+        shareModal={shareModal}
+        handleShareModal={handleShareModal}
+        userId={userId}
+      />
       <div className="rounded-t-3xl h-[154px]  w-[100%] relative ">
         <img
           src={
@@ -119,7 +130,12 @@ const MemberCard = ({ profile, companyProfile }) => {
               </div>
 
               <div className="w-[100%] flex justify-between">
-                <div className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center">
+                <div
+                  className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center"
+                  onClick={() => {
+                    handleShareModal(), setuserId(profile?.id);
+                  }}
+                >
                   <FiShare2 className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
                   <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
                     Share
