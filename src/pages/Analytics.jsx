@@ -70,6 +70,7 @@ const Analytics = () => {
   let [selectedUser, setSelectedUser] = useState({});
   let [analytics, setAnalytics] = useState(null);
   let [filter, setfilter] = useState("Today");
+
   useEffect(() => {
     if (conexParent) {
       setCompanyId(conexParent);
@@ -140,6 +141,7 @@ const Analytics = () => {
     }
   };
   let filterData = ["Today", "Past 1 week", "Past 1 Month", "Past 1 Year"];
+  console.log(analytics);
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       {screen >= 450 ? <Sidebar /> : null}

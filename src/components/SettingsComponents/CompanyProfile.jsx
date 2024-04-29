@@ -49,12 +49,16 @@ const CompanyProfile = ({ uid }) => {
     // settheimg(null)
   };
 
+  let [prflKey, setPrflKey] = useState(0);
+  let [logoKey, setLogoKey] = useState(0);
+  let [coverKey, setCoverKey] = useState(0);
+
   let handlePrflImageChange = (event) => {
     // profileImage
     setprflimg("");
     const { files } = event.target;
 
-    // setKey(key + 1);
+    setPrflKey(prflKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -89,7 +93,7 @@ const CompanyProfile = ({ uid }) => {
     setlogoimg("");
     const { files } = event.target;
 
-    // setKey(key + 1);
+    setLogoKey(logoKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -124,7 +128,7 @@ const CompanyProfile = ({ uid }) => {
     setbgimg("");
     const { files } = event.target;
 
-    // setKey(key + 1);
+    setCoverKey(coverKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -143,6 +147,8 @@ const CompanyProfile = ({ uid }) => {
   const logo = useSelector((state) => state.profileInfoSlice.logoUrl);
   const textColor = useSelector((state) => state.profileInfoSlice.textColor);
   const color = useSelector((state) => state.profileInfoSlice.color);
+
+  console.log(textColor);
 
   const profilePictureLock = useSelector(
     (state) => state.profileInfoSlice.profilePictureLock
@@ -236,16 +242,17 @@ const CompanyProfile = ({ uid }) => {
             ) : (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full bg-gray-100 flex justify-center items-center flex-col relative">
                 <label
-                  htmlFor="prflImg"
+                  htmlFor="logoImg"
                   className="absolute right-[15px] top-0"
                 >
                   <GrAddCircle style={{ fontSize: "20px" }} />
 
                   <input
                     type="file"
-                    id="prflImg"
+                    id="logoImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handleLogoImageChange}
+                    key={logoKey}
                   />
                 </label>
                 <BiImage
@@ -296,6 +303,7 @@ const CompanyProfile = ({ uid }) => {
                     id="prflImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handlePrflImageChange}
+                    key={prflKey}
                   />
                 </label>
                 <PiUserRectangleFill
@@ -340,6 +348,7 @@ const CompanyProfile = ({ uid }) => {
                     id="cvrImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handlebgImageChange}
+                    key={coverKey}
                   />
                 </label>
                 <IoImageOutline

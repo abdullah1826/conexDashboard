@@ -17,95 +17,107 @@ import {
   update,
 } from "firebase/database";
 import { getDownloadURL, uploadString, ref as sRef } from "firebase/storage";
+import axios from "axios";
 let cnxUid = localStorage.getItem("connexUid");
 let conexParent = localStorage.getItem("conexParent");
 
 let cnxId = conexParent ? conexParent : cnxUid;
+let baseUrl = "https://apis.connexcard.com/api/";
 
 // ------------------------------------------------Login User-----------------------------------------------
 
 export const handleLogin = (data, navigate) => {
   console.log("testing");
+
   if (data?.email && data?.password) {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("user", user);
-        if (user) {
-          const starCountRef = query(
-            ref(db, "/Users"),
-            orderByChild("id"),
-            equalTo(user?.uid)
-          );
-          onValue(starCountRef, async (snapshot) => {
-            const data = await snapshot.val();
-            console.log("data", data);
-            let dataArray = Object.values(data)?.[0];
-            console.log(dataArray);
-            if (dataArray?.isAdmin === true) {
-              localStorage.setItem("connexUid", user?.uid);
-              localStorage.setItem("conexParent", dataArray?.parentID);
-              navigate("/home");
-              window.location.reload();
-            } else {
-              toast.warn("Access Denied!");
+    const starCountRef = ref(db, `/Admin`);
+    onValue(starCountRef, async (snapshot) => {
+      const admin = await snapshot.val();
+
+      if (data?.email === admin?.email && data?.password === admin?.password) {
+        localStorage.setItem("connexUid", "superAdmin");
+        localStorage.setItem("conexParent", "superAdmin");
+        navigate("/home");
+        window.location.reload();
+      } else {
+        signInWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log("user", user);
+            if (user) {
+              const starCountRef = query(
+                ref(db, "/Users"),
+                orderByChild("id"),
+                equalTo(user?.uid)
+              );
+              onValue(starCountRef, async (snapshot) => {
+                const data = await snapshot.val();
+                console.log("data", data);
+                let dataArray = Object.values(data)?.[0];
+                console.log(dataArray);
+                if (dataArray?.isAdmin === true) {
+                  localStorage.setItem("connexUid", user?.uid);
+                  localStorage.setItem("conexParent", dataArray?.parentID);
+                  navigate("/home");
+                  window.location.reload();
+                } else {
+                  toast.warn("Access Denied!");
+                }
+                // console.log(data);
+                // console.log("testing data");
+                MediaKeyStatusMap;
+                // setmylist(Object.values(data));
+
+                // setfiltered(Object.values(data));
+
+                // updateStarCount(postElement, data);
+              });
             }
-            // console.log(data);
-            // console.log("testing data");
-            MediaKeyStatusMap;
-            // setmylist(Object.values(data));
 
-            // setfiltered(Object.values(data));
+            //   const starCountRef = ref(db, `/User/${user?.uid}`);
+            //   onValue(starCountRef, async (snapshot) => {
+            //     const data = await snapshot.val();
+            //     if (data?.parentId) {
+            //       const starCountRef2 = ref(db, `/User/${data?.parentId}`);
+            //       onValue(starCountRef2, async (thesnapshot) => {
+            //         const parentdata = await thesnapshot.val();
 
-            // updateStarCount(postElement, data);
+            //         if (parentdata?.allowTeamLogin === true) {
+            //           localStorage.setItem("tapNowUid", user.uid);
+            //           navigate("/home");
+            //           toast.success("Login Sucessfuly");
+            //           window.location.reload(true);
+            //         } else {
+            //           toast.warning("Access Denied!");
+            //         }
+            //       });
+            //     } else {
+            //       localStorage.setItem("tapNowUid", user.uid);
+            //       toast.success("Login Sucessfuly");
+            //       navigate("/home");
+            //       window.location.reload(true);
+            //     }
+            //   });
+
+            // toast.success('Login Sucessfuly')
+
+            // navigate('/home')
+
+            // ...
+          })
+          .catch((error) => {
+            console.log(error.message);
+            if (error.message === "Firebase: Error (auth/user-not-found).") {
+              toast.error("User not Found !");
+            } else if (
+              error.message === "Firebase: Error (auth/wrong-password)."
+            ) {
+              toast.error("Wrong Password !");
+            }
           });
-        }
-
-        //   const starCountRef = ref(db, `/User/${user?.uid}`);
-        //   onValue(starCountRef, async (snapshot) => {
-        //     const data = await snapshot.val();
-        //     if (data?.parentId) {
-        //       const starCountRef2 = ref(db, `/User/${data?.parentId}`);
-        //       onValue(starCountRef2, async (thesnapshot) => {
-        //         const parentdata = await thesnapshot.val();
-
-        //         if (parentdata?.allowTeamLogin === true) {
-        //           localStorage.setItem("tapNowUid", user.uid);
-        //           navigate("/home");
-        //           toast.success("Login Sucessfuly");
-        //           window.location.reload(true);
-        //         } else {
-        //           toast.warning("Access Denied!");
-        //         }
-        //       });
-        //     } else {
-        //       localStorage.setItem("tapNowUid", user.uid);
-        //       toast.success("Login Sucessfuly");
-        //       navigate("/home");
-        //       window.location.reload(true);
-        //     }
-        //   });
-
-        // toast.success('Login Sucessfuly')
-
-        // navigate('/home')
-
-        // ...
-      })
-      .catch((error) => {
-        // const errorCode = error.code;
-        const errorMessage = error.message;
-        // alert(errorMessage)
-
-        console.log(error.message);
-
-        if (error.message === "Firebase: Error (auth/user-not-found).") {
-          toast.error("User not Found !");
-        } else if (error.message === "Firebase: Error (auth/wrong-password).") {
-          toast.error("Wrong Password !");
-        }
-      });
+      }
+    });
   } else {
     toast.error("Email and password should not be empty!");
   }
@@ -115,7 +127,7 @@ export const handleLogin = (data, navigate) => {
 
 export const forgetPassword = (email) => {
   if (!email) {
-    toast.error("Email field is requirde");
+    toast.error("Email is required");
   } else {
     sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -145,68 +157,162 @@ export const createNewCard = async (data, callBack) => {
         // Signed in
         const user = userCredential.user;
         // console.log(user.uid)
+
         let cnxId = localStorage.getItem("connexUid");
-        update(ref(db, `Users/${user.uid}`), {
-          platform: "web",
-          address: "",
-          backgroundColor: "#000000",
-          bio: "",
-          city: "",
-          color: "#000000",
-          coverUrl: "",
-          darkTheme: "0",
-          directMode: false,
-          dob: "",
-          email: data.email,
-          fcmToken: "",
-          gender: "",
-          id: user.uid,
-          isActivateTag: false,
-          isCover: false,
-          isCustomLink: false,
-          isDeleted: false,
-          isEmail: true,
-          isFirstLink: false,
-          isProVersion: false,
-          isProfile: false,
-          isProfilePhoto: false,
-          isReqByMe: false,
-          isReqByOther: false,
-          isShareProfile: false,
-          isSubscribe: false,
-          job: "",
-          language: "en",
-          logoUrl: "",
-          name: data?.name,
-          parentID: cnxId,
-          parentId: "",
-          phone: "",
-          proVersionExpiryDate: "",
-          proVersionPurchaseDate: "",
-          profileOn: 1,
-          profileUrl: "",
-          socialTextColor: "#FF000000",
-          title: "",
-          totalViews: 0,
-          username: randNum() + data?.name + user.uid,
-          website: "",
-          workPlace: "",
-          formHeader: "Contact me!",
-          leadForm: {
-            Fname: true,
-            company: true,
-            email: true,
-            job: true,
-            note: true,
-            phone: true,
-          },
-          isAdmin: false,
-          qrLogoUrl: "",
-          leadMode: false,
-        }).then(() => {
-          toast.success("New user created sucessfuly");
-          handleTeamModal();
-        });
+        let conexParent = localStorage.getItem("conexParent");
+        if (conexParent != "superAdmin") {
+          update(ref(db, `Users/${user.uid}`), {
+            platform: "web",
+            address: "",
+            backgroundColor: "#000000",
+            bio: "",
+            city: "",
+            color: "#000000",
+            coverUrl: "",
+            darkTheme: "0",
+            directMode: false,
+            dob: "",
+            email: data.email,
+            fcmToken: "",
+            gender: "",
+            id: user.uid,
+            isActivateTag: false,
+            isCover: false,
+            isCustomLink: false,
+            isDeleted: false,
+            isEmail: true,
+            isFirstLink: false,
+            isProVersion: false,
+            isProfile: false,
+            isProfilePhoto: false,
+            isReqByMe: false,
+            isReqByOther: false,
+            isShareProfile: false,
+            isSubscribe: false,
+            job: "",
+            language: "en",
+            logoUrl: "",
+            name: data?.name,
+            parentID: cnxId,
+            parentId: "",
+            phone: "",
+            proVersionExpiryDate: "",
+            proVersionPurchaseDate: "",
+            profileOn: 1,
+            profileUrl: "",
+            socialTextColor: "#FF000000",
+            title: "",
+            totalViews: 0,
+            username: randNum() + data?.name + user.uid,
+            website: "",
+            workPlace: "",
+            formHeader: "Contact me!",
+            leadForm: {
+              Fname: true,
+              company: true,
+              email: true,
+              job: true,
+              note: true,
+              phone: true,
+            },
+            isAdmin: false,
+            isCompany: false,
+            qrLogoUrl: "",
+            leadMode: false,
+            textColor: "#000000",
+          }).then(() => {
+            axios
+              .post(`${baseUrl}createAccount`, {
+                companyId: cnxId,
+                email: data?.email,
+                password: data?.password,
+                token: "12f3g4hj2j3h4g54h3juyt5j4k3jngbfvkg43hj",
+              })
+              .then((res) => {
+                console.log("the response", res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            toast.success("New user created sucessfuly");
+            handleTeamModal();
+          });
+        } else {
+          update(ref(db, `Users/${user.uid}`), {
+            platform: "web",
+            address: "",
+            backgroundColor: "#000000",
+            bio: "",
+            city: "",
+            color: "#000000",
+            coverUrl: "",
+            darkTheme: "0",
+            directMode: false,
+            dob: "",
+            email: data.email,
+            fcmToken: "",
+            gender: "",
+            id: user.uid,
+            isActivateTag: false,
+            isCover: false,
+            isCustomLink: false,
+            isDeleted: false,
+            isEmail: true,
+            isFirstLink: false,
+            isProVersion: false,
+            isProfile: false,
+            isProfilePhoto: false,
+            isReqByMe: false,
+            isReqByOther: false,
+            isShareProfile: false,
+            isSubscribe: false,
+            job: "",
+            language: "en",
+            logoUrl: "",
+            name: data?.name,
+            parentID: "",
+            parentId: "",
+            phone: "",
+            proVersionExpiryDate: "",
+            proVersionPurchaseDate: "",
+            profileOn: 1,
+            profileUrl: "",
+            socialTextColor: "#FF000000",
+            title: "",
+            totalViews: 0,
+            username: randNum() + data?.name + user.uid,
+            website: "",
+            workPlace: "",
+            formHeader: "Contact me!",
+            leadForm: {
+              Fname: true,
+              company: true,
+              email: true,
+              job: true,
+              note: true,
+              phone: true,
+            },
+            isAdmin: true,
+            isCompany: true,
+            qrLogoUrl: "",
+            leadMode: false,
+          }).then(() => {
+            axios
+              .post(`${baseUrl}createAccount`, {
+                email: data?.email,
+                password: data?.password,
+                token: "12f3g4hj2j3h4g54h3juyt5j4k3jngbfvkg43hj",
+              })
+              .then((res) => {
+                console.log("the response", res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            toast.success("New user created sucessfuly");
+            handleTeamModal();
+          });
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -244,6 +350,35 @@ export const getAllChilds = async (callBackFunc, setloading) => {
   );
   onValue(starCountRef, async (snapshot) => {
     const data = await snapshot.val();
+    if (data) {
+      callBackFunc(data);
+      console.log(data);
+      setloading(false);
+      console.log("testing data");
+    } else {
+      setloading(false);
+    }
+
+    MediaKeyStatusMap;
+    // setmylist(Object.values(data));
+
+    // setfiltered(Object.values(data));
+
+    // updateStarCount(postElement, data);
+  });
+};
+
+// ------------------------------------------------Get all companies-----------------------------------------------
+
+export const getAllCompanies = async (callBackFunc, setloading) => {
+  setloading(true);
+  const starCountRef = query(
+    ref(db, "/Users"),
+    orderByChild("isCompany"),
+    equalTo(true)
+  );
+  onValue(starCountRef, async (snapshot) => {
+    const data = await snapshot.val();
     callBackFunc(data);
     console.log(data);
     setloading(false);
@@ -259,7 +394,7 @@ export const getAllChilds = async (callBackFunc, setloading) => {
 
 // ------------------------------------------------Get single child profile-----------------------------------------------
 
-export const getSingleChild = (id, callBackFunc, setloading) => {
+export const getSingleChild = (id, callBackFunc) => {
   const starCountRef = query(
     ref(db, "/Users"),
     orderByChild("id"),
@@ -277,6 +412,42 @@ export const getSingleChild = (id, callBackFunc, setloading) => {
 
     // updateStarCount(postElement, data);
   });
+};
+
+// ------------------------------------------------delete single child profile-----------------------------------------------
+
+export const deleteSingleChild = (id, companyId) => {
+  console.log("api start working......");
+  axios
+    .post(`${baseUrl}deleteAccount`, {
+      id,
+      token: "12f3g4hj2j3h4g54h3juyt5j4k3jngbfvkg43hj",
+    })
+    .then((res) => {
+      console.log("the response", res);
+      // const starCountRef = query(
+      //   ref(db, "/Teams"),
+      //   orderByChild("companyId"),
+      //   equalTo(cnxId)
+      // );
+      // onValue(starCountRef, async (snapshot) => {
+      //   const data = await snapshot.val();
+      //   if (data) {
+      //     callBackFunc(data);
+      //     setloading(false);
+      //   } else {
+      //     setloading(false);
+      //   }
+
+      //   console.log(data);
+      //   console.log("testing data");
+      //   MediaKeyStatusMap;
+      // });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  console.log("api end working......");
 };
 
 // ------------------------------------------------Update About Data-----------------------------------------------
@@ -511,6 +682,8 @@ export const getAllTeams = async (callBackFunc, setloading) => {
     if (data) {
       callBackFunc(data);
       setloading(false);
+    } else {
+      setloading(false);
     }
 
     console.log(data);
@@ -526,7 +699,7 @@ export const getAllTeams = async (callBackFunc, setloading) => {
 
 // ------------------------------------------------Add team member-----------------------------------------------
 
-export const addTeamMember = (team, membersId, cb) => {
+export const addTeamMember = (team, membersId, cb, setMemberIds) => {
   if (membersId.length > 0) {
     if (team?.members) {
       let memberArray = Object.values(team?.members);
@@ -536,12 +709,14 @@ export const addTeamMember = (team, membersId, cb) => {
       ]).then(() => {
         toast.success("Team updated successfuly");
         cb();
+        setMemberIds([]);
       });
     } else {
       set(ref(db, `Teams/${team?.teamId}/members/`), [...membersId]).then(
         () => {
           toast.success("Team updated successfuly");
           cb();
+          setMemberIds([]);
         }
       );
     }
@@ -553,6 +728,7 @@ export const addTeamMember = (team, membersId, cb) => {
 // ------------------------------------------------Get single child profile-----------------------------------------------
 
 export const getAllTeamMembers = (arr, callBack, members) => {
+  callBack([]);
   if (arr) {
     console.log(arr);
     Object.values(arr)?.map((elm) => {
@@ -563,12 +739,41 @@ export const getAllTeamMembers = (arr, callBack, members) => {
       );
       onValue(starCountRef, async (snapshot) => {
         const data = await snapshot.val();
-        callBack((prev) => [...prev, ...Object.values(data)]);
+        if (data) {
+          callBack((prev) => [...prev, ...Object.values(data)]);
+        }
+
         console.log(data);
         console.log("testing data");
         MediaKeyStatusMap;
       });
     });
+  }
+};
+
+export const getAllTeamMembersLength = (arr) => {
+  if (arr) {
+    console.log(arr);
+    let membersArray = [];
+    Object.values(arr)?.map((elm) => {
+      const starCountRef = query(
+        ref(db, "/Users"),
+        orderByChild("id"),
+        equalTo(elm)
+      );
+      onValue(starCountRef, async (snapshot) => {
+        const data = await snapshot.val();
+        if (data) {
+          membersArray?.push(Object.values(data));
+        }
+
+        console.log(data);
+        console.log("testing data");
+        MediaKeyStatusMap;
+      });
+    });
+    
+   
   }
 };
 
@@ -942,6 +1147,8 @@ export const removeTeamMember = (userId, teamId, allMembers, cb) => {
       return elm != userId;
     });
 
+    console.log("remainingMembers", remainingMembers);
+
     set(ref(db, `Teams/${teamId}/members/`), [...remainingMembers]).then(() => {
       cb(userId);
       toast.success("Team member deleted successfuly");
@@ -1019,9 +1226,10 @@ export const getSingleChildAnalytics = (id, callBackFunc, setloading) => {
   );
   onValue(starCountRef, async (snapshot) => {
     const data = await snapshot.val();
+
     callBackFunc(data);
     setloading(false);
-    // console.log(data);
+    console.log("analyticsdata", data);
     // console.log("testing data");
     MediaKeyStatusMap;
     // setmylist(Object.values(data));
@@ -1029,6 +1237,38 @@ export const getSingleChildAnalytics = (id, callBackFunc, setloading) => {
     // setfiltered(Object.values(data));
 
     // updateStarCount(postElement, data);
+  });
+};
+
+// ------------------------------------------------Get single child profile-----------------------------------------------
+
+export const adminAccess = (companyId, email, cb) => {
+  if (email) {
+    axios
+      .post(`${baseUrl}adminAccess`, {
+        companyId,
+        token: "12f3g4hj2j3h4g54h3juyt5j4k3jngbfvkg43hj",
+        email,
+      })
+      .then((res) => {
+        toast.success(res?.data?.message);
+        console.log("the response", res);
+        cb("");
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message);
+        console.log(err?.response?.data?.message);
+      });
+  } else {
+    toast.success("Email is required");
+  }
+};
+
+// ------------------------------------------------Remove Admin-----------------------------------------------
+
+export const removeAdmin = (id) => {
+  update(ref(db, `Users/${id}/`), {
+    isAdmin: false,
   });
 };
 

@@ -17,7 +17,13 @@ import {
 import bgplhldr from "../../imgs/bgplhldr.png";
 import { MdOutlineCancel } from "react-icons/md";
 
-const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
+const SingleTeamModal = ({
+  teamModal,
+  handleTeamModal,
+  singleTeam,
+  singleTeamMembers,
+  setSingleTeamMembers,
+}) => {
   const style2 = {
     position: "absolute",
     top: "50%",
@@ -36,32 +42,45 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
 
   let [members, setmembers] = useState([]);
 
+  // useEffect(() => {
+  //   setmembers([]);
+  // }, []);
+
   let onCloseAction = () => {
     handleTeamModal();
-    // setmembers([]);
   };
 
   useEffect(() => {
-    if (singleTeam?.members) {
-      getAllTeamMembers(singleTeam?.members, setmembers, members);
+    if (singleTeamMembers) {
+      getAllTeamMembers(singleTeamMembers, setmembers, members);
     } else {
       setmembers([]);
     }
-  }, [singleTeam?.members]);
-  console.log(members);
+  }, [singleTeamMembers]);
+  console.log(singleTeamMembers);
 
   let removeMemberLocaly = (id) => {
     let remainingMembers = members?.filter((elm) => {
       return id != elm?.id;
     });
     setmembers(remainingMembers);
+    if (singleTeamMembers) {
+      let remainingMembersIds = Object.values(singleTeamMembers)?.filter(
+        (elm) => {
+          return id != elm;
+        }
+      );
+      setSingleTeamMembers(remainingMembersIds);
+    }
   };
 
   return (
     <div>
       <Modal
         open={teamModal}
-        onClose={() => onCloseAction()}
+        onClose={() => {
+          onCloseAction();
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -118,7 +137,7 @@ const SingleTeamModal = ({ teamModal, handleTeamModal, singleTeam }) => {
                           removeTeamMember(
                             elm?.id,
                             singleTeam?.teamId,
-                            Object.values(singleTeam?.members),
+                            Object.values(singleTeamMembers),
                             removeMemberLocaly
                           )
                         }

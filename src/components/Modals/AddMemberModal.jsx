@@ -31,14 +31,15 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
   let [allProfiles, setAllProfiles] = useState([]);
   let [filtered, setfiltered] = useState([]);
   let [memberIds, setMemberIds] = useState([]);
-
+  console.log(memberIds);
   let getAllProfiles = (obj) => {
     setAllProfiles(Object.values(obj));
     setfiltered(Object.values(obj));
   };
+  let [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getAllChilds(getAllProfiles);
+    getAllChilds(getAllProfiles, setLoading);
   }, []);
 
   //---------------------------------------------------(search functionality)-----------------------------------------------
@@ -71,8 +72,6 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
       setMemberIds([...updatedIds]);
     }
   };
-
-  console.log(memberIds);
 
   let ifAdded = (id) => {
     if (singleTeam?.members) {
@@ -157,7 +156,12 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
               <button
                 className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                 onClick={() =>
-                  addTeamMember(singleTeam, memberIds, handleAddModal)
+                  addTeamMember(
+                    singleTeam,
+                    memberIds,
+                    handleAddModal,
+                    setMemberIds
+                  )
                 }
               >
                 Add

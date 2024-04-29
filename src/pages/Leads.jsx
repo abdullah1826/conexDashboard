@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { BiSearchAlt } from "react-icons/bi";
 import { MdArrowDropDown } from "react-icons/md";
-import { Menu } from "@mui/material";
+import { Checkbox, Menu, Tooltip } from "@mui/material";
 import { FaEye, FaSquarePlus } from "react-icons/fa6";
 import csv from "../imgs/csv.png";
 import zap from "../imgs/zap.png";
@@ -18,7 +18,7 @@ import NavbarFooter from "./NavbarFooter";
 import CreateNewTeam from "../components/Modals/CreateNewTeam";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { getContacts } from "../Services";
+import { getAllTeams, getContacts } from "../Services";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import SingleLeadModal from "../components/Modals/SingleLeadModal";
 // import DeleteContact from "../components/Modals/DeleteContactModal";
@@ -64,6 +64,20 @@ const Leads = () => {
     setfiltered(result);
   }, [search]);
 
+  // -----------------------getting all subteams----------------------
+
+  let [teams, setTeams] = useState([]);
+  let [loading, setloading] = useState(false);
+  let getTeams = (value) => {
+    if (value) {
+      setTeams(Object.values(value));
+    }
+  };
+
+  useEffect(() => {
+    getAllTeams(getTeams, setloading);
+  }, []);
+
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       <DeleteContactModal
@@ -108,8 +122,33 @@ const Leads = () => {
                 </span>
               </p>
             </div>
-            <div className="w-[72%] h-[100%] flex justify-between">
-              {"\u00A0"}{" "}
+
+            <div className="w-[72%] h-[100%] flex justify-between ">
+              <Tooltip title="Filter by Team">
+                <div className="sm:w-[150px] sm:h-[100%]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                  <select
+                    name=""
+                    id=""
+                    className="w-[90%] outline-none"
+                    // onChange={(e) => SingleLeads(e)}
+                  >
+                    <option
+                      value="all"
+                      // onClick={() => dispatch(getSingleLeadContacts(elm?.id))}
+                    >
+                      All
+                    </option>
+                    {Object.values(teams)?.map((elm) => {
+                      return (
+                        <option value={elm?.teamId}>{elm?.teamName}</option>
+                      );
+                    })}
+                  </select>
+                </div>
+              </Tooltip>
+              {/* <Tooltip title="Filter by Company">
+                <div className="sm:w-[130px] sm:h-[100%] border  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer"></div>
+              </Tooltip> */}
               <div className="sm:w-[254px] sm:h-[100%] w-[100px] h-[33px] flex items-center rounded-[36px] bg-white shadow-xl">
                 {screen <= 450 ? (
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
@@ -126,8 +165,8 @@ const Leads = () => {
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
                 ) : null}
               </div>
-              {"\u00A0"}
-              <div className="sm:w-[185px] sm:h-[100%] w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+
+              <div className="sm:w-[185px] sm:h-[100%] border  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                 <img
                   src={csv}
                   alt=""
@@ -148,32 +187,14 @@ const Leads = () => {
                   <TfiDownload className="text-lg mr-2" />
                 ) : null}
               </div>
-              {"\u00A0"}
-              <div className="sm:w-[185px] sm:h-[100%] w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer">
-                <img
-                  src={zap}
-                  alt=""
-                  className="sm:h-[37px] sm:w-[37px] h-[20px] w-[20px]"
-                  style={screen <= 450 ? { marginLeft: "0px" } : null}
-                />
-                <p
-                  className="font-[500] sm:text-[15px] text-[8px]"
-                  style={
-                    screen <= 450
-                      ? { marginLeft: "0px", whiteSpace: "nowrap" }
-                      : null
-                  }
-                >
-                  Export Zapier
-                </p>
-                {screen >= 450 ? (
-                  <TfiDownload className="text-lg mr-2" />
-                ) : null}
-              </div>
             </div>
           </div>
 
           <div className="w-[100%] h-[47px] rounded-[36px] bg-[#ECEBEA] mt-[50px] flex justify-around items-center">
+            <div className="w-[5%]">
+              <Checkbox defaultChecked color="default" />
+            </div>
+
             <div className="w-[15%] ml-5">
               <p className="font-[500] sm:text-[16px] text-[12px]">Contact</p>
             </div>

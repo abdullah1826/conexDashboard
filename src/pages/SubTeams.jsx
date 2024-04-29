@@ -10,7 +10,12 @@ import NavbarFooter from "./NavbarFooter";
 import CreateNewTeam from "../components/Modals/CreateNewTeam";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteCompany, getAllTeams } from "../Services";
+import {
+  deleteCompany,
+  getAllTeamMembersLength,
+  getAllTeams,
+  splitString,
+} from "../Services";
 import bgplhldr from "../imgs/bgplhldr.png";
 import AddMemberModal from "../components/Modals/AddMemberModal";
 import SingleTeamModal from "../components/Modals/SingleTeamModal";
@@ -26,6 +31,7 @@ const SubTeams = () => {
   let [modal, setModal] = useState(false);
   let [teams, setTeams] = useState([]);
   let [singleTeam, setSingleTeam] = useState({});
+  let [singleTeamMembers, setSingleTeamMembers] = useState([]);
   let [loading, setloading] = useState(false);
 
   // console.log(singleTeam);
@@ -84,6 +90,20 @@ const SubTeams = () => {
   let [deleteModal, setdeleteModal] = useState(false);
   let [teamId, setteamId] = useState("");
 
+  let [members, setmembers] = useState([]);
+
+  // useEffect(() => {
+  //   setmembers([]);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (singleTeamMembers) {
+  //     getAllTeamMembers(singleTeamMembers, setmembers, members);
+  //   } else {
+  //     setmembers([]);
+  //   }
+  // }, [singleTeamMembers]);
+
   let handledeleteModal = () => {
     setdeleteModal(!deleteModal);
   };
@@ -93,7 +113,7 @@ const SubTeams = () => {
       setTeams([]);
     }
   };
-
+  console.log(loading);
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       {screen >= 450 ? <Sidebar /> : null}
@@ -117,6 +137,8 @@ const SubTeams = () => {
             teamModal={teamModal}
             handleTeamModal={handleTeamModal}
             singleTeam={singleTeam}
+            singleTeamMembers={singleTeamMembers}
+            setSingleTeamMembers={setSingleTeamMembers}
           />
           <DeleteModal
             deleteModal={deleteModal}
@@ -173,7 +195,7 @@ const SubTeams = () => {
                 <div
                   className="w-[185px] sm:h-[100%] h-[70%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer"
                   onClick={() => {
-                    handleModal(), setSingleTeam(null);
+                    handleModal(), setSingleTeam({ teamName: "", image: "" });
                   }}
                 >
                   <IoMdAdd className="text-[black] mr-1" />{" "}
@@ -207,13 +229,14 @@ const SubTeams = () => {
                               screen <= 450 ? { whiteSpace: "nowrap" } : null
                             }
                           >
-                            {team?.teamName}
+                            {splitString(team?.teamName, 23)}
                           </h2>
                           <div className="flex items-center text-[#7F7F7F]">
                             <GoPerson className="text-[15px]" />
                             <p className="ml-[2px] sm:text-[11px] text-[10px] font-[400]">
                               {team?.members
                                 ? `${
+                                    // getAllTeamMembersLength()
                                     Object.values(team?.members)?.length
                                   } Members`
                                 : "0 Members"}
@@ -242,7 +265,9 @@ const SubTeams = () => {
                             <div
                               className="sm:h-[30px] h-[25px] sm:w-[70px] w-[94px] bg-[#F3F3F3] rounded-[21px] cursor-pointer flex justify-center items-center ml-[5px]"
                               onClick={() => {
-                                handleTeamModal(), setSingleTeam(team);
+                                handleTeamModal(),
+                                  setSingleTeam(team),
+                                  setSingleTeamMembers(team?.members);
                               }}
                             >
                               <p

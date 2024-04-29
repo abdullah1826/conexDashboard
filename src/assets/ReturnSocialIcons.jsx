@@ -373,7 +373,7 @@ export const more = [
     title: "Amazon",
     img: amazone,
     placeholder: "Amazon link*",
-    linkID: 41,
+    linkID: 43,
   },
 ];
 
@@ -512,7 +512,7 @@ export const returnIcons = (linkID) => {
     return playstore;
   } else if (linkID === 41) {
     return appstore;
-  } else if (linkID === 41) {
+  } else if (linkID === 43) {
     return amazone;
   } else if (linkID === 58) {
     return threads;

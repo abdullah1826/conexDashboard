@@ -32,6 +32,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
     // p: "32px",
   };
 
+  let [imgKey, setImgKey] = useState(0);
   console.log(singleTeam);
 
   let [data, setData] = useState({
@@ -50,10 +51,6 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
   };
 
   let callBack = () => {
-    setData({
-      name: "",
-      img: "",
-    });
     handleModal();
   };
 
@@ -88,15 +85,20 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
         // dispatch(setProfileImg(reader.result))
 
         setBgcropModal(true);
+        setImgKey(imgKey + 1);
       });
     }
   };
+
+  console.log(singleTeam);
 
   return (
     <div>
       <Modal
         open={modal}
-        onClose={() => callBack()}
+        onClose={() => {
+          callBack();
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -130,12 +132,13 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                     id="prflImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handlebgImageChange}
+                    key={imgKey}
                   />
                 </label>
                 <img
                   src={data?.img ? data?.img : bgplhldr}
                   alt=""
-                  className="h-[150px] w-[100%] rounded-[45px]"
+                  className="h-[150px] w-[100%] rounded-[45px] object-cover"
                 />
               </div>
 
@@ -153,7 +156,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                 >
                   Cancel
                 </button>
-                {singleTeam === null ? (
+                {!singleTeam?.name ? (
                   <button
                     className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                     onClick={() => createTeam(data, callBack)}

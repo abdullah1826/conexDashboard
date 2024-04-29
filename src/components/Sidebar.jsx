@@ -14,12 +14,14 @@ import { BsFillBuildingsFill } from "react-icons/bs";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { handleLogout } from "../Services";
 import DeleteModal from "./Modals/DeleteModal";
-
+import { BsBuildingsFill } from "react-icons/bs";
 const Sidebar = () => {
   let navigate = useNavigate();
 
   let [user, setuser] = useState({});
   let [modal, setModal] = useState(false);
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
 
   let handleModal = () => {
     setModal(!modal);
@@ -84,72 +86,85 @@ const Sidebar = () => {
               }
             >
               <div className=" flex items-center rounded-md  ml-2">
-                <FaUser className="text-xl ml-2 " />
-                <p className="ml-[10px] text-[13px] font-[600]">Team Members</p>
-              </div>
-            </div>
-
-            <div
-              className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
-              onClick={() => navigate("/subteams")}
-              style={
-                currentPath.includes("/subteams")
-                  ? { backgroundColor: "black", color: "white" }
-                  : null
-              }
-            >
-              <div className=" flex items-center rounded-md   ml-2">
-                <IoIosPeople className="text-3xl ml-2 " />
-                <p className="ml-[10px] text-[13px] font-[600]">Sub Teams</p>
-              </div>
-            </div>
-
-            <div
-              className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
-              onClick={() => navigate("/leads")}
-              style={
-                currentPath.includes("/leads")
-                  ? { backgroundColor: "black", color: "white" }
-                  : null
-              }
-            >
-              <div className=" flex items-center rounded-md ml-2">
-                <FaFilter className=" text-xl ml-2 " />
+                {conexParent != "superAdmin" ? (
+                  <FaUser className="text-xl ml-2 " />
+                ) : (
+                  <BsBuildingsFill className="text-xl ml-2 " />
+                )}
                 <p className="ml-[10px] text-[13px] font-[600]">
-                  Leads Generated
+                  {conexParent === "superAdmin" ? "Companies" : "Team Members"}
                 </p>
               </div>
             </div>
+            {conexParent != "superAdmin" && (
+              <>
+                <div
+                  className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
+                  onClick={() => navigate("/subteams")}
+                  style={
+                    currentPath.includes("/subteams")
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
+                >
+                  <div className=" flex items-center rounded-md   ml-2">
+                    <IoIosPeople className="text-3xl ml-2 " />
+                    <p className="ml-[10px] text-[13px] font-[600]">
+                      Sub Teams
+                    </p>
+                  </div>
+                </div>
 
-            <div
-              className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
-              onClick={() => navigate("/analytics")}
-              style={
-                currentPath.includes("/analytics")
-                  ? { backgroundColor: "black", color: "white" }
-                  : null
-              }
-            >
-              <div className=" flex items-center rounded-md   ml-2">
-                <SiGoogleanalytics className=" text-xl ml-2 " />
-                <p className="ml-[10px] text-[13px] font-[600]">Analytics</p>
-              </div>
-            </div>
+                <div
+                  className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
+                  onClick={() => navigate("/leads")}
+                  style={
+                    currentPath.includes("/leads")
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
+                >
+                  <div className=" flex items-center rounded-md ml-2">
+                    <FaFilter className=" text-xl ml-2 " />
+                    <p className="ml-[10px] text-[13px] font-[600]">
+                      Leads Generated
+                    </p>
+                  </div>
+                </div>
 
-            <div
-              className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
-              onClick={() => navigate("/company")}
-              style={
-                currentPath.includes("/company")
-                  ? { backgroundColor: "black", color: "white" }
-                  : null
-              }
-            >
-              <div className=" flex items-center rounded-md   ml-2">
-                <BsFillBuildingsFill className=" text-xl ml-2 " />
-                <p className="ml-[10px] text-[13px] font-[600]">Company</p>
-              </div>
-            </div>
+                <div
+                  className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
+                  onClick={() => navigate("/analytics")}
+                  style={
+                    currentPath.includes("/analytics")
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
+                >
+                  <div className=" flex items-center rounded-md   ml-2">
+                    <SiGoogleanalytics className=" text-xl ml-2 " />
+                    <p className="ml-[10px] text-[13px] font-[600]">
+                      Analytics
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="hover:bg-[black] text-[#8F8E8E] hover:text-[white] h-[55px]  w-[100%] rounded-[18px] flex items-center cursor-pointer mt-4"
+                  onClick={() => navigate("/company")}
+                  style={
+                    currentPath.includes("/company")
+                      ? { backgroundColor: "black", color: "white" }
+                      : null
+                  }
+                >
+                  <div className=" flex items-center rounded-md   ml-2">
+                    <BsFillBuildingsFill className=" text-xl ml-2 " />
+                    <p className="ml-[10px] text-[13px] font-[600]">Company</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className="h-[10%]  w-[90%] flex flex-col justify-end">

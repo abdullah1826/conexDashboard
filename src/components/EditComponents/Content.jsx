@@ -128,7 +128,7 @@ const Content = ({ uid }) => {
 
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
-      <div className="w-[100%] ">
+      <div className="w-[100%] h-[100%]">
         <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
         <DeleteModal
           deleteModal={deleteModal}
@@ -181,161 +181,180 @@ const Content = ({ uid }) => {
             </p>
           </div>
         </div>
-        {directMode ? (
-          <div className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2">
-            {directMode && (
-              <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-                <div className="mt-3">
-                  <div className="w-[100%] flex justify-center items-center ">
-                    <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-                  </div>
-                  <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-                    <img
-                      src={returnIcons(direct?.linkID)}
-                      alt=""
-                      className="h-[45px] w-[45px] object-cover"
-                    />
-                    <h2 className="font-[500] text-[15px] mt-2">
-                      {direct?.name}
-                    </h2>
-                  </div>
-                </div>
-                <div className="w-[100%] flex justify-center items-center mt-4">
-                  {/* <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
+        {links?.length > 0 ? (
+          <>
+            {directMode ? (
+              <div className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2">
+                {directMode && (
+                  <div className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
+                    <div className="mt-3">
+                      <div className="w-[100%] flex justify-center items-center ">
+                        <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
+                      </div>
+                      <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+                        <img
+                          src={returnIcons(direct?.linkID)}
+                          alt=""
+                          className="h-[45px] w-[45px] object-cover"
+                        />
+                        <h2 className="font-[500] text-[15px] mt-2">
+                          {direct?.name}
+                        </h2>
+                      </div>
+                    </div>
+                    <div className="w-[100%] flex justify-center items-center mt-4">
+                      {/* <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
                     Remove Link
                   </button>
                   <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
                     Open Link
                   </button> */}
-                </div>
-              </div>
-            )}
-            {links?.map((elm) => {
-              return (
-                <div
-                  className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6"
-                  style={
-                    direct.linkID === elm?.linkID ? { display: "none" } : null
-                  }
-                >
-                  <div
-                    className="mt-3"
-                    style={directMode ? { opacity: "50%" } : null}
-                  >
-                    <div className="w-[100%] flex justify-center items-center ">
-                      <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-                    </div>
-                    <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-                      <img
-                        src={returnIcons(elm?.linkID)}
-                        alt=""
-                        className="h-[45px] w-[45px] object-cover"
-                      />
-                      <h2 className="font-[500] text-[15px] mt-2">
-                        {elm?.name}
-                      </h2>
                     </div>
                   </div>
-                  <div className="w-[100%] flex justify-center items-center mt-4">
-                    <button
-                      className="w-[69px] h-[29px] rounded-[16px] border  text-[9px] font-[500] bg-black text-white"
-                      onClick={() =>
-                        addtoDirect(elm?.name, elm?.linkID, elm?.value, uid)
+                )}
+                {links?.map((elm) => {
+                  return (
+                    <div
+                      className="sm:w-[190px] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6"
+                      style={
+                        direct.linkID === elm?.linkID
+                          ? { display: "none" }
+                          : null
                       }
                     >
-                      Make Direct
-                    </button>
-                    {/* <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
+                      <div
+                        className="mt-3"
+                        style={directMode ? { opacity: "50%" } : null}
+                      >
+                        <div className="w-[100%] flex justify-center items-center ">
+                          <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
+                        </div>
+                        <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+                          <img
+                            src={returnIcons(elm?.linkID)}
+                            alt=""
+                            className="h-[45px] w-[45px] object-cover"
+                          />
+                          <h2 className="font-[500] text-[15px] mt-2">
+                            {elm?.name}
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="w-[100%] flex justify-center items-center mt-4">
+                        <button
+                          className="w-[69px] h-[29px] rounded-[16px] border  text-[9px] font-[500] bg-black text-white"
+                          onClick={() =>
+                            addtoDirect(elm?.name, elm?.linkID, elm?.value, uid)
+                          }
+                        >
+                          Make Direct
+                        </button>
+                        {/* <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
                     Remove Link
                   </button>
                   <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
                     Open Link
                   </button> */}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <DragDropContext
-            onDragEnd={handleDragEnd}
-            // className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2"
-          >
-            <Droppable droppableId="droppable" direction="vertical">
-              {(provided) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="w-[100%]  flex flex-row justify-start gap-x-6 flex-wrap mt-2"
-                >
-                  {/* allLinks */}
-                  {items?.map((elm, index) => (
-                    <Draggable
-                      key={elm.name}
-                      draggableId={elm.name}
-                      index={index}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <DragDropContext
+                onDragEnd={handleDragEnd}
+                // className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2"
+              >
+                <Droppable droppableId="droppable" direction="vertical">
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="w-[100%]  flex flex-row justify-start gap-x-6 flex-wrap mt-2"
                     >
-                      {(provided) => (
-                        <div
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                          className="w-[30%]"
+                      {/* allLinks */}
+                      {items?.map((elm, index) => (
+                        <Draggable
+                          key={elm.name}
+                          draggableId={elm.name}
+                          index={index}
                         >
-                          <>
-                            <div className="sm:w-[100%] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
-                              <div className="w-[100%] flex justify-center items-center ">
-                                <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
-                              </div>
-                              <div className="w-[100%] flex flex-col justify-center items-center mt-4">
-                                <img
-                                  src={returnIcons(elm?.linkID)}
-                                  alt=""
-                                  className="h-[45px] w-[45px] object-cover"
-                                />
-                                <h2 className="font-[500] text-[15px] mt-2">
-                                  {elm?.name}
-                                </h2>
-                              </div>
+                          {(provided) => (
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                              className="w-[30%]"
+                            >
+                              <>
+                                <div className="sm:w-[100%] w-[49%] h-[180px] rounded-[24px] shadow-lg mt-6">
+                                  <div className="w-[100%] flex justify-center items-center ">
+                                    <PiDotsSixBold className="text-2xl text-[#EDEDED] cursor-grab" />
+                                  </div>
+                                  <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+                                    <img
+                                      src={returnIcons(elm?.linkID)}
+                                      alt=""
+                                      className="h-[45px] w-[45px] object-cover"
+                                    />
+                                    <h2 className="font-[500] text-[15px] mt-2">
+                                      {elm?.name}
+                                    </h2>
+                                  </div>
 
-                              <div className="w-[100%] flex justify-center items-center mt-4">
-                                <button
-                                  className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]"
-                                  onClick={() => {
-                                    handledeleteModal(), setteamId(elm?.linkID);
-                                  }}
-                                >
-                                  Remove Link
-                                </button>
-                                <Switch
-                                  // size="small"
-                                  checked={elm?.shareable}
-                                  onChange={() =>
-                                    updateLinkShareAble(
-                                      uid,
-                                      elm?.linkID,
-                                      elm?.shareable,
-                                      links
-                                    )
-                                  }
-                                  // inputProps={{ 'aria-label': 'controlled' }}
-                                  className="ml-1"
-                                />
-                                {/* <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
+                                  <div className="w-[100%] flex justify-center items-center mt-4">
+                                    <button
+                                      className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]"
+                                      onClick={() => {
+                                        handledeleteModal(),
+                                          setteamId(elm?.linkID);
+                                      }}
+                                    >
+                                      Remove Link
+                                    </button>
+                                    <Switch
+                                      // size="small"
+                                      checked={elm?.shareable}
+                                      onChange={() =>
+                                        updateLinkShareAble(
+                                          uid,
+                                          elm?.linkID,
+                                          elm?.shareable,
+                                          links
+                                        )
+                                      }
+                                      // inputProps={{ 'aria-label': 'controlled' }}
+                                      className="ml-1"
+                                    />
+                                    {/* <button className="w-[62px] h-[27px] rounded-[16px] border ml-1 text-[8px] font-[500] bg-black text-white">
                                   Open Link
                                 </button> */}
-                              </div>
+                                  </div>
+                                </div>
+                              </>
                             </div>
-                          </>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
+          </>
+        ) : (
+          <div className="w-[100%] h-[85%] flex justify-center items-center">
+            <p>
+              No links to show{" "}
+              <span
+                className="font-[500] underline cursor-pointer"
+                onClick={() => handleModal()}
+              >
+                Add links
+              </span>
+            </p>
+          </div>
         )}
       </div>
     </div>

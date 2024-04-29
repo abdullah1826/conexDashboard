@@ -134,6 +134,8 @@ const EditMember = () => {
     dispatch(setlocationLock(singleProfile[uid]?.locationLock));
     if (typeof singleProfile[uid]?.links === "object") {
       dispatch(setLinks(Object.values(singleProfile[uid]?.links)));
+    } else {
+      dispatch(setLinks([]));
     }
 
     dispatch(
@@ -193,6 +195,21 @@ const EditMember = () => {
     dispatch(setQrColor(singleProfile?.[uid]?.qrColor));
     dispatch(setQrLogo(singleProfile?.[uid]?.qrLogoUrl));
   };
+
+  let handleCancelAbout = () => {
+    dispatch(setName(singleProfile[uid]?.name));
+    dispatch(setEmail(singleProfile[uid]?.email));
+    dispatch(setColor(singleProfile[uid]?.color));
+    dispatch(setTextColor(singleProfile[uid]?.textColor));
+    dispatch(setPhone(singleProfile[uid]?.phone));
+    dispatch(setCoverUrl(singleProfile[uid]?.coverUrl));
+    dispatch(setProfileurl(singleProfile[uid]?.profileUrl));
+    dispatch(setLogoUrl(singleProfile[uid]?.logoUrl));
+    dispatch(setDesignation(singleProfile[uid]?.job));
+    dispatch(setAddress(singleProfile[uid]?.address));
+    dispatch(setBio(singleProfile[uid]?.bio));
+  };
+
   let [shareModal, setshareModal] = useState(false);
   let [userId, setuserId] = useState("");
   let handleShareModal = () => {
@@ -366,7 +383,9 @@ const EditMember = () => {
             ) : null}
             <div className="w-[100%] h-[535px]  rounded-[35px] shadow-xl bg-white flex">
               <div className="sm:w-[70%] w-[100%] h-[100%]  flex justify-center items-center">
-                {route?.isAbout === true && <About uid={uid} />}
+                {route?.isAbout === true && (
+                  <About uid={uid} handleCancelAbout={handleCancelAbout} />
+                )}
                 {route?.isContent === true && <Content uid={uid} />}
                 {route?.isQr === true && (
                   <Qr uid={uid} handleCancelQr={handleCancelQr} />

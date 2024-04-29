@@ -18,7 +18,7 @@ import { IoMdAdd } from "react-icons/io";
 
 import NavbarFooter from "./NavbarFooter";
 import CreateNewCard from "../components/Modals/CreateNewCard";
-import { getAllChilds, getSingleChild } from "../Services";
+import { getAllChilds, getAllCompanies, getSingleChild } from "../Services";
 import ShareCardModal from "../components/Modals/ShareCardModal";
 import { MoonLoader } from "react-spinners";
 
@@ -41,7 +41,8 @@ const Home = () => {
     setAnchorEl(null);
   };
   var screen = window.innerWidth;
-
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
   let [modal, setModal] = useState(false);
   let [loading, setloading] = useState(false);
   let handleModal = () => {
@@ -49,12 +50,15 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getAllChilds(getAllProfiles, setloading);
+    if (conexParent === "superAdmin") {
+      getAllCompanies(getAllProfiles, setloading);
+    } else {
+      getAllChilds(getAllProfiles, setloading);
+    }
   }, []);
 
   let [companyId, setCompanyId] = useState("");
-  let conexParent = localStorage.getItem("conexParent");
-  let connexUid = localStorage.getItem("connexUid");
+
   let [companyProfile, setCompanyProfile] = useState({});
 
   useEffect(() => {
@@ -70,6 +74,22 @@ const Home = () => {
   }, [companyId]);
 
   console.log(allProfiles);
+
+  // ---------------------------------------Search functionality--------------------------------------------
+
+  let [filtered, setfiltered] = useState([]);
+  useEffect(() => {
+    setfiltered(allProfiles);
+  }, [allProfiles]);
+  let [search, setsearch] = useState("");
+
+  useEffect(() => {
+    const result = allProfiles?.filter((contact) => {
+      return contact?.name.toLowerCase().match(search.toLowerCase());
+    });
+
+    setfiltered(result);
+  }, [search]);
 
   return (
     <div
@@ -108,77 +128,83 @@ const Home = () => {
               </div>
               {screen >= 450 ? (
                 <div className="sm:w-[66%] w-[60%]  h-[100%] flex justify-between">
-                  <div className="w-[254px] h-[100%] flex items-center rounded-[36px] bg-white shadow-xl">
+                  <div className="w-[274px] h-[100%] flex items-center rounded-[36px] bg-white shadow-xl">
                     <input
                       type="text"
                       className="h-[100%] w-[77%] outline-none rounded-[36px] pl-[10px] ml-2"
                       placeholder={screen >= 450 ? "Search" : null}
+                      onChange={(e) => setsearch(e.target.value)}
+                      value={search}
                     />
                     <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
                   </div>
-                  <div
-                    component="nav"
-                    // aria-label="Device settings"
-                    id="lang-button"
-                    aria-haspopup="listbox"
-                    aria-controls="lang-menu"
-                    aria-expanded={openMenu ? "true" : undefined}
-                    onClick={handleClickListItem}
-                    className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer"
-                  >
-                    <img
-                      src={uk}
-                      alt=""
-                      className="h-[30px] w-[30px] object-cover"
-                    />
-                    <p className="font-[500] text-[15px]">English</p>
-                    <MdArrowDropDown className="text-2xl" />
-                  </div>
-                  <Menu
-                    id="lang-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      "aria-labelledby": "lang-button",
-                      role: "listbox",
-                    }}
-                  >
-                    <MenuItem
-                      // key={index}
-                      // disabled={index === 0}
-                      // selected={index === selectedIndex}
-                      // onClick={(event) => handleMenuItemClick(event, index)}
-                      onClick={() => {
-                        handleClose();
-                      }}
-                      sx={{ display: "flex" }}
-                    >
-                      <img
-                        src={uk}
-                        alt=""
-                        className="h-[27px] w-[27px] object-cover"
-                      />
-                      <p className="font-[500] ml-2 text-base">English</p>
-                    </MenuItem>
-                    <MenuItem
-                      // key={index}
-                      // disabled={index === 0}
-                      // selected={index === selectedIndex}
-                      // onClick={(event) => handleMenuItemClick(event, index)}
-                      onClick={() => {
-                        handleClose();
-                      }}
-                      sx={{ display: "flex" }}
-                    >
-                      <img
-                        src={fr}
-                        alt=""
-                        className="h-[27px] w-[27px] object-cover rounded-full"
-                      />
-                      <p className="font-[500] ml-2 text-base">French</p>
-                    </MenuItem>
-                  </Menu>
+                  {conexParent != "superAdmin" && (
+                    <>
+                      <div
+                        component="nav"
+                        // aria-label="Device settings"
+                        id="lang-button"
+                        aria-haspopup="listbox"
+                        aria-controls="lang-menu"
+                        aria-expanded={openMenu ? "true" : undefined}
+                        onClick={handleClickListItem}
+                        className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer"
+                      >
+                        <img
+                          src={uk}
+                          alt=""
+                          className="h-[30px] w-[30px] object-cover"
+                        />
+                        <p className="font-[500] text-[15px]">English</p>
+                        <MdArrowDropDown className="text-2xl" />
+                      </div>
+                      <Menu
+                        id="lang-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "lang-button",
+                          role: "listbox",
+                        }}
+                      >
+                        <MenuItem
+                          // key={index}
+                          // disabled={index === 0}
+                          // selected={index === selectedIndex}
+                          // onClick={(event) => handleMenuItemClick(event, index)}
+                          onClick={() => {
+                            handleClose();
+                          }}
+                          sx={{ display: "flex" }}
+                        >
+                          <img
+                            src={uk}
+                            alt=""
+                            className="h-[27px] w-[27px] object-cover"
+                          />
+                          <p className="font-[500] ml-2 text-base">English</p>
+                        </MenuItem>
+                        <MenuItem
+                          // key={index}
+                          // disabled={index === 0}
+                          // selected={index === selectedIndex}
+                          // onClick={(event) => handleMenuItemClick(event, index)}
+                          onClick={() => {
+                            handleClose();
+                          }}
+                          sx={{ display: "flex" }}
+                        >
+                          <img
+                            src={fr}
+                            alt=""
+                            className="h-[27px] w-[27px] object-cover rounded-full"
+                          />
+                          <p className="font-[500] ml-2 text-base">French</p>
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  )}
                   {/* <div className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer">
                   <p className="font-[500] text-[15px] ml-2">Members</p>
                   <MdArrowDropDown className="text-2xl ml-1" />
@@ -221,7 +247,7 @@ const Home = () => {
             </div>
 
             <div className="w-[100%] flex justify-start gap-x-[6%] flex-wrap sm:mt-[40px] mt-[20px] sm:h-[78%] h-[68%] overflow-y-scroll">
-              {allProfiles?.map((profile) => {
+              {filtered?.map((profile) => {
                 return (
                   <MemberCard
                     profile={profile}

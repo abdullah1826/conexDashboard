@@ -81,7 +81,7 @@ const AccountLinks = ({ uid }) => {
           )
         }
       />
-      <div className="overflow-y-scroll min-h-[80%]">
+      <div className="overflow-y-scroll h-[85%] ">
         <DragDropContext
           onDragEnd={handleDragEnd}
           // className="w-[100%]  flex justify-start gap-x-6 flex-wrap mt-2"

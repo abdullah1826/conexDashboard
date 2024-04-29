@@ -38,7 +38,7 @@ import {
 } from "../../Services.jsx";
 import SocialLinkModal from "../Modals/SocialLinkModal.jsx";
 
-const About = ({ uid }) => {
+const About = ({ uid, handleCancelAbout }) => {
   const IOSSwitch = styled((props) => (
     <Switch
       focusVisibleClassName=".Mui-focusVisible"
@@ -137,6 +137,10 @@ const About = ({ uid }) => {
 
   console.log(name);
 
+  let [prflKey, setPrflKey] = useState(0);
+  let [logoKey, setLogoKey] = useState(0);
+  let [coverKey, setCoverKey] = useState(0);
+
   // ----------------------------------------------------State setup for profile img crop---------------------------------------------
   let [prflimg, setprflimg] = useState(null);
   let [cropModal, setcropModal] = useState(false);
@@ -159,7 +163,7 @@ const About = ({ uid }) => {
     setprflimg("");
     const { files } = event.target;
 
-    // setKey(key + 1);
+    setPrflKey(prflKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -193,8 +197,7 @@ const About = ({ uid }) => {
     // profileImage
     setlogoimg("");
     const { files } = event.target;
-
-    // setKey(key + 1);
+    setLogoKey(logoKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -229,7 +232,7 @@ const About = ({ uid }) => {
     setbgimg("");
     const { files } = event.target;
 
-    // setKey(key + 1);
+    setCoverKey(coverKey + 1);
     if (files && files?.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -716,20 +719,21 @@ const About = ({ uid }) => {
             ) : (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full bg-gray-100 flex justify-center items-center flex-col relative">
                 <label
-                  htmlFor="prflImg"
+                  htmlFor="logoImg"
                   className="absolute right-[15px] top-0"
                 >
                   <GrAddCircle style={{ fontSize: "20px" }} />
 
                   <input
                     type="file"
-                    id="prflImg"
+                    id="logoImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handleLogoImageChange}
+                    key={logoKey}
                   />
                 </label>
                 <BiImage
-                  className="sm:text-[30px] text-[20px] "
+                  className="sm:text-[30px] text-[20px]"
                   style={{ color: "8F8E8E" }}
                 />
               </div>
@@ -771,6 +775,7 @@ const About = ({ uid }) => {
                     id="prflImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handlePrflImageChange}
+                    key={prflKey}
                   />
                 </label>
                 <PiUserRectangleFill
@@ -812,6 +817,7 @@ const About = ({ uid }) => {
                     id="cvrImg"
                     style={{ opacity: 0, width: "0px", height: "0px" }}
                     onChange={handlebgImageChange}
+                    key={coverKey}
                   />
                 </label>
                 <IoImageOutline
@@ -878,7 +884,10 @@ const About = ({ uid }) => {
             className="w-[252px] flex justify-between mt-1 "
             style={screen <= 450 ? { marginTop: "20px" } : null}
           >
-            <button className="w-[120px] h-[40px] border rounded-[16px] text-[12px] font-[600]">
+            <button
+              className="w-[120px] h-[40px] border rounded-[16px] text-[12px] font-[600]"
+              onClick={() => handleCancelAbout()}
+            >
               Cancel
             </button>
             <button

@@ -70,6 +70,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
 
   let handleLinkEditModal = () => {
     setLinkEdit(!linkEdit);
+    setLinkValue({ value: "", shareable: true });
   };
 
   const style2 = {
