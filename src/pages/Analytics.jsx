@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { MdArrowDropDown } from "react-icons/md";
 import { FiInfo } from "react-icons/fi";
-import { Chart as ChartJs, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJs, ArcElement, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { BarChart } from "@mui/x-charts/BarChart";
 import NavbarFooter from "./NavbarFooter";
@@ -12,7 +12,7 @@ import {
   getSingleChildAnalytics,
   splitString,
 } from "../Services";
-import { Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem, Tooltip } from "@mui/material";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import CompanyProfile from "../components/SettingsComponents/CompanyProfile";
 import { MdOutlineFilterList } from "react-icons/md";
@@ -69,7 +69,7 @@ const Analytics = () => {
   let [companyProfile, setCompanyProfile] = useState({});
   let [selectedUser, setSelectedUser] = useState({});
   let [analytics, setAnalytics] = useState(null);
-  let [filter, setfilter] = useState("Today");
+  let [filter, setfilter] = useState("Total");
 
   useEffect(() => {
     if (conexParent) {
@@ -140,7 +140,13 @@ const Analytics = () => {
       return 0;
     }
   };
-  let filterData = ["Today", "Past 1 week", "Past 1 Month", "Past 1 Year"];
+  let filterData = [
+    "Total",
+    "Today",
+    "Past 1 week",
+    "Past 1 Month",
+    "Past 1 Year",
+  ];
   console.log(analytics);
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
@@ -322,12 +328,14 @@ const Analytics = () => {
                 </div>
               ) : (
                 <div className="h-[31%] w-[100%] bg-white rounded-[37px] shadow-xl ">
-                  <div className="w-[100%] h-[25%]  flex items-end">
-                    <p className="flex font-[500] text-[16] ml-4 items-center">
-                      Leads Generated
-                      <FiInfo className="ml-1 text-[11px] cursor-pointer" />
-                    </p>
-                  </div>
+                  <Tooltip title="The number of times people submit the form">
+                    <div className="w-[100%] h-[25%]  flex items-end">
+                      <p className="flex font-[500] text-[16] ml-4 items-center">
+                        Leads Generated
+                        <FiInfo className="ml-1 text-[11px] cursor-pointer" />
+                      </p>
+                    </div>
+                  </Tooltip>
                   <div className="w-[100%] h-[75%]  flex justify-around items-center">
                     <h2 className="font-[700] text-[48px] w-[35%]">
                       {returnAnalyticsData(filter, "leads", analytics)}
@@ -359,12 +367,14 @@ const Analytics = () => {
                 </div>
               ) : (
                 <div className="h-[31%] w-[100%] bg-white rounded-[37px] shadow-xl ">
-                  <div className="w-[100%] h-[25%]  flex items-end">
-                    <p className="flex font-[500] text-[16] ml-4 items-center">
-                      Link taps
-                      <FiInfo className="ml-1 text-[11px] cursor-pointer" />
-                    </p>
-                  </div>
+                  <Tooltip title="The total number of times someone open your links">
+                    <div className="w-[100%] h-[25%]  flex items-end">
+                      <p className="flex font-[500] text-[16] ml-4 items-center">
+                        Link taps
+                        <FiInfo className="ml-1 text-[11px] cursor-pointer" />
+                      </p>
+                    </div>
+                  </Tooltip>
                   <div className="w-[100%] h-[75%]  flex justify-around items-center">
                     <h2 className="font-[700] text-[48px] w-[35%]">
                       {returnAnalyticsData(filter, "links", analytics)}
@@ -396,12 +406,14 @@ const Analytics = () => {
                 </div>
               ) : (
                 <div className="h-[31%] w-[100%] bg-white rounded-[37px] shadow-xl ">
-                  <div className="w-[100%] h-[25%]  flex items-end">
-                    <p className="flex font-[500] text-[16] ml-4 items-center">
-                      Card Views
-                      <FiInfo className="ml-1 text-[11px] cursor-pointer" />
-                    </p>
-                  </div>
+                  <Tooltip title="The Total number of times someone land on your Connex Profile">
+                    <div className="w-[100%] h-[25%]  flex items-end">
+                      <p className="flex font-[500] text-[16] ml-4 items-center">
+                        Card Views
+                        <FiInfo className="ml-1 text-[11px] cursor-pointer" />
+                      </p>
+                    </div>
+                  </Tooltip>
                   <div className="w-[100%] h-[75%]  flex justify-around items-center">
                     <h2 className="font-[700] text-[48px] w-[35%]">
                       {returnAnalyticsData(filter, "views", analytics)}

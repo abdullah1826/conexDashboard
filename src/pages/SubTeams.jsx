@@ -18,13 +18,14 @@ import {
 } from "../Services";
 import bgplhldr from "../imgs/bgplhldr.png";
 import AddMemberModal from "../components/Modals/AddMemberModal";
-import SingleTeamModal from "../components/Modals/SingleTeamModal";
+// import SingleTeamModal from "../components/Modals/SingleTeamModal";
 import { IoEyeOutline } from "react-icons/io5";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { BsFillTrashFill } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
 import DeleteModal from "../components/Modals/DeleteModal";
 import { MoonLoader } from "react-spinners";
+import SingleTeamModal from "../components/Modals/SingleTeamMoDAL.JSX";
 
 const SubTeams = () => {
   var screen = window.innerWidth;
@@ -88,7 +89,7 @@ const SubTeams = () => {
     setfiltered(result);
   }, [search]);
   let [deleteModal, setdeleteModal] = useState(false);
-  let [teamId, setteamId] = useState("");
+  let [teamId, setteamId] = useState({});
 
   let [members, setmembers] = useState([]);
 
@@ -306,7 +307,7 @@ const SubTeams = () => {
                             <div
                               className="sm:h-[30px] h-[25px] sm:w-[70px] w-[94px] bg-[#F3F3F3] rounded-[21px] cursor-pointer flex justify-center items-center ml-[5px]"
                               onClick={() => {
-                                handledeleteModal(), setteamId(team?.teamId);
+                                handledeleteModal(), setteamId(team);
                               }}
                             >
                               <p

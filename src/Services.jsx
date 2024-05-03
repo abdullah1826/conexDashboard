@@ -164,10 +164,10 @@ export const createNewCard = async (data, callBack) => {
           update(ref(db, `Users/${user.uid}`), {
             platform: "web",
             address: "",
-            backgroundColor: "#000000",
+            backgroundColor: "",
             bio: "",
             city: "",
-            color: "#000000",
+            color: "",
             coverUrl: "",
             darkTheme: "0",
             directMode: false,
@@ -219,7 +219,7 @@ export const createNewCard = async (data, callBack) => {
             isCompany: false,
             qrLogoUrl: "",
             leadMode: false,
-            textColor: "#000000",
+            textColor: "",
           }).then(() => {
             axios
               .post(`${baseUrl}createAccount`, {
@@ -699,24 +699,76 @@ export const getAllTeams = async (callBackFunc, setloading) => {
 
 // ------------------------------------------------Add team member-----------------------------------------------
 
-export const addTeamMember = (team, membersId, cb, setMemberIds) => {
+export const addTeamMember = async (
+  team,
+  membersId,
+  cb,
+  setMemberIds,
+  members,
+  setMembers
+) => {
+  console.log("test.....", members);
   if (membersId.length > 0) {
     if (team?.members) {
       let memberArray = Object.values(team?.members);
-      set(ref(db, `Teams/${team?.teamId}/members/`), [
+      await set(ref(db, `Teams/${team?.teamId}/members/`), [
         ...memberArray,
         ...membersId,
-      ]).then(() => {
-        toast.success("Team updated successfuly");
-        cb();
-        setMemberIds([]);
-      });
-    } else {
-      set(ref(db, `Teams/${team?.teamId}/members/`), [...membersId]).then(
-        () => {
+      ]).then(async () => {
+        const updatePromises = members?.map(async (elm) => {
+          console.log("testing...");
+          if (elm?.teams && typeof elm?.teams === "object") {
+            await set(ref(db, `Users/${elm?.id}/teams/`), [
+              ...Object.values(elm?.teams),
+              team?.teamId,
+            ]);
+          } else {
+            await set(ref(db, `Users/${elm?.id}/teams/`), [team?.teamId]);
+          }
+        });
+
+        try {
+          const updatedIds = await Promise.all(updatePromises);
+          console.log("Updated IDs:", updatedIds);
+          // Handle success, show success message, etc.
           toast.success("Team updated successfuly");
           cb();
           setMemberIds([]);
+          setMembers([]);
+        } catch (error) {
+          console.error("Error updating objects:", error);
+          // Handle error, show error message, etc.
+          toast.error("Error updating objects");
+        }
+      });
+    } else {
+      set(ref(db, `Teams/${team?.teamId}/members/`), [...membersId]).then(
+        async () => {
+          const updatePromises = members?.map(async (elm) => {
+            console.log("testing...");
+            if (elm?.teams && typeof elm?.teams === "object") {
+              await set(ref(db, `Users/${elm?.id}/teams/`), [
+                ...Object.values(elm?.teams),
+                team?.teamId,
+              ]);
+            } else {
+              await set(ref(db, `Users/${elm?.id}/teams/`), [team?.teamId]);
+            }
+          });
+
+          try {
+            const updatedIds = await Promise.all(updatePromises);
+            console.log("Updated IDs:", updatedIds);
+            // Handle success, show success message, etc.
+            toast.success("Team updated successfuly");
+            cb();
+            setMemberIds([]);
+            setMembers([]);
+          } catch (error) {
+            console.error("Error updating objects:", error);
+            // Handle error, show error message, etc.
+            toast.error("Error updating objects");
+          }
         }
       );
     }
@@ -772,8 +824,6 @@ export const getAllTeamMembersLength = (arr) => {
         MediaKeyStatusMap;
       });
     });
-    
-   
   }
 };
 
@@ -857,11 +907,18 @@ export const renoveLink = (linkData, id, allLinks, cb) => {
     let remainingLinks = allLinks?.filter((elm) => {
       return elm?.linkID != linkData?.linkID;
     });
-
-    set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
-      cb();
-      toast.success("Link deleted successfuly");
-    });
+    console.log(remainingLinks);
+    if (remainingLinks?.length === 0) {
+      remove(ref(db, `Users/${id}/links/`)).then(() => {
+        cb();
+        // toast.success("Link deleted successfuly");
+      });
+    } else {
+      set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
+        cb();
+        // toast.success("Link deleted successfuly");
+      });
+    }
   }
   // }
 };
@@ -904,10 +961,52 @@ export const addtoDirect = (name, linkID, value, id) => {
 };
 
 // ---------------------------------------Handle delete company----------------------------------
-export const deleteCompany = (id, callBack) => {
-  remove(ref(db, `Teams/${id}`)).then(() => {
-    callBack();
-    toast.success("Team deleted successfuly");
+export const deleteCompany = (team, callBack) => {
+  remove(ref(db, `Teams/${team?.teamId}`)).then(async () => {
+    if (team?.members && typeof team?.members === "object") {
+      const membersPromises = Object.values(team?.members)?.map((elm) => {
+        const starCountRef = query(
+          ref(db, "/Users"),
+          orderByChild("id"),
+          equalTo(elm)
+        );
+        onValue(starCountRef, async (snapshot) => {
+          const data = await snapshot.val();
+          if (Object.values(data)?.[0]) {
+            console.log(data);
+            if (
+              Object.values(data)?.[0]?.teams &&
+              typeof Object.values(data)?.[0]?.teams === "object"
+            ) {
+              const remainingTeams = Object.values(
+                Object.values(data)?.[0]?.teams
+              )?.filter((elem) => {
+                return elem != team?.teamId;
+              });
+              set(ref(db, `Users/${Object.values(data)?.[0]?.id}/teams/`), [
+                ...remainingTeams,
+              ]);
+            }
+          }
+
+          console.log(data);
+          console.log("testing data");
+          MediaKeyStatusMap;
+        });
+      });
+
+      try {
+        const updatedIds = await Promise.all(membersPromises);
+        console.log("Updated IDs:", updatedIds);
+        // Handle success, show success message, etc.
+        callBack();
+        toast.success("Team deleted successfuly");
+      } catch (error) {
+        console.error("Error updating objects:", error);
+        // Handle error, show error message, etc.
+        toast.error("Error updating objects");
+      }
+    }
   });
 };
 
@@ -925,7 +1024,7 @@ export const changeProfileStatus = (status, id) => {
 export const getContacts = (id, cb) => {
   const starCountRef = query(
     ref(db, "/Contacts"),
-    orderByChild("userid"),
+    orderByChild("parentId"),
     equalTo(id)
   );
   onValue(starCountRef, async (snapshot) => {
@@ -938,8 +1037,9 @@ export const getContacts = (id, cb) => {
 };
 
 // ---------------------------------------Handle delete contact----------------------------------
-export const deleteContact = (id) => {
+export const deleteContact = (id, cb) => {
   remove(ref(db, `Contacts/${id}`)).then(() => {
+    cb();
     toast.success("Contact deleted successfuly");
   });
 };
@@ -1140,7 +1240,7 @@ export const updateTeam = async (data, callBack, teamId) => {
 
 // ----------------------------------------------------Remove Team Member---------------------------------------------
 
-export const removeTeamMember = (userId, teamId, allMembers, cb) => {
+export const removeTeamMember = (user, userId, teamId, allMembers, cb) => {
   // if (linkData?.value) {
   if (allMembers) {
     let remainingMembers = allMembers?.filter((elm) => {
@@ -1150,8 +1250,16 @@ export const removeTeamMember = (userId, teamId, allMembers, cb) => {
     console.log("remainingMembers", remainingMembers);
 
     set(ref(db, `Teams/${teamId}/members/`), [...remainingMembers]).then(() => {
-      cb(userId);
-      toast.success("Team member deleted successfuly");
+      if (typeof user?.teams === "object") {
+        let userTeams = Object.values(user?.teams);
+        let remainingTeams = userTeams?.filter((elm) => {
+          return elm != teamId;
+        });
+        set(ref(db, `Users/${userId}/teams/`), [...remainingTeams]).then(() => {
+          cb(userId);
+          toast.success("Team member deleted successfuly");
+        });
+      }
     });
   }
   // }

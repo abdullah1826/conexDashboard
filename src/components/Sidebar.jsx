@@ -15,6 +15,8 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { handleLogout } from "../Services";
 import DeleteModal from "./Modals/DeleteModal";
 import { BsBuildingsFill } from "react-icons/bs";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const Sidebar = () => {
   let navigate = useNavigate();
 
@@ -177,6 +179,12 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
+      {/* <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      /> */}
       {/* <LogoutModal
         modal={modal}
         handleModal={handleModal}

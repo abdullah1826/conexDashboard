@@ -121,19 +121,22 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
     let addedLink = links.find((elm) => {
       return elm?.linkID === link?.linkID;
     });
+
     if (addedLink) {
+      console.log("true");
       setLinkValue({
         value: addedLink?.value,
         shareable: addedLink?.shareable,
         index,
       });
       setLinkInfo({
-        name: link?.name,
+        name: addedLink?.name,
         img: link?.img,
         linkID: link?.linkID,
         placeholder: link?.placeholder,
       });
     } else {
+      console.log("false");
       setLinkInfo(link);
     }
   };
@@ -239,6 +242,26 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                       }
                       value={linkValue?.value}
                     />
+                    {linkInfo?.linkID === 49 ||
+                    linkInfo?.linkID === 50 ||
+                    linkInfo?.linkID === 51 ||
+                    linkInfo?.linkID === 52 ? (
+                      <>
+                        <h2 className="text-sm font-medium mt-4">Title*</h2>
+                        <input
+                          type="text"
+                          className="mt-2 outline-none border-none w-[90%]  h-[50px] bg-[#f7f7f7] rounded-lg p-5 placeholder:text-sm"
+                          onChange={(e) =>
+                            setLinkInfo({
+                              ...linkInfo,
+                              name: e.target.value,
+                            })
+                          }
+                          value={linkInfo?.name}
+                        />
+                      </>
+                    ) : null}
+
                     <div className="w-[90%] flex justify-center items-center mt-5">
                       <div className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center mr-1 bg-[#f0f0f0]">
                         Cancel
@@ -375,12 +398,12 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                     <h2 className="font-medium text-[#4F4F4F]">Social</h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
-                      {socialIcons.map((elm) => {
+                      {socialIcons.map((elm, i) => {
                         return (
                           <div
                             className=" h-[70px] shadow-sm w-[270px] rounded-xl   bg-[#f7f7f7] hover:bg-white hover:shadow-xl cursor-pointer p-2 flex items-center mt-5 relative"
                             onClick={() => {
-                              handleLinkEditModal(), setLinkInfo(elm);
+                              handleLinkEditModal(), addAlreadyExist(elm, i);
                             }}
                             //   onClick={
                             //     checkAdded(elm?.name)
@@ -426,12 +449,12 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                     </h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
-                      {media?.map((elm) => {
+                      {media?.map((elm, i) => {
                         return (
                           <div
                             className=" h-[70px] shadow-sm w-[270px] rounded-xl   bg-[#f7f7f7] hover:bg-white hover:shadow-xl cursor-pointer p-2 flex items-center mt-5 relative"
                             onClick={() => {
-                              handleLinkEditModal(), setLinkInfo(elm);
+                              handleLinkEditModal(), addAlreadyExist(elm, i);
                             }}
                             //   onClick={
                             //     checkAdded(elm?.title)
@@ -474,12 +497,12 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                     <h2 className="font-medium text-[#4F4F4F]">Payment</h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
-                      {payment?.map((elm) => {
+                      {payment?.map((elm, i) => {
                         return (
                           <div
                             className=" h-[70px] shadow-sm w-[270px] rounded-xl   bg-[#f7f7f7] hover:bg-white hover:shadow-xl cursor-pointer p-2 flex items-center mt-5 relative"
                             onClick={() => {
-                              handleLinkEditModal(), setLinkInfo(elm);
+                              handleLinkEditModal(), addAlreadyExist(elm, i);
                             }}
                             //   onClick={
                             //     checkAdded(elm?.title)
@@ -522,12 +545,12 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                     <h2 className="font-medium text-[#4F4F4F]">More</h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
-                      {more?.map((elm) => {
+                      {more?.map((elm, i) => {
                         return (
                           <div
                             className=" h-[70px] shadow-sm w-[270px] rounded-xl   bg-[#f7f7f7] hover:bg-white hover:shadow-xl cursor-pointer p-2 flex items-center mt-5 relative"
                             onClick={() => {
-                              handleLinkEditModal(), setLinkInfo(elm);
+                              handleLinkEditModal(), addAlreadyExist(elm, i);
                             }}
                             //   onClick={
                             //     checkAdded(elm?.title)

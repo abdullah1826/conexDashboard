@@ -4,12 +4,14 @@ import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { useSelector } from "react-redux";
 import { returnIcons } from "../assets/ReturnSocialIcons";
-import { getSingleChild } from "../Services";
+import { getSingleChild, splitString } from "../Services";
 import {
   setOrgLogo,
   setOrganizationCover,
   setOrganizationProfile,
 } from "../redux/profileInfoSlice";
+import { BsGlobe2 } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 
 const Mobile = ({ linkInfo, ifAdded }) => {
   const name = useSelector((state) => state.profileInfoSlice.name);
@@ -100,22 +102,34 @@ const Mobile = ({ linkInfo, ifAdded }) => {
       setCompanyId(connexUid);
     }
   }, []);
-
+  let dispatch = useDispatch();
   let getCompanyData = (data) => {
     dispatch(setOrganizationCover(data?.[companyId]?.coverUrl));
     dispatch(setOrgLogo(data?.[companyId]?.logoUrl));
     dispatch(setOrganizationProfile(data?.[companyId]?.profileUrl));
-    setCompanyProfile(data);
+    setCompanyProfile(data?.[companyId]);
   };
 
   useEffect(() => {
     getSingleChild(companyId, getCompanyData);
   }, [companyId]);
 
+  console.log(companyProfile);
+
+  let returnWeblink = () => {
+    let web = links?.find((elm) => {
+      return elm?.linkID === 54;
+    });
+
+    return web;
+  };
+
+  console.log(textColor);
+
   return (
     <div
       className="w-[253px] h-[455px] rounded-[35px] border mt-2 overflow-y-scroll relative"
-      style={{ backgroundColor: hexToRGBA(color) }}
+      // style={{ backgroundColor: hexToRGBA(color) }}
     >
       {leadMode && (
         <div className="absolute w-[100%] flex justify-center items-center h-[455px]">
@@ -225,7 +239,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
 
       <div
         className="w-[100%] flex flex-col items-center mt-[40px]"
-        style={{ color: textColor }}
+        style={{ color: textColor ? textColor : companyProfile?.textColor }}
       >
         {!nameLock && (
           <h2 className="font-[500] text-[16px] text-center">{name}</h2>
@@ -233,70 +247,133 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         {/* <p className="text-[#656363] font-[400] text-[11px] w-[90%] text-center">
           Mern Stack developer at avicenne
         </p> */}
+
         <p
           className=" font-[400] text-[11px] w-[90%] text-center"
-          style={{ color: textColor }}
-        >
-          {email}
-        </p>
-        <p
-          className=" font-[400] text-[11px] w-[90%] text-center"
-          style={{ color: textColor }}
+          style={{ color: textColor ? textColor : companyProfile?.textColor }}
         >
           {designation}
         </p>
-        {!phoneLock && (
-          <p
-            className=" font-[400] text-[11px] w-[90%] text-center"
-            style={{ color: textColor }}
-          >
-            {phone}
-          </p>
-        )}
 
-        {!locationLock && (
+        {/* {!locationLock && (
           <p
             className=" font-[400] text-[11px] w-[90%] text-center"
             style={{ color: textColor }}
           >
             {address}
           </p>
-        )}
+        )} */}
 
         {!bioLock && (
           <p
             className="font-[400] text-[11px] w-[90%] text-center"
-            style={{ color: textColor }}
+            style={{ color: textColor ? textColor : companyProfile?.textColor }}
           >
             {bio}
           </p>
         )}
       </div>
 
-      <div className="w-[100%] flex justify-center mt-2">
+      <div className="w-[100%] flex flex-col items-center mt-2">
+        <div className="w-[65%] flex justify-center gap-3 items-center">
+          <div
+            className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
+            style={{ backgroundColor: color ? color : companyProfile?.color }}
+          >
+            <i class="fa fa-users text-white"></i>
+          </div>
+          {!phoneLock && phone && (
+            <div
+              className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
+              style={{ backgroundColor: color ? color : companyProfile?.color }}
+            >
+              <i class="fa fa-phone text-white"></i>
+            </div>
+          )}
+          {email && (
+            <div
+              className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
+              style={{ backgroundColor: color ? color : companyProfile?.color }}
+            >
+              <i class="fa fa-envelope text-white"></i>
+            </div>
+          )}
+          {address && (
+            <div
+              className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
+              style={{
+                backgroundColor: color ? color : companyProfile?.color,
+                display: locationLock ? "none" : null,
+              }}
+            >
+              <i class="fa fa-map-marker text-white"></i>
+            </div>
+          )}
+        </div>
         <div
-          className="w-[65%] h-[36px] border rounded-xl text-white flex justify-center items-center text-[12px]"
-          style={{ backgroundColor: color }}
+          className="w-[65%] h-[36px]  rounded-2xl text-white flex justify-center items-center text-[12px] mt-3"
+          style={{ backgroundColor: color ? color : companyProfile?.color }}
         >
           Let's Connect
         </div>
+        {returnWeblink() && (
+          <div
+            className="w-[80%] h-[36px]  rounded-2xl  flex  items-center text-[12px] mt-3 relative "
+            style={{
+              backgroundColor: "#e6e6e6",
+              display: !returnWeblink()?.shareable ? "none" : null,
+            }}
+          >
+            <div
+              className="h-[42px] w-[42px] rounded-full absolute left-[-10px] flex justify-center items-center "
+              style={{ backgroundColor: color ? color : companyProfile?.color }}
+            >
+              <BsGlobe2 className="text-2xl bg-white rounded-full" />
+            </div>
+            <p className="text-[11px] w-[65%] absolute left-[37px]">
+              {splitString(returnWeblink()?.value, 26)}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="w-[100%] flex justify-center mt-3">
         <div className="w-[90%] grid grid-cols-4 ml-6 gap-y-3">
           {links?.map((elm) => {
-            return (
+            return linkInfo?.linkID != elm?.linkID ? (
               <div
                 className="w-[35px] h-[50px] flex flex-col items-center"
-                style={{ display: !elm?.shareable ? "none" : null }}
+                style={{
+                  display:
+                    !elm?.shareable || elm?.linkID === 54 ? "none" : null,
+                }}
               >
                 <img
                   src={returnIcons(elm?.linkID)}
                   alt=""
                   className="h-[35px] w-[35px]"
                 />
-                <p className="text-[8px] mt-[2px]" style={{ color: textColor }}>
+                <p
+                  className="text-[8px] mt-[2px] text-center"
+                  style={{ color: textColor }}
+                >
                   {elm?.name}
+                </p>
+              </div>
+            ) : (
+              <div className="w-[35px] h-[50px] flex flex-col items-center">
+                <img
+                  src={returnIcons(linkInfo?.linkID)}
+                  alt=""
+                  className="h-[35px] w-[35px]"
+                />
+                <p
+                  className="text-[8px] mt-[2px] text-center"
+                  style={{
+                    color: textColor ? textColor : companyProfile?.textColor,
+                  }}
+                >
+                  {linkInfo?.name}
                 </p>
               </div>
             );
@@ -309,7 +386,14 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                 alt=""
                 className="h-[35px] w-[35px]"
               />
-              <p className="text-[8px] mt-[2px]">{linkInfo?.name}</p>
+              <p
+                className="text-[8px] mt-[2px] text-center"
+                style={{
+                  color: textColor ? textColor : companyProfile?.textColor,
+                }}
+              >
+                {linkInfo?.name}
+              </p>
             </div>
           )}
         </div>

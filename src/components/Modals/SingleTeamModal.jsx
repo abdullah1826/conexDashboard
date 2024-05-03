@@ -135,6 +135,7 @@ const SingleTeamModal = ({
                         className="h-[30px] w-[70px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white mr-1"
                         onClick={() =>
                           removeTeamMember(
+                            elm,
                             elm?.id,
                             singleTeam?.teamId,
                             Object.values(singleTeamMembers),

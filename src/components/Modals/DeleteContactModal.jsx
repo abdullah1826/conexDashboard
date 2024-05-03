@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import { deleteContact } from "../../Services";
 
-const DeleteContactModal = ({ deleteModal, handledeleteModal, lead }) => {
+const DeleteContactModal = ({ deleteModal, handledeleteModal, lead, cb }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
 
   const style2 = {
@@ -48,7 +48,7 @@ const DeleteContactModal = ({ deleteModal, handledeleteModal, lead }) => {
               <div
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm ml-[5px] bg-black text-white cursor-pointer"
                 onClick={() => {
-                  deleteContact(lead?.id), handledeleteModal();
+                  deleteContact(lead?.id, cb), handledeleteModal();
                 }}
               >
                 Sure

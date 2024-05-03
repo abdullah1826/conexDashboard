@@ -126,12 +126,11 @@ const EditMember = () => {
     dispatch(setAddress(singleProfile[uid]?.address));
     dispatch(setBio(singleProfile[uid]?.bio));
     dispatch(setProfilePictureLock(singleProfile[uid]?.profilePictureLock));
-    dispatch(setlogoLock(singleProfile[uid]?.logoLock));
-    dispatch(setcoverLock(singleProfile[uid]?.coverLock));
-    dispatch(setnameLock(singleProfile[uid]?.nameLock));
-    dispatch(setphoneLock(singleProfile[uid]?.phoneLock));
-    dispatch(setbioLock(singleProfile[uid]?.bioLock));
-    dispatch(setlocationLock(singleProfile[uid]?.locationLock));
+    // dispatch(setlogoLock(singleProfile[uid]?.logoLock));
+    // dispatch(setcoverLock(singleProfile[uid]?.coverLock));
+    // dispatch(setnameLock(singleProfile[uid]?.nameLock));
+    // dispatch(setphoneLock(singleProfile[uid]?.phoneLock));
+    // dispatch(setbioLock(singleProfile[uid]?.bioLock));
     if (typeof singleProfile[uid]?.links === "object") {
       dispatch(setLinks(Object.values(singleProfile[uid]?.links)));
     } else {
@@ -189,6 +188,7 @@ const EditMember = () => {
     dispatch(setnameLock(companyProfile?.[companyId]?.nameLock));
     dispatch(setphoneLock(companyProfile?.[companyId]?.phoneLock));
     dispatch(setbioLock(companyProfile?.[companyId]?.bioLock));
+    dispatch(setlocationLock(companyProfile?.[companyId]?.locationLock));
   }, [companyProfile?.[companyId]]);
 
   let handleCancelQr = () => {

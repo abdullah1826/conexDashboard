@@ -18,6 +18,7 @@ import csv from "../../imgs/csv.png";
 import zap from "../../imgs/zap.png";
 import { TfiDownload } from "react-icons/tfi";
 import { FaRegMessage } from "react-icons/fa6";
+import DownloadCsv from "../DownloadCsv";
 
 const SingleLeadModal = ({ leadModal, handleLeadModal, singleLead }) => {
   const style2 = {
@@ -119,17 +120,18 @@ const SingleLeadModal = ({ leadModal, handleLeadModal, singleLead }) => {
                   <div className="w-[100%] flex justify-center">
                     <h2 className="font-[400] text-[18px]">Export as</h2>
                   </div>
-                  <div className="h-[113px] rounded-[18px] border shadow-lg mt-2 flex justify-center flex-col items-center cursor-pointer">
+                  {/* <div className="h-[113px] rounded-[18px] border shadow-lg mt-2 flex justify-center flex-col items-center cursor-pointer">
                     <img src={zap} alt="" className="h-[35px] w-[35px]" />
                     <div className="flex text-[14px] font-[500] mt-1">
                       Zapier File <TfiDownload className="text-lg ml-1" />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="h-[113px] rounded-[18px] border shadow-lg mt-2 flex justify-center flex-col items-center cursor-pointer">
                     <img src={csv} alt="" className="h-[35px] w-[35px]" />
                     <div className="flex text-[14px] font-[500] mt-1">
-                      Csv File <TfiDownload className="text-lg ml-1" />
+                      <DownloadCsv data={[singleLead]} />{" "}
+                      <TfiDownload className="text-lg ml-1" />
                     </div>
                   </div>
                 </div>

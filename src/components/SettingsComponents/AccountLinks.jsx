@@ -14,6 +14,8 @@ import { set, ref } from "firebase/database";
 import { db } from "../../firebase";
 import { setLinks } from "../../redux/profileInfoSlice";
 import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AccountLinks = ({ uid }) => {
   let [modal, setmodal] = useState(false);
@@ -58,7 +60,7 @@ const AccountLinks = ({ uid }) => {
 
   let updateLinks = () => {
     if (links?.length < 2) {
-      setLinks([]);
+      dispatch(setLinks([]));
       setItems([]);
     }
   };
@@ -81,6 +83,7 @@ const AccountLinks = ({ uid }) => {
           )
         }
       />
+
       <div className="overflow-y-scroll h-[85%] ">
         <DragDropContext
           onDragEnd={handleDragEnd}

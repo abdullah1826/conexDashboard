@@ -162,8 +162,8 @@ export const socialIcons = [
     linkID: 3,
   },
   {
-    name: "Twitter",
-    title: "Twitter",
+    name: "X",
+    title: "X",
     img: twitter,
     placeholder: "Twitter Username*",
     linkID: 2,
@@ -319,13 +319,7 @@ export const more = [
     placeholder: "Calendly link*",
     linkID: 38,
   },
-  {
-    name: "Custom Link",
-    title: "Custom",
-    img: custom,
-    placeholder: "Custom link*",
-    linkID: 50,
-  },
+
   {
     name: "Store",
     title: "Store",
@@ -374,6 +368,41 @@ export const more = [
     img: amazone,
     placeholder: "Amazon link*",
     linkID: 43,
+  },
+  {
+    name: "Website",
+    title: "Website",
+    img: website,
+    placeholder: "web link*",
+    linkID: 54,
+  },
+  {
+    name: "Custom Link1",
+    title: "Custom",
+    img: custom,
+    placeholder: "Custom link*",
+    linkID: 49,
+  },
+  {
+    name: "Custom Link2",
+    title: "Custom",
+    img: custom,
+    placeholder: "Custom link*",
+    linkID: 50,
+  },
+  {
+    name: "Custom Link3",
+    title: "Custom",
+    img: custom,
+    placeholder: "Custom link*",
+    linkID: 51,
+  },
+  {
+    name: "Custom Link4",
+    title: "Custom",
+    img: custom,
+    placeholder: "Custom link*",
+    linkID: 52,
   },
 ];
 
@@ -498,7 +527,7 @@ export const returnIcons = (linkID) => {
     return paypal;
   } else if (linkID === 38) {
     return calendly;
-  } else if (linkID === 50) {
+  } else if (linkID === 49 || linkID === 50 || linkID === 51 || linkID === 52) {
     return custom;
   } else if (linkID === 36) {
     return store;
@@ -516,5 +545,7 @@ export const returnIcons = (linkID) => {
     return amazone;
   } else if (linkID === 58) {
     return threads;
+  } else if (linkID === 54) {
+    return website;
   }
 };

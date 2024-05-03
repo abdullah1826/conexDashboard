@@ -853,7 +853,7 @@ const About = ({ uid, handleCancelAbout }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Designation"
+              placeholder="Job Title"
               onChange={(e) => dispatch(setDesignation(e.target.value))}
               value={designation}
             />

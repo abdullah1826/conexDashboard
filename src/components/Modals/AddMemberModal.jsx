@@ -31,6 +31,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
   let [allProfiles, setAllProfiles] = useState([]);
   let [filtered, setfiltered] = useState([]);
   let [memberIds, setMemberIds] = useState([]);
+  let [members, setMembers] = useState([]);
   console.log(memberIds);
   let getAllProfiles = (obj) => {
     setAllProfiles(Object.values(obj));
@@ -56,14 +57,23 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
 
   //   console.log("single", singleTeam);
 
-  let addRemoveMember = (id) => {
+  let addRemoveMember = (id, member) => {
     let exist = memberIds?.some((elm) => {
       return elm === id;
     });
+
+    let existMember = members?.some((elm) => {
+      return elm?.id === member?.id;
+    });
+
     console.log(exist);
 
     let updatedIds = memberIds?.filter((elm) => {
       return elm != id;
+    });
+
+    let updatedMembers = members?.filter((elm) => {
+      return elm?.id != member?.id;
     });
 
     if (!exist) {
@@ -71,7 +81,15 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
     } else {
       setMemberIds([...updatedIds]);
     }
+
+    if (!existMember) {
+      setMembers([...members, member]);
+    } else {
+      setMembers([...updatedMembers]);
+    }
   };
+
+  console.log(members);
 
   let ifAdded = (id) => {
     if (singleTeam?.members) {
@@ -137,7 +155,9 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                             // onClick={() => addRemoveMember(elm?.id)}
                           />
                         ) : (
-                          <Checkbox onChange={() => addRemoveMember(elm?.id)} />
+                          <Checkbox
+                            onChange={() => addRemoveMember(elm?.id, elm)}
+                          />
                         )}
                       </div>
                     </div>
@@ -160,6 +180,8 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                     singleTeam,
                     memberIds,
                     handleAddModal,
+                    setMemberIds,
+                    members,
                     setMemberIds
                   )
                 }

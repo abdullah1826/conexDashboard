@@ -18,7 +18,7 @@ import NavbarFooter from "./NavbarFooter";
 import CreateNewTeam from "../components/Modals/CreateNewTeam";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { getAllTeams, getContacts } from "../Services";
+import { getAllChilds, getAllTeams, getContacts } from "../Services";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import SingleLeadModal from "../components/Modals/SingleLeadModal";
 // import DeleteContact from "../components/Modals/DeleteContactModal";
@@ -78,12 +78,53 @@ const Leads = () => {
     getAllTeams(getTeams, setloading);
   }, []);
 
+  let removeLastLead = () => {
+    if (leads?.length < 2) {
+      setLeads([]);
+      setfiltered([]);
+    }
+  };
+  let [teamId, setTeamId] = useState("all");
+  let [userId, setUserId] = useState("all");
+
+  // -----------------------getting all users----------------------
+  let [allProfiles, setAllProfiles] = useState([]);
+
+  let getAllProfiles = (obj) => {
+    setAllProfiles(Object.values(obj));
+  };
+
+  useEffect(() => {
+    getAllChilds(getAllProfiles, () => console.log("test"));
+  }, []);
+
+  // -----------------------filters----------------------
+
+  useEffect(() => {
+    if (teamId === "all") {
+      setfiltered(leads);
+    } else {
+      const filtered = leads?.filter((item) => item?.teams?.includes(teamId));
+      setfiltered(filtered);
+    }
+  }, [teamId]);
+
+  useEffect(() => {
+    if (userId === "all") {
+      setfiltered(leads);
+    } else {
+      const filtered = leads?.filter((item) => item?.userid === userId);
+      setfiltered(filtered);
+    }
+  }, [userId]);
+
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       <DeleteContactModal
         deleteModal={deleteModal}
         handledeleteModal={handleDeleteModal}
         lead={lead}
+        cb={removeLastLead}
       />
       <SingleLeadModal
         leadModal={leadModal}
@@ -123,14 +164,14 @@ const Leads = () => {
               </p>
             </div>
 
-            <div className="w-[72%] h-[100%] flex justify-between ">
+            <div className="w-[82%] h-[100%] flex justify-between ">
               <Tooltip title="Filter by Team">
-                <div className="sm:w-[150px] sm:h-[100%]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                <div className="sm:w-[130px] sm:h-[100%]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                   <select
                     name=""
                     id=""
                     className="w-[90%] outline-none"
-                    // onChange={(e) => SingleLeads(e)}
+                    onChange={(e) => setTeamId(e.target.value)}
                   >
                     <option
                       value="all"
@@ -146,9 +187,26 @@ const Leads = () => {
                   </select>
                 </div>
               </Tooltip>
-              {/* <Tooltip title="Filter by Company">
-                <div className="sm:w-[130px] sm:h-[100%] border  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer"></div>
-              </Tooltip> */}
+              <Tooltip title="Filter by Name">
+                <div className="sm:w-[130px] sm:h-[100%]  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                  <select
+                    name=""
+                    id=""
+                    className="w-[90%] outline-none"
+                    onChange={(e) => setUserId(e.target.value)}
+                  >
+                    <option
+                      value="all"
+                      // onClick={() => dispatch(getSingleLeadContacts(elm?.id))}
+                    >
+                      All
+                    </option>
+                    {Object.values(allProfiles)?.map((elm) => {
+                      return <option value={elm?.id}>{elm?.name}</option>;
+                    })}
+                  </select>
+                </div>
+              </Tooltip>
               <div className="sm:w-[254px] sm:h-[100%] w-[100px] h-[33px] flex items-center rounded-[36px] bg-white shadow-xl">
                 {screen <= 450 ? (
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
@@ -191,9 +249,9 @@ const Leads = () => {
           </div>
 
           <div className="w-[100%] h-[47px] rounded-[36px] bg-[#ECEBEA] mt-[50px] flex justify-around items-center">
-            <div className="w-[5%]">
+            {/* <div className="w-[5%]">
               <Checkbox defaultChecked color="default" />
-            </div>
+            </div> */}
 
             <div className="w-[15%] ml-5">
               <p className="font-[500] sm:text-[16px] text-[12px]">Contact</p>

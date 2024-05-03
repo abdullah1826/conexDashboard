@@ -45,6 +45,8 @@ import {
 } from "../redux/profileInfoSlice";
 import { CiLock } from "react-icons/ci";
 import HelpModal from "../components/Modals/HelpModal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Company = () => {
   let [value, setValue] = useState(0);
@@ -193,7 +195,12 @@ const Company = () => {
               </Menu> */}
               <div
                 className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-center items-center cursor-pointer"
-                onClick={() => handlehelpModal()}
+                // onClick={() => handlehelpModal()}
+                onClick={() =>
+                  window.open(
+                    "https://connexcard.store/pages/support-contactus"
+                  )
+                }
               >
                 <p className="font-[500] sm:text-[15px] text-[12px] ">Help ?</p>
                 {/* <MdArrowDropDown className="text-2xl ml-1" /> */}
@@ -274,6 +281,12 @@ const Company = () => {
         </div>
       </div>
       {screen <= 450 ? <NavbarFooter /> : null}
+      {/* <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      /> */}
     </div>
   );
 };

@@ -118,7 +118,9 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
               isCircle={false}
               isNotRedux={true}
             />
-            <h2 className="text-center font-medium text-lg">Create new team</h2>
+            <h2 className="text-center font-medium text-lg">
+              {singleTeam?.teamName === "" ? "Create new team" : "Edit team"}
+            </h2>
             <div className="w-[90%] h-[80%] flex flex-col items-center justify-around">
               <div className="h-[150px] w-[90%] rounded-[45px] relative">
                 <label
@@ -156,7 +158,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                 >
                   Cancel
                 </button>
-                {!singleTeam?.name ? (
+                {singleTeam?.teamName === "" ? (
                   <button
                     className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                     onClick={() => createTeam(data, callBack)}
