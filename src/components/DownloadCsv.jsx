@@ -7,7 +7,7 @@ const DownloadCsv = ({ data }) => {
     return {
       Contact: item?.name,
       Email: item?.email,
-      contactedWith: item?.contactedWith,
+      ConnectedWith: item?.connectedWith,
       Date: item?.date,
       Job: item?.job,
       Company: item?.company,

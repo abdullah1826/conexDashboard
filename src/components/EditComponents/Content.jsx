@@ -129,7 +129,12 @@ const Content = ({ uid }) => {
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
       <div className="w-[100%] h-[100%]">
-        <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
+        <SocialLinkModal
+          modal={modal}
+          handleClose={handleModal}
+          uid={uid}
+          allProfiles={[]}
+        />
         <DeleteModal
           deleteModal={deleteModal}
           handledeleteModal={handledeleteModal}
@@ -193,9 +198,16 @@ const Content = ({ uid }) => {
                       </div>
                       <div className="w-[100%] flex flex-col justify-center items-center mt-4">
                         <img
-                          src={returnIcons(direct?.linkID)}
+                          src={
+                            direct?.image
+                              ? direct?.image
+                              : returnIcons(direct?.linkID)
+                          }
                           alt=""
                           className="h-[45px] w-[45px] object-cover"
+                          style={{
+                            borderRadius: direct?.image ? "10px" : "0px",
+                          }}
                         />
                         <h2 className="font-[500] text-[15px] mt-2">
                           {direct?.name}
@@ -231,9 +243,14 @@ const Content = ({ uid }) => {
                         </div>
                         <div className="w-[100%] flex flex-col justify-center items-center mt-4">
                           <img
-                            src={returnIcons(elm?.linkID)}
+                            src={
+                              elm?.image ? elm?.image : returnIcons(elm?.linkID)
+                            }
                             alt=""
                             className="h-[45px] w-[45px] object-cover"
+                            style={{
+                              borderRadius: elm?.image ? "10px" : "0px",
+                            }}
                           />
                           <h2 className="font-[500] text-[15px] mt-2">
                             {elm?.name}
@@ -244,7 +261,13 @@ const Content = ({ uid }) => {
                         <button
                           className="w-[69px] h-[29px] rounded-[16px] border  text-[9px] font-[500] bg-black text-white"
                           onClick={() =>
-                            addtoDirect(elm?.name, elm?.linkID, elm?.value, uid)
+                            addtoDirect(
+                              elm?.name,
+                              elm?.linkID,
+                              elm?.value,
+                              uid,
+                              elm?.image
+                            )
                           }
                         >
                           Make Direct
@@ -293,7 +316,16 @@ const Content = ({ uid }) => {
                                   </div>
                                   <div className="w-[100%] flex flex-col justify-center items-center mt-4">
                                     <img
-                                      src={returnIcons(elm?.linkID)}
+                                      src={
+                                        elm?.image
+                                          ? elm?.image
+                                          : returnIcons(elm?.linkID)
+                                      }
+                                      style={{
+                                        borderRadius: elm?.image
+                                          ? "10px"
+                                          : "0px",
+                                      }}
                                       alt=""
                                       className="h-[45px] w-[45px] object-cover"
                                     />

@@ -349,9 +349,10 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                 }}
               >
                 <img
-                  src={returnIcons(elm?.linkID)}
+                  src={elm?.image ? elm?.image : returnIcons(elm?.linkID)}
                   alt=""
                   className="h-[35px] w-[35px]"
+                  style={{ borderRadius: elm?.image ? "8px" : "0px" }}
                 />
                 <p
                   className="text-[8px] mt-[2px] text-center"
@@ -361,11 +362,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                 </p>
               </div>
             ) : (
-              <div className="w-[35px] h-[50px] flex flex-col items-center">
+              <div className="w-[35px] h-[50px] flex flex-col items-center ">
                 <img
-                  src={returnIcons(linkInfo?.linkID)}
+                  src={
+                    linkInfo?.image
+                      ? linkInfo?.image
+                      : returnIcons(linkInfo?.linkID)
+                  }
                   alt=""
-                  className="h-[35px] w-[35px]"
+                  className=" rounded-lg object-cover min-h-[35px] min-w-[35px] max-h-[35px] max-w-[35px]"
                 />
                 <p
                   className="text-[8px] mt-[2px] text-center"
@@ -380,11 +385,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
           })}
 
           {ifAdded === false && (
-            <div className="w-[35px] h-[50px] flex flex-col items-center">
+            <div className="w-[35px] h-[50px] flex flex-col items-center ">
               <img
-                src={returnIcons(linkInfo?.linkID)}
+                src={
+                  linkInfo?.image
+                    ? linkInfo?.image
+                    : returnIcons(linkInfo?.linkID)
+                }
                 alt=""
-                className="h-[35px] w-[35px]"
+                className="min-h-[35px] min-w-[35px] max-h-[35px] max-w-[35px] rounded-lg object-cover"
               />
               <p
                 className="text-[8px] mt-[2px] text-center"

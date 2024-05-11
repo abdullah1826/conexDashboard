@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown, MdOutlinePerson3 } from "react-icons/md";
 import { FiInfo } from "react-icons/fi";
 import { Chart as ChartJs, ArcElement, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
@@ -8,6 +8,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import NavbarFooter from "./NavbarFooter";
 import {
   getAllChilds,
+  getAllTeams,
   getSingleChild,
   getSingleChildAnalytics,
   splitString,
@@ -61,6 +62,17 @@ const Analytics = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  const [anchorEl3, setAnchorEl3] = useState(null);
+
+  const open3 = Boolean(anchorEl3);
+
+  const handleClickListItem3 = (event) => {
+    setAnchorEl3(event.currentTarget);
+  };
+  const handleClose3 = () => {
+    setAnchorEl3(null);
   };
 
   let [companyId, setCompanyId] = useState("");
@@ -148,6 +160,23 @@ const Analytics = () => {
     "Past 1 Year",
   ];
   console.log(analytics);
+
+  // -----------------------getting all subteams----------------------
+
+  let [teams, setTeams] = useState([]);
+  // let [loading, setloading] = useState(false);
+  let getTeams = (value) => {
+    if (value) {
+      setTeams(Object.values(value));
+    }
+  };
+
+  useEffect(() => {
+    getAllTeams(getTeams, setloading);
+  }, []);
+
+  const [team, setTeam] = useState("All");
+
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       {screen >= 450 ? <Sidebar /> : null}
@@ -205,6 +234,78 @@ const Analytics = () => {
                     className="h-[27px] w-[27px] object-cover"
                   /> */}
                       <p className="font-[500] ml-2 text-base">{elm}</p>
+                    </MenuItem>
+                  );
+                })}
+              </Menu>
+
+              <div
+                component="nav"
+                // aria-label="Device settings"
+                id="company-menu"
+                aria-haspopup="listbox"
+                aria-controls="company-menu"
+                // aria-expanded={openMenu ? "true" : undefined}
+                onClick={handleClickListItem3}
+                className="w-[140px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer mr-4"
+              >
+                <p className="font-[500] text-[15px]">
+                  {team ? splitString(team, 11) : "Select User"}
+                </p>
+                <MdArrowDropDown className="text-2xl" />
+              </div>
+              <Menu
+                id="company-menu"
+                anchorEl={anchorEl3}
+                open={open3}
+                onClose={handleClose3}
+                MenuListProps={{
+                  "aria-labelledby": "lang-button",
+                  role: "listbox",
+                }}
+              >
+                <MenuItem
+                  // key={index}
+                  // disabled={index === 0}
+                  // selected={index === selectedIndex}
+                  // onClick={(event) => handleMenuItemClick(event, index)}
+                  onClick={() => {
+                    handleClose3();
+                  }}
+                  sx={{ display: "flex" }}
+                >
+                  {/* <img
+                    src={
+                      companyProfile?.[companyId]?.profileUrl
+                        ? companyProfile?.[companyId]?.profileUrl
+                        : prsnPlshldr
+                    }
+                    alt=""
+                    className="h-[27px] w-[27px] object-cover"
+                  /> */}
+                  <p className="font-[500] ml-2 text-base">All</p>
+                </MenuItem>
+                {Object.values(teams)?.map((elm, index) => {
+                  return (
+                    <MenuItem
+                      key={index}
+                      // disabled={index === 0}
+                      // selected={index === selectedIndex}
+                      // onClick={(event) => handleMenuItemClick(event, index)}
+                      onClick={() => {
+                        setTeam(elm?.teamName);
+                        handleClose3();
+                      }}
+                      sx={{ display: "flex" }}
+                    >
+                      {/* <img
+                        src={elm?.profileUrl ? elm?.profileUrl : prsnPlshldr}
+                        alt=""
+                        className="h-[27px] w-[27px] object-cover"
+                      /> */}
+                      <p className="font-[500] ml-2 text-base">
+                        {elm?.teamName}
+                      </p>
                     </MenuItem>
                   );
                 })}

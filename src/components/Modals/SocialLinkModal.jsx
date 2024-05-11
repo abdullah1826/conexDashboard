@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { useSelector, useDispatch } from "react-redux";
 // import {
@@ -25,14 +25,15 @@ import "react-toastify/dist/ReactToastify.min.css";
 // import LinkupdateModal from "./LinkupdateModal";
 // import { setLinkDescription, setLinkHighlight } from "../Redux/UserinfoSlice";
 import { useMediaQuery } from "react-responsive";
-import { MdArrowBackIosNew } from "react-icons/md";
+import { MdAddCircleOutline, MdArrowBackIosNew } from "react-icons/md";
 import { addNewLink, renoveLink, updateNewLink } from "../../Services";
 import Mobile from "../Mobile";
 import { FaRegTrashAlt } from "react-icons/fa";
+import Cropper from "../Cropper";
 
 // import { removeLink } from "../Redux/Singlelinkslice";
 
-const SocialLinkModal = ({ modal, handleClose, uid }) => {
+const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
   //   console.log(link);
   //   const linkModal = useSelector((state) => state.modalHandeler.linkmodal);
   //   const linkEditmodal = useSelector(
@@ -71,6 +72,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
   let handleLinkEditModal = () => {
     setLinkEdit(!linkEdit);
     setLinkValue({ value: "", shareable: true });
+    setcustomImg("");
   };
 
   const style2 = {
@@ -131,14 +133,72 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
       });
       setLinkInfo({
         name: addedLink?.name,
-        img: link?.img,
+        image: addedLink?.image ? addedLink?.image : link?.img,
         linkID: link?.linkID,
         placeholder: link?.placeholder,
       });
     } else {
       console.log("false");
-      setLinkInfo(link);
+      setLinkInfo({ ...link, image: link?.img });
     }
+  };
+
+  let [customImg, setcustomImg] = useState("");
+
+  let handleImageChange = (result) => {
+    setLinkInfo({ ...linkInfo, image: result });
+  };
+
+  // ----------------------------------------------------State setup for logo img crop---------------------------------------------
+  let [logoimg, setlogoimg] = useState(null);
+  let [cropLogoModal, setcroplogoModal] = useState(false);
+  let [mylogolimg, setmylogolimg] = useState(null);
+  let [croplogo, setCroplogo] = useState({
+    unit: "%",
+    x: 50,
+    y: 50,
+    width: 25,
+    height: 25,
+  });
+  let [logoKey, setLogoKey] = useState(0);
+  let handlecloselogocropper = () => {
+    setcroplogoModal(false);
+    // settheimg(null)
+  };
+
+  let handleLogoImageChange = (event) => {
+    // profileImage
+    setlogoimg("");
+    const { files } = event.target;
+    setLogoKey(logoKey + 1);
+    if (files && files?.length > 0) {
+      const reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.addEventListener("load", () => {
+        setlogoimg(reader.result);
+        // dispatch(setProfileImg(reader.result))
+
+        setcroplogoModal(true);
+      });
+    }
+  };
+
+  console.log(linkInfo?.image);
+
+  let [companyId, setCompanyId] = useState("");
+  let conexParent = localStorage.getItem("conexParent");
+  let connexUid = localStorage.getItem("connexUid");
+  let [companyProfile, setCompanyProfile] = useState({});
+  useEffect(() => {
+    if (conexParent) {
+      setCompanyId(conexParent);
+    } else {
+      setCompanyId(connexUid);
+    }
+  }, []);
+
+  const ifCompany = (uid) => {
+    return uid === companyId ? true : false;
   };
 
   return (
@@ -151,6 +211,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
           //     dispatch(setLinkHighlight(false));
           handleClose();
           setLinkEdit(false);
+          setcustomImg("");
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -213,13 +274,48 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
 
             {linkEdit ? (
               <div className="w-[100%] h-[93%] flex">
+                {/* --------------------------------------------croper for logo image------------------------------------------------  */}
+                <Cropper
+                  cropModal={cropLogoModal}
+                  handleclosecropper={handlecloselogocropper}
+                  theimg={logoimg}
+                  myimg={mylogolimg}
+                  setmyimg={setmylogolimg}
+                  setcrop={setCroplogo}
+                  crop={croplogo}
+                  aspect={1 / 1}
+                  setReduxState={handleImageChange}
+                  isCircle={false}
+                  isNotRedux={true}
+                />
                 <div className="w-[64%] h-[100%]">
                   <div className="mt-10 w-[90%] flex justify-center">
-                    <img
-                      src={linkInfo?.img}
-                      alt=""
-                      className="h-[120px] w-[120px]"
-                    />
+                    <div className="h-[120px] w-[120px] relative ">
+                      <img
+                        src={linkInfo?.image}
+                        alt=""
+                        className="h-[120px] w-[120px] rounded-3xl object-cover"
+                      />
+                      {linkInfo?.linkID === 49 ||
+                      linkInfo?.linkID === 50 ||
+                      linkInfo?.linkID === 51 ||
+                      linkInfo?.linkID === 52 ? (
+                        <label
+                          for="qrimg"
+                          class="absolute right-[-2px] top-[-2px] cursor-pointer"
+                        >
+                          <MdAddCircleOutline className="text-2xl" />
+                          <input
+                            type="file"
+                            name="qrimg"
+                            id="qrimg"
+                            class="opacity-0 w-[0px] h-[0px]"
+                            onChange={handleLogoImageChange}
+                            key={logoKey}
+                          />
+                        </label>
+                      ) : null}
+                    </div>
                   </div>
 
                   {/* <div className="mt-8">
@@ -273,7 +369,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                             onClick={() =>
                               updateNewLink(
                                 {
-                                  image: "",
+                                  image: linkInfo?.image,
                                   linkID: linkInfo?.linkID,
                                   name: linkInfo?.name,
                                   value: linkValue?.value,
@@ -281,7 +377,6 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                                 },
                                 uid,
                                 links,
-
                                 () => setLinkEdit(false)
                               )
                             }
@@ -315,7 +410,7 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                           onClick={() =>
                             addNewLink(
                               {
-                                image: "",
+                                image: linkInfo?.image,
                                 linkID: linkInfo?.linkID,
                                 name: linkInfo?.name,
                                 value: linkValue?.value,
@@ -323,7 +418,9 @@ const SocialLinkModal = ({ modal, handleClose, uid }) => {
                               },
                               uid,
                               links,
-                              handleLinkEditModal
+                              handleLinkEditModal,
+                              ifCompany,
+                              allProfiles
                             )
                           }
                         >

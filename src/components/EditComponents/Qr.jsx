@@ -113,9 +113,28 @@ const Qr = ({ uid, handleCancelQr }) => {
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
-            <div className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center">
-              <MdColorize className="text-[white] text-[14px] cursor-pointer" />
-            </div>
+            <label
+              htmlFor="bgclr"
+              className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center"
+            >
+              <div>
+                <MdColorize className="text-[white] text-[14px] cursor-pointer" />
+              </div>
+              <input
+                type="color"
+                id="bgclr"
+                style={{
+                  opacity: "0px",
+                  height: "0px",
+                  width: "0px",
+                  // backgroundColor: "black",
+                  // color: "black",
+                }}
+                onChange={(e) => dispatch(setQrColor(e.target.value))}
+                value={qrColor}
+              />
+            </label>
+
             <div
               className="h-[20px] w-[20px] flex justify-center items-center rounded-full"
               onClick={() => dispatch(setQrColor("#E70A0A"))}

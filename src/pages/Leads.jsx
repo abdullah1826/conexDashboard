@@ -98,13 +98,22 @@ const Leads = () => {
     getAllChilds(getAllProfiles, () => console.log("test"));
   }, []);
 
+  const getMemberbyId = (id) => {
+    const member = Object.values(allProfiles)?.find((elm) => {
+      return elm?.id === id;
+    });
+    return member;
+  };
+
   // -----------------------filters----------------------
 
   useEffect(() => {
     if (teamId === "all") {
       setfiltered(leads);
     } else {
-      const filtered = leads?.filter((item) => item?.teams?.includes(teamId));
+      const filtered = leads?.filter((item) =>
+        getMemberbyId(item?.userid)?.teams?.includes(teamId)
+      );
       setfiltered(filtered);
     }
   }, [teamId]);
@@ -117,6 +126,39 @@ const Leads = () => {
       setfiltered(filtered);
     }
   }, [userId]);
+
+  const returnDate = (milliseconds) => {
+    const date = new Date(milliseconds);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    return formattedDate;
+  };
+
+  let [startDate, setStartDate] = useState("");
+  let [endDate, setEndDate] = useState("");
+
+  const convertDateToMilli = (date) => {
+    const selectedDate = new Date(date);
+    const dateMilliseconds = selectedDate.getTime();
+    console.log(dateMilliseconds);
+    return dateMilliseconds;
+  };
+
+  useEffect(() => {
+    if (startDate !== "" && endDate !== "") {
+      const firstDate = convertDateToMilli(startDate);
+      const lastDate = convertDateToMilli(endDate);
+      console.log(firstDate);
+      console.log(lastDate);
+      const filterOnDate = leads?.filter((elm) => {
+        return elm?.date >= firstDate && elm?.date <= lastDate;
+      });
+      setfiltered(filterOnDate);
+    }
+  }, [startDate, endDate]);
 
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
@@ -137,12 +179,12 @@ const Leads = () => {
       <div className="sm:w-[80%] w-[100%] flex justify-center overflow-y-scroll">
         <div className="w-[90%] ">
           <div
-            className="w-[100%] flex justify-between h-[50px]  mt-[30px]"
+            className="w-[100%] flex justify-between h-[80px]  mt-[30px]  "
             style={
               screen <= 450 ? { alignItems: "center", height: "42px" } : null
             }
           >
-            <div className="w-[25%] h-[100%] flex items-center">
+            {/* <div className="w-[25%] h-[100%] flex items-center">
               <p
                 className="font-[600] sm:text-[20px] text-[11px]"
                 style={
@@ -162,11 +204,41 @@ const Leads = () => {
                   ({leads?.length})
                 </span>
               </p>
-            </div>
+            </div> */}
 
-            <div className="w-[82%] h-[100%] flex justify-between ">
+            <div className="w-[100%] h-[100%] flex justify-between items-end">
+              <div className="h-[50px] mb-[20px]">
+                <p className="text-sm">Start Date</p>
+                <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                  <input
+                    type="date"
+                    className="h-[90%] w-[90%] text-xs rounded-[36px]"
+                    onChange={(e) => setStartDate(e.target.value)}
+                    value={startDate}
+                  />
+                </div>
+              </div>
+              <div className="h-[50px] mb-[20px]">
+                <p className="text-sm">End Date</p>
+                <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                  <input
+                    type="date"
+                    className="h-[90%] w-[90%] text-xs rounded-[36px]"
+                    onChange={(e) => setEndDate(e.target.value)}
+                    value={endDate}
+                  />
+                </div>
+              </div>
+              {/* <p>End Date</p>
+              <div className="sm:w-[130px] sm:h-[100%] p-2  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                <input
+                  type="date"
+                  className="h-[90%] w-[90%] text-xs rounded-[36px]"
+                />
+              </div> */}
+
               <Tooltip title="Filter by Team">
-                <div className="sm:w-[130px] sm:h-[100%]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                <div className="sm:w-[130px] sm:h-[50px]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                   <select
                     name=""
                     id=""
@@ -188,7 +260,7 @@ const Leads = () => {
                 </div>
               </Tooltip>
               <Tooltip title="Filter by Name">
-                <div className="sm:w-[130px] sm:h-[100%]  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+                <div className="sm:w-[130px] sm:h-[50px]  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                   <select
                     name=""
                     id=""
@@ -207,7 +279,7 @@ const Leads = () => {
                   </select>
                 </div>
               </Tooltip>
-              <div className="sm:w-[254px] sm:h-[100%] w-[100px] h-[33px] flex items-center rounded-[36px] bg-white shadow-xl">
+              <div className="sm:w-[254px] sm:h-[50px] w-[100px] h-[33px] flex items-center rounded-[36px] bg-white shadow-xl">
                 {screen <= 450 ? (
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
                 ) : null}
@@ -224,7 +296,7 @@ const Leads = () => {
                 ) : null}
               </div>
 
-              <div className="sm:w-[185px] sm:h-[100%] border  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
+              <div className="sm:w-[185px] sm:h-[50px] border  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                 <img
                   src={csv}
                   alt=""
@@ -310,12 +382,14 @@ const Leads = () => {
                     className="h-[46px] w-[46px] rounded-full object-cover"
                   />
                   <p className="text-[12px] font-[500] ml-[5px]">
-                    {contact?.connectedWith}
+                    {getMemberbyId(contact?.userid)?.name}
                   </p>
                 </div>
                 {screen >= 450 ? (
                   <div className="w-[15%]">
-                    <p className="font-[500] text-[12px]">January 25, 2023</p>
+                    <p className="font-[500] text-[12px]">
+                      {returnDate(contact?.date)}
+                    </p>
                   </div>
                 ) : null}
                 <div className="flex w-[15%]">

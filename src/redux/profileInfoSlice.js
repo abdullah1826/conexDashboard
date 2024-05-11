@@ -15,6 +15,7 @@ const initialState = {
     name: "",
     value: "",
     linkID: "",
+    image: "",
   },
   profilePictureLock: false,
   logoLock: false,
@@ -97,6 +98,7 @@ export const profileInfoSlice = createSlice({
         name: action.payload?.name,
         value: action.payload?.value,
         linkID: action.payload?.linkID,
+        image: action.payload?.image,
       };
     },
     setDirectMode: (state, action) => {

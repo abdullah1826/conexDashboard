@@ -381,7 +381,7 @@ const About = ({ uid, handleCancelAbout }) => {
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
             <div className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center">
               <label
-                htmlFor="textclr"
+                htmlFor="bgclr"
                 className="h-[100%] w-[100%] rounded-full flex justify-center items-center"
               >
                 <div>
@@ -389,7 +389,7 @@ const About = ({ uid, handleCancelAbout }) => {
                 </div>
                 <input
                   type="color"
-                  id="textclr"
+                  id="bgclr"
                   style={{
                     opacity: "0px",
                     height: "0px",

@@ -520,7 +520,7 @@ export const returnIcons = (linkID) => {
   } else if (linkID === 31) {
     return deezer;
   } else if (linkID === 39) {
-    return vimeo;
+    return googlemaps;
   } else if (linkID === 56) {
     return cashapp;
   } else if (linkID === 35) {

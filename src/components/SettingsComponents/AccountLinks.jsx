@@ -5,7 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import SocialLinkModal from "../Modals/SocialLinkModal";
 import { useSelector } from "react-redux";
 import { returnIcons } from "../../assets/ReturnSocialIcons";
-import { renoveLink, updateLinkShareAble } from "../../Services";
+import { getAllChilds, renoveLink, updateLinkShareAble } from "../../Services";
 import { Switch } from "@mui/material";
 import DeleteModal from "../Modals/DeleteModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -34,6 +34,17 @@ const AccountLinks = ({ uid }) => {
   useEffect(() => {
     setItems(links);
   }, [links]);
+
+  // -----------------------getting all users----------------------
+  let [allProfiles, setAllProfiles] = useState([]);
+
+  let getAllProfiles = (obj) => {
+    setAllProfiles(Object.values(obj));
+  };
+
+  useEffect(() => {
+    getAllChilds(getAllProfiles, () => console.log("test"));
+  }, []);
   const handleDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -67,7 +78,12 @@ const AccountLinks = ({ uid }) => {
 
   return (
     <div className="h-[400px] w-[100%]  mt-7 flex flex-col  relative">
-      <SocialLinkModal modal={modal} handleClose={handleModal} uid={uid} />
+      <SocialLinkModal
+        modal={modal}
+        handleClose={handleModal}
+        uid={uid}
+        allProfiles={allProfiles}
+      />
       <DeleteModal
         deleteModal={deleteModal}
         handledeleteModal={handledeleteModal}
@@ -113,13 +129,20 @@ const AccountLinks = ({ uid }) => {
                         <>
                           <div className="sm:w-[70%] w-[100%] h-[57px] bg-white rounded-[36px] shadow-lg flex justify-center items-center mt-4">
                             <div className="w-[95%] h-[80%] flex justify-between">
-                              <div className="w-[129px] flex items-center ">
+                              <div className="w-[35%] flex items-center">
                                 <MdDragIndicator className="text-[#E1E1E1] text-xl" />
                                 <div className="w-[30px]">
                                   <img
-                                    src={returnIcons(elm?.linkID)}
+                                    src={
+                                      elm?.image
+                                        ? elm?.image
+                                        : returnIcons(elm?.linkID)
+                                    }
                                     alt=""
                                     className="h-[29px]  w-[29px]"
+                                    style={{
+                                      borderRadius: elm?.image ? "8px" : "0px",
+                                    }}
                                   />
                                 </div>
 
