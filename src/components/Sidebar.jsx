@@ -17,8 +17,10 @@ import DeleteModal from "./Modals/DeleteModal";
 import { BsBuildingsFill } from "react-icons/bs";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const Sidebar = () => {
   let navigate = useNavigate();
+  const { t } = useTranslation();
 
   let [user, setuser] = useState({});
   let [modal, setModal] = useState(false);
@@ -112,7 +114,7 @@ const Sidebar = () => {
                   <div className=" flex items-center rounded-md   ml-2">
                     <IoIosPeople className="text-3xl ml-2 " />
                     <p className="ml-[10px] text-[13px] font-[600]">
-                      Sub Teams
+                      {t("Sub Teams")}
                     </p>
                   </div>
                 </div>
@@ -175,7 +177,10 @@ const Sidebar = () => {
             onClick={() => handledeleteModal()}
           >
             <RiLogoutCircleLine className="text-white text-lg " />
-            <p className="font-[600] text-[12px] text-white ml-2">Logout</p>
+            <p className="font-[600] text-[12px] text-white ml-2">
+              {t("Logout")}
+              {/* Logout */}
+            </p>
           </div>
         </div>
       </div>

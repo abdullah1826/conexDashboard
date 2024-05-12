@@ -146,7 +146,9 @@ const Content = ({ uid }) => {
               },
               uid,
               links,
-              updateLinks
+              updateLinks,
+              () => false,
+              []
             )
           }
         />

@@ -18,9 +18,15 @@ import { IoMdAdd } from "react-icons/io";
 
 import NavbarFooter from "./NavbarFooter";
 import CreateNewCard from "../components/Modals/CreateNewCard";
-import { getAllChilds, getAllCompanies, getSingleChild } from "../Services";
+import {
+  changeLanguage,
+  getAllChilds,
+  getAllCompanies,
+  getSingleChild,
+} from "../Services";
 import ShareCardModal from "../components/Modals/ShareCardModal";
 import { MoonLoader } from "react-spinners";
+// import { changeLanguage } from "i18next";
 
 const Home = () => {
   let [openMenu, setopenMenu] = useState(false);
@@ -174,7 +180,7 @@ const Home = () => {
                           // selected={index === selectedIndex}
                           // onClick={(event) => handleMenuItemClick(event, index)}
                           onClick={() => {
-                            handleClose();
+                            changeLanguage(companyId, "en", handleClose);
                           }}
                           sx={{ display: "flex" }}
                         >
@@ -191,7 +197,7 @@ const Home = () => {
                           // selected={index === selectedIndex}
                           // onClick={(event) => handleMenuItemClick(event, index)}
                           onClick={() => {
-                            handleClose();
+                            changeLanguage(companyId, "fr", handleClose);
                           }}
                           sx={{ display: "flex" }}
                         >

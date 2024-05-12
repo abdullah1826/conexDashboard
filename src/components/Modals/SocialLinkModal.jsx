@@ -200,7 +200,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
   const ifCompany = (uid) => {
     return uid === companyId ? true : false;
   };
-
+  console.log(ifCompany());
   return (
     <>
       <Modal
@@ -242,7 +242,9 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                         },
                         uid,
                         links,
-                        () => setLinkEdit(false)
+                        () => setLinkEdit(false),
+                        ifCompany,
+                        allProfiles
                       )
                     }
                   />
@@ -377,7 +379,9 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                 },
                                 uid,
                                 links,
-                                () => setLinkEdit(false)
+                                () => setLinkEdit(false),
+                                ifCompany,
+                                allProfiles
                               )
                             }
                           >

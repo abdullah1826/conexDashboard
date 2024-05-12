@@ -95,7 +95,9 @@ const AccountLinks = ({ uid }) => {
             },
             uid,
             links,
-            updateLinks
+            updateLinks,
+            () => true,
+            allProfiles
           )
         }
       />

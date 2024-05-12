@@ -843,7 +843,7 @@ export const addNewLink = async (
   ifCompany,
   allMembers
 ) => {
-  console.log(ifCompany(id));
+  console.log("add working.........");
   if (linkData?.value) {
     console.log("img64", linkData?.image);
     console.log(allLinks);
@@ -933,45 +933,66 @@ export const addNewLink = async (
             console.log(error);
           });
       } else {
-        set(ref(db, `Users/${id}/links/`), [...allLinks, linkData]).then(
-          async () => {
-            // checking if link is added by company so that link should be added to all childs
-            if (ifCompany(id) && allMembers?.length > 0) {
-              const promiseAddingLinkToChilds = allMembers?.map(async (elm) => {
-                if (elm?.links) {
-                  const valueExists = Object.values(elm?.links)?.some(
-                    (obj) => obj["linkID"] === linkData?.linkID
-                  );
-                  if (!valueExists) {
-                    await set(ref(db, `Users/${elm?.id}/links/`), [
-                      ...Object.values(elm?.links),
-                      linkData,
-                    ]);
-                  }
-                } else {
-                  await set(ref(db, `Users/${elm?.id}/links/`), [linkData]);
-                }
-              });
-
-              try {
-                const updatedUserlinks = await Promise.all(
-                  promiseAddingLinkToChilds
+        set(ref(db, `Users/${id}/links/`), [
+          ...allLinks,
+          {
+            image: "",
+            linkID: linkData?.linkID,
+            name: linkData?.name,
+            value: linkData?.value,
+            shareable: linkData?.shareable,
+          },
+        ]).then(async () => {
+          // checking if link is added by company so that link should be added to all childs
+          if (ifCompany(id) && allMembers?.length > 0) {
+            const promiseAddingLinkToChilds = allMembers?.map(async (elm) => {
+              if (elm?.links) {
+                const valueExists = Object.values(elm?.links)?.some(
+                  (obj) => obj["linkID"] === linkData?.linkID
                 );
-                console.log("Updated IDs:", updatedUserlinks);
-                // Handle success, show success message, etc.
-                toast.success("Link added successfuly");
-                handleLinkEditModal();
-              } catch (error) {
-                console.error("Error updating objects:", error);
-                // Handle error, show error message, etc.
-                toast.error("Error updating objects");
+                if (!valueExists) {
+                  await set(ref(db, `Users/${elm?.id}/links/`), [
+                    ...Object.values(elm?.links),
+                    {
+                      image: "",
+                      linkID: linkData?.linkID,
+                      name: linkData?.name,
+                      value: linkData?.value,
+                      shareable: linkData?.shareable,
+                    },
+                  ]);
+                }
+              } else {
+                await set(ref(db, `Users/${elm?.id}/links/`), [
+                  {
+                    image: "",
+                    linkID: linkData?.linkID,
+                    name: linkData?.name,
+                    value: linkData?.value,
+                    shareable: linkData?.shareable,
+                  },
+                ]);
               }
-            } else {
+            });
+
+            try {
+              const updatedUserlinks = await Promise.all(
+                promiseAddingLinkToChilds
+              );
+              console.log("Updated IDs:", updatedUserlinks);
+              // Handle success, show success message, etc.
               toast.success("Link added successfuly");
               handleLinkEditModal();
+            } catch (error) {
+              console.error("Error updating objects:", error);
+              // Handle error, show error message, etc.
+              toast.error("Error updating objects");
             }
+          } else {
+            toast.success("Link added successfuly");
+            handleLinkEditModal();
           }
-        );
+        });
       }
     } else {
       if (returnIfHttps(linkData?.image) === false) {
@@ -1017,7 +1038,14 @@ export const addNewLink = async (
                           }
                         } else {
                           await set(ref(db, `Users/${elm?.id}/links/`), [
-                            linkData,
+                            {
+                              image: "",
+                              linkID: linkData?.linkID,
+                              name: linkData?.name,
+                              value: linkData?.value,
+                              shareable: linkData?.shareable,
+                            },
+                            ,
                           ]);
                         }
                       }
@@ -1061,11 +1089,25 @@ export const addNewLink = async (
                 if (!valueExists) {
                   await set(ref(db, `Users/${elm?.id}/links/`), [
                     ...Object.values(elm?.links),
-                    linkData,
+                    {
+                      image: "",
+                      linkID: linkData?.linkID,
+                      name: linkData?.name,
+                      value: linkData?.value,
+                      shareable: linkData?.shareable,
+                    },
                   ]);
                 }
               } else {
-                await set(ref(db, `Users/${elm?.id}/links/`), [linkData]);
+                await set(ref(db, `Users/${elm?.id}/links/`), [
+                  {
+                    image: "",
+                    linkID: linkData?.linkID,
+                    name: linkData?.name,
+                    value: linkData?.value,
+                    shareable: linkData?.shareable,
+                  },
+                ]);
               }
             });
 
@@ -1094,43 +1136,285 @@ export const addNewLink = async (
 
 // ----------------------------------------------------Update link to database---------------------------------------------
 
-export const updateNewLink = (linkData, id, allLinks, handleLinkEditModal) => {
+export const updateNewLink = (
+  linkData,
+  id,
+  allLinks,
+  handleLinkEditModal,
+  ifCompany,
+  allChilds
+) => {
   // if (linkData?.value) {
 
-  if (allLinks) {
-    let index = allLinks?.findIndex((elm) => {
-      return elm?.linkID === linkData?.linkID;
-    });
+  if (ifCompany(id)) {
+    if (returnIfHttps(linkData?.image) === false) {
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, linkData?.image.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              if (allLinks) {
+                let index = allLinks?.findIndex((elm) => {
+                  return elm?.linkID === linkData?.linkID;
+                });
 
-    update(ref(db, `Users/${id}/links/${index}`), { ...linkData }).then(() => {
-      handleLinkEditModal();
-      toast.success("Link updated successfuly");
-    });
+                update(ref(db, `Users/${id}/links/${index}`), {
+                  image: URL,
+                  linkID: linkData?.linkID,
+                  name: linkData?.name,
+                  value: linkData?.value,
+                  shareable: linkData?.shareable,
+                }).then(async () => {
+                  const promiseUpdatingLinkToChilds = allChilds?.map(
+                    async (elm) => {
+                      if (elm?.links) {
+                        let index = Object.values(elm?.links)?.findIndex(
+                          (elem) => {
+                            return elem?.linkID === linkData?.linkID;
+                          }
+                        );
+
+                        update(ref(db, `Users/${elm?.id}/links/${index}`), {
+                          image: URL,
+                          linkID: linkData?.linkID,
+                          name: linkData?.name,
+                          value: linkData?.value,
+                          shareable: linkData?.shareable,
+                        });
+                      }
+                    }
+                  );
+
+                  try {
+                    const updatedUserlinks = await Promise.all(
+                      promiseUpdatingLinkToChilds
+                    );
+                    handleLinkEditModal();
+                    toast.success("Link updated successfuly");
+                  } catch (error) {
+                    console.error("Error updating objects:", error);
+                    // Handle error, show error message, etc.
+                    toast.error("Error updating objects");
+                  }
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      if (allLinks) {
+        let index = allLinks?.findIndex((elm) => {
+          return elm?.linkID === linkData?.linkID;
+        });
+
+        update(ref(db, `Users/${id}/links/${index}`), {
+          image: linkData?.image?.slice(0, 4) === "http" ? linkData?.image : "",
+          linkID: linkData?.linkID,
+          name: linkData?.name,
+          value: linkData?.value,
+          shareable: linkData?.shareable,
+        }).then(async () => {
+          const promiseUpdatingLinkToChilds = allChilds?.map(async (elm) => {
+            if (elm?.links) {
+              let index = Object.values(elm?.links)?.findIndex((elem) => {
+                return elem?.linkID === linkData?.linkID;
+              });
+
+              update(ref(db, `Users/${elm?.id}/links/${index}`), {
+                image:
+                  linkData?.image?.slice(0, 4) === "http"
+                    ? linkData?.image
+                    : "",
+                linkID: linkData?.linkID,
+                name: linkData?.name,
+                value: linkData?.value,
+                shareable: linkData?.shareable,
+              });
+            }
+          });
+
+          try {
+            const updatedUserlinks = await Promise.all(
+              promiseUpdatingLinkToChilds
+            );
+            console.log("Updated IDs:", updatedUserlinks);
+            // Handle success, show success message, etc.
+            toast.success("Link updated successfuly");
+            handleLinkEditModal();
+          } catch (error) {
+            console.error("Error updating objects:", error);
+            // Handle error, show error message, etc.
+            toast.error("Error updating objects");
+          }
+        });
+      }
+    }
+  } else {
+    if (returnIfHttps(linkData?.image) === false) {
+      console.log("testing........6");
+      let name = new Date().getTime() + id;
+      const storageRef = sRef(storage, name);
+      uploadString(storageRef, linkData?.image.slice(23), "base64", {
+        contentType: "image/png",
+      })
+        .then(() => {
+          console.log("img testing");
+          getDownloadURL(storageRef)
+            .then((URL) => {
+              // console.log(URL)
+              if (allLinks) {
+                let index = allLinks?.findIndex((elm) => {
+                  return elm?.linkID === linkData?.linkID;
+                });
+
+                update(ref(db, `Users/${id}/links/${index}`), {
+                  image: URL,
+                  linkID: linkData?.linkID,
+                  name: linkData?.name,
+                  value: linkData?.value,
+                  shareable: linkData?.shareable,
+                }).then(() => {
+                  handleLinkEditModal();
+                  toast.success("Link updated successfuly");
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // setimg(null)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      if (allLinks) {
+        let index = allLinks?.findIndex((elm) => {
+          return elm?.linkID === linkData?.linkID;
+        });
+
+        update(ref(db, `Users/${id}/links/${index}`), {
+          image: "",
+          linkID: linkData?.linkID,
+          name: linkData?.name,
+          value: linkData?.value,
+          shareable: linkData?.shareable,
+        }).then(() => {
+          handleLinkEditModal();
+          toast.success("Link updated successfuly");
+        });
+      }
+    }
   }
+
   // }
 };
 
 // ----------------------------------------------------Remove link from database---------------------------------------------
 
-export const renoveLink = (linkData, id, allLinks, cb) => {
+export const renoveLink = (
+  linkData,
+  id,
+  allLinks,
+  cb,
+  ifCompany,
+  allChilds
+) => {
   // if (linkData?.value) {
-  if (allLinks) {
-    let remainingLinks = allLinks?.filter((elm) => {
-      return elm?.linkID != linkData?.linkID;
-    });
-    console.log(remainingLinks);
-    if (remainingLinks?.length === 0) {
-      remove(ref(db, `Users/${id}/links/`)).then(() => {
-        cb();
-        // toast.success("Link deleted successfuly");
+  if (ifCompany(id)) {
+    if (allLinks) {
+      let remainingLinks = allLinks?.filter((elm) => {
+        return elm?.linkID != linkData?.linkID;
       });
-    } else {
-      set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
-        cb();
-        // toast.success("Link deleted successfuly");
+      console.log(remainingLinks);
+      if (remainingLinks?.length === 0) {
+        remove(ref(db, `Users/${id}/links/`)).then(async () => {
+          const removelinkpromise = allChilds?.map((elm) => {
+            let remainingUserLinks = Object.values(elm?.links)?.filter(
+              (elm) => {
+                return elm?.linkID != linkData?.linkID;
+              }
+            );
+            if (remainingUserLinks?.length === 0) {
+              remove(ref(db, `Users/${elm?.id}/links/`));
+            } else {
+              set(ref(db, `Users/${elm?.id}/links/`), [...remainingUserLinks]);
+            }
+          });
+
+          try {
+            const deleteUserlinks = await Promise.all(removelinkpromise);
+            console.log("all user link deleted");
+            cb();
+          } catch (error) {
+            console.error("Error updating objects:", error);
+            toast.error("Error updating objects");
+          }
+
+          // toast.success("Link deleted successfuly");
+        });
+      } else {
+        set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(
+          async () => {
+            const removelinkpromise = allChilds?.map((elm) => {
+              let remainingUserLinks = Object.values(elm?.links)?.filter(
+                (elm) => {
+                  return elm?.linkID != linkData?.linkID;
+                }
+              );
+              if (remainingUserLinks?.length === 0) {
+                remove(ref(db, `Users/${elm?.id}/links/`));
+              } else {
+                set(ref(db, `Users/${elm?.id}/links/`), [
+                  ...remainingUserLinks,
+                ]);
+              }
+            });
+
+            try {
+              const deleteUserlinks = await Promise.all(removelinkpromise);
+              console.log("all user link deleted");
+              cb();
+            } catch (error) {
+              console.error("Error updating objects:", error);
+              toast.error("Error updating objects");
+            }
+            // toast.success("Link deleted successfuly");
+          }
+        );
+      }
+    }
+  } else {
+    if (allLinks) {
+      let remainingLinks = allLinks?.filter((elm) => {
+        return elm?.linkID != linkData?.linkID;
       });
+      console.log(remainingLinks);
+      if (remainingLinks?.length === 0) {
+        remove(ref(db, `Users/${id}/links/`)).then(() => {
+          cb();
+          // toast.success("Link deleted successfuly");
+        });
+      } else {
+        set(ref(db, `Users/${id}/links/`), [...remainingLinks]).then(() => {
+          cb();
+          // toast.success("Link deleted successfuly");
+        });
+      }
     }
   }
+
   // }
 };
 
@@ -1588,6 +1872,15 @@ export const adminAccess = (companyId, email, cb) => {
 export const removeAdmin = (id) => {
   update(ref(db, `Users/${id}/`), {
     isAdmin: false,
+  });
+};
+
+export const changeLanguage = (id, mylanguage, cb) => {
+  update(ref(db, `Users/${id}/`), {
+    language: mylanguage,
+  }).then(() => {
+    localStorage.setItem("connexLanguage", mylanguage);
+    cb(mylanguage);
   });
 };
 
