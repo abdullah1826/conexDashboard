@@ -1,5 +1,6 @@
 import React from "react";
 import { CSVLink } from "react-csv";
+import { useTranslation } from "react-i18next";
 
 const DownloadCsv = ({ data }) => {
   console.log(data);
@@ -16,13 +17,15 @@ const DownloadCsv = ({ data }) => {
     };
   });
 
+  const { t } = useTranslation();
+
   return (
     <CSVLink
       data={csvData}
       filename={`MyContacts.csv`}
       style={{ textDecoration: "none", color: "black" }}
     >
-      Export CSV
+      {t("Export CSV")}
     </CSVLink>
   );
 };

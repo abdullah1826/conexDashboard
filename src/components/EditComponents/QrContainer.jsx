@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { QRCode } from "react-qrcode-logo";
 import { useSelector } from "react-redux";
 
@@ -19,10 +20,11 @@ const QrContainer = ({ uid }) => {
       document.body.removeChild(downloadLink);
     }
   };
+  const { t } = useTranslation();
   return (
     <div className="h-[100%] w-[100%] flex flex-col justify-center items-center">
       <div className="h-[90%] w-[80%] flex flex-col justify-around items-center">
-        <h2 className="font-[500] text-lg">User's QR Code</h2>
+        <h2 className="font-[500] text-lg">{t("User's QR Code")}</h2>
         <QRCode
           //   value={cardUrl + userId}
           size="171"
@@ -51,10 +53,10 @@ const QrContainer = ({ uid }) => {
         </div>
 
         <div
-          className="h-[40px] w-[130px] rounded-full bg-black flex justify-center items-center text-white cursor-pointer"
+          className="h-[40px] w-[130px] rounded-full bg-black flex justify-center items-center text-white cursor-pointer text-center"
           onClick={() => downloadQRCode()}
         >
-          Download Qr
+          {t("Download Qr")}
         </div>
       </div>
     </div>

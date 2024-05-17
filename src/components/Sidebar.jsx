@@ -65,6 +65,8 @@ const Sidebar = () => {
     setdeleteModal(!deleteModal);
   };
 
+  const language = localStorage.getItem("connexLanguage");
+
   return (
     <div className="w-[20%] h-[100vh]  flex flex-col sticky shadow-2xl bg-white">
       <DeleteModal
@@ -96,7 +98,9 @@ const Sidebar = () => {
                   <BsBuildingsFill className="text-xl ml-2 " />
                 )}
                 <p className="ml-[10px] text-[13px] font-[600]">
-                  {conexParent === "superAdmin" ? "Companies" : "Team Members"}
+                  {conexParent === "superAdmin"
+                    ? "Companies"
+                    : t("Team Members")}
                 </p>
               </div>
             </div>
@@ -131,7 +135,7 @@ const Sidebar = () => {
                   <div className=" flex items-center rounded-md ml-2">
                     <FaFilter className=" text-xl ml-2 " />
                     <p className="ml-[10px] text-[13px] font-[600]">
-                      Leads Generated
+                      {t("Leads Generated")}
                     </p>
                   </div>
                 </div>
@@ -148,7 +152,7 @@ const Sidebar = () => {
                   <div className=" flex items-center rounded-md   ml-2">
                     <SiGoogleanalytics className=" text-xl ml-2 " />
                     <p className="ml-[10px] text-[13px] font-[600]">
-                      Analytics
+                      {t("Analytics")}
                     </p>
                   </div>
                 </div>
@@ -164,7 +168,9 @@ const Sidebar = () => {
                 >
                   <div className=" flex items-center rounded-md   ml-2">
                     <BsFillBuildingsFill className=" text-xl ml-2 " />
-                    <p className="ml-[10px] text-[13px] font-[600]">Company</p>
+                    <p className="ml-[10px] text-[13px] font-[600]">
+                      {t("Company")}
+                    </p>
                   </div>
                 </div>
               </>
@@ -173,11 +179,14 @@ const Sidebar = () => {
         </div>
         <div className="h-[10%]  w-[90%] flex flex-col justify-end">
           <div
-            className="h-[36px]  w-[95px]  flex items-center pl-[10px] rounded-[34px] cursor-pointer ml-2 border bg-black"
+            className="h-[36px]  w-[95px]  flex items-center justify-center rounded-[34px] cursor-pointer ml-2 border bg-black"
             onClick={() => handledeleteModal()}
           >
-            <RiLogoutCircleLine className="text-white text-lg " />
-            <p className="font-[600] text-[12px] text-white ml-2">
+            {" "}
+            {language === "en" && (
+              <RiLogoutCircleLine className="text-white text-lg " />
+            )}
+            <p className="font-[600] text-[12px] text-white ml-2 text-center">
               {t("Logout")}
               {/* Logout */}
             </p>

@@ -8,6 +8,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteModal from "../Modals/DeleteModal";
+import { useTranslation } from "react-i18next";
 
 const Organization = ({ uid }) => {
   let [email, setEmail] = useState("");
@@ -50,6 +51,8 @@ const Organization = ({ uid }) => {
     setdeleteModal(!deleteModal);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-[100%]  mt-7 flex flex-col">
       <div className="sm:w-[600px] w-[100%] ml-[20px]">
@@ -60,10 +63,10 @@ const Organization = ({ uid }) => {
           func={() => removeAdmin(adminId)}
         />
         <h2 className="font-[600] sm:text-[20px] text-[16px] text-[#625F5F]">
-          Organization Settings
+          {t("Organization Settings")}
         </h2>
         <p className="font-[400] sm:text-[14px] text-[14px] text-[#707070]">
-          You can assign accounts as administrative accounts.
+          {t("You can assign accounts as administrative accounts.")}
         </p>
         <div className="sm:w-[600px] w-[100%] min-h-[150px] max-h-[350] overflow-y-scroll ">
           <div className="sm:w-[600px] w-[100%]  sm:h-[101px] h-[83px] outline-none bg-white rounded-[36px] mt-3 flex justify-center items-center ">
@@ -78,7 +81,7 @@ const Organization = ({ uid }) => {
               </div>
               <div className="flex gap-2">
                 <div className="w-[107px] h-[47px] border border-black rounded-[36px] flex justify-center items-center font-[400] sm:text-[15px] text-[12px]">
-                  Admin
+                  {t("Admin")}
                 </div>
 
                 {/* <div
@@ -106,7 +109,7 @@ const Organization = ({ uid }) => {
                   </div>
                   <div className="flex gap-2">
                     <div className="w-[107px] h-[47px] border border-black rounded-[36px] flex justify-center items-center font-[400] sm:text-[15px] text-[12px]">
-                      Admin
+                      {t("Admin")}
                     </div>
                     {Object.values(crntUser)?.[0]?.isCompany && (
                       <div
@@ -115,7 +118,7 @@ const Organization = ({ uid }) => {
                           handledeleteModal(), setAdminId(elm?.id);
                         }}
                       >
-                        Remove
+                        {t("Remove")}
                       </div>
                     )}
                   </div>
@@ -127,17 +130,18 @@ const Organization = ({ uid }) => {
 
         <div className="mt-7">
           <h2 className="font-[600] sm:text-[20px] text-[16px] text-[#625F5F]">
-            Invite user
+            {t("Invite user")}
           </h2>
           <p className="font-[400] sm:text-[14px] text-[14px] text-[#707070]">
-            Admins have full access to the entire dashboard and all other
-            accounts.
+            {t(
+              "Admins have full access to the entire dashboard and all other accounts."
+            )}
           </p>
         </div>
 
         <div className="w-[100%] mt-3">
           <div className="w-[100%] ">
-            <h2 className="font-[600] text-[14px] ml-2">Email</h2>
+            <h2 className="font-[600] text-[14px] ml-2">{t("Email")}</h2>
             <input
               type="text"
               className="w-[99%] pl-[4%] h-[46px] outline-none bg-white rounded-[36px] mt-1"
@@ -152,7 +156,7 @@ const Organization = ({ uid }) => {
             className="w-[25%] h-[100%] rounded-[36px] bg-black flex justify-center items-center text-white cursor-pointer"
             onClick={() => adminAccess(uid, email, setEmail)}
           >
-            Invite
+            {t("Invite")}
           </div>
         </div>
         <ToastContainer

@@ -8,10 +8,11 @@ import { BiSearchAlt } from "react-icons/bi";
 import prsnPlshldr from "../../imgs/prsnPlshldr.png";
 import Checkbox from "@mui/material/Checkbox";
 import { addTeamMember, getAllChilds } from "../../Services";
+import { useTranslation } from "react-i18next";
 
 const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
-
+  const { t } = useTranslation();
   const style2 = {
     position: "absolute",
     top: "50%",
@@ -121,7 +122,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                 <input
                   type="text"
                   className="h-[100%] sm:w-[88%] w-[70px] outline-none rounded-[36px] sm:pl-[10px] pl-[0px] ml-2 sm:text[20px] text[11px]"
-                  placeholder="Search"
+                  placeholder={t("Search")}
                   onChange={(e) => setsearch(e.target.value)}
                   value={search}
                 />
@@ -171,7 +172,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                 className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                 onClick={() => handleAddModal()}
               >
-                Cancel
+                {t("Cancel")}
               </button>
               <button
                 className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
@@ -186,7 +187,7 @@ const AddMemberModal = ({ addModal, handleAddModal, singleTeam }) => {
                   )
                 }
               >
-                Add
+                {t("Add")}
               </button>
             </div>
           </div>

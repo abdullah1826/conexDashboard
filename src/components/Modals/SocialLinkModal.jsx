@@ -30,6 +30,7 @@ import { addNewLink, renoveLink, updateNewLink } from "../../Services";
 import Mobile from "../Mobile";
 import { FaRegTrashAlt } from "react-icons/fa";
 import Cropper from "../Cropper";
+import { useTranslation } from "react-i18next";
 
 // import { removeLink } from "../Redux/Singlelinkslice";
 
@@ -201,6 +202,14 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
     return uid === companyId ? true : false;
   };
   console.log(ifCompany());
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const { t } = useTranslation();
+
   return (
     <>
       <Modal
@@ -227,7 +236,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                     onClick={() => handleLinkEditModal()}
                   >
                     <MdArrowBackIosNew className="text-xl" />
-                    <p className="ml-1 text-lg">Back</p>
+                    <p className="ml-1 text-lg">{t("Back")}</p>
                   </div>
                   <FaRegTrashAlt
                     className="text-2xl hover:text-red-500 cursor-pointer"
@@ -311,7 +320,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                             type="file"
                             name="qrimg"
                             id="qrimg"
-                            class="opacity-0 w-[0px] h-[0px]"
+                            className="opacity-0 w-[0px] h-[0px]"
                             onChange={handleLogoImageChange}
                             key={logoKey}
                           />
@@ -333,7 +342,11 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                       {linkInfo?.placeholder}
                     </h2>
                     <input
-                      type="text"
+                      type={
+                        linkInfo?.linkID === 6 || linkInfo?.linkID === 10
+                          ? "number"
+                          : "text"
+                      }
                       className="mt-2 outline-none border-none w-[90%]  h-[50px] bg-[#f7f7f7] rounded-lg p-5 placeholder:text-sm"
                       onChange={(e) =>
                         setLinkValue({ ...linkValue, value: e.target.value })
@@ -361,8 +374,11 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                     ) : null}
 
                     <div className="w-[90%] flex justify-center items-center mt-5">
-                      <div className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center mr-1 bg-[#f0f0f0]">
-                        Cancel
+                      <div
+                        className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center mr-1 bg-[#f0f0f0]"
+                        onClick={() => handleLinkEditModal()}
+                      >
+                        {t("Cancel")}
                       </div>
                       {checkAdded(linkInfo?.linkID) ? (
                         <>
@@ -381,11 +397,12 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                 links,
                                 () => setLinkEdit(false),
                                 ifCompany,
-                                allProfiles
+                                allProfiles,
+                                t
                               )
                             }
                           >
-                            Update
+                            {t("Update")}
                           </div>
 
                           {/* <div
@@ -411,24 +428,46 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                       ) : (
                         <div
                           className="h-[38px] w-[110px] rounded-full cursor-pointer font-[500] flex justify-center items-center ml-1 bg-black text-white"
-                          onClick={() =>
-                            addNewLink(
-                              {
-                                image: linkInfo?.image,
-                                linkID: linkInfo?.linkID,
-                                name: linkInfo?.name,
-                                value: linkValue?.value,
-                                shareable: linkValue?.shareable,
-                              },
-                              uid,
-                              links,
-                              handleLinkEditModal,
-                              ifCompany,
-                              allProfiles
-                            )
-                          }
+                          onClick={() => {
+                            if (linkInfo?.linkID === 20) {
+                              if (isValidEmail(linkValue?.value)) {
+                                addNewLink(
+                                  {
+                                    image: linkInfo?.image,
+                                    linkID: linkInfo?.linkID,
+                                    name: linkInfo?.name,
+                                    value: linkValue?.value,
+                                    shareable: linkValue?.shareable,
+                                  },
+                                  uid,
+                                  links,
+                                  handleLinkEditModal,
+                                  ifCompany,
+                                  allProfiles
+                                );
+                              } else {
+                                toast.error("please enter valid email");
+                              }
+                            } else {
+                              addNewLink(
+                                {
+                                  image: linkInfo?.image,
+                                  linkID: linkInfo?.linkID,
+                                  name: linkInfo?.name,
+                                  value: linkValue?.value,
+                                  shareable: linkValue?.shareable,
+                                },
+                                uid,
+                                links,
+                                handleLinkEditModal,
+                                ifCompany,
+                                allProfiles,
+                                t
+                              );
+                            }
+                          }}
                         >
-                          Add
+                          {t("Add")}
                         </div>
                       )}
                     </div>
@@ -443,12 +482,14 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
               </div>
             ) : (
               <>
-                <h2 className="text-2xl font-medium">Add Content</h2>
+                <h2 className="text-2xl font-medium">{t("Add Content")}</h2>
                 <p className="text-sm mt-2 text-[#4F4F4F]">
-                  Select from our wide variety of links and contact info below.
+                  {t(
+                    "Select from our wide variety of links and contact info below"
+                  )}
                 </p>
                 <div className="mt-10">
-                  <h2 className="font-medium text-[#4F4F4F]">Contact</h2>
+                  <h2 className="font-medium text-[#4F4F4F]">{t("Contact")}</h2>
                   <div className="grid sm:grid-cols-3 grid-cols-1 gap-x-4 ">
                     {/* flex justify-around flex-wrap */}
                     {contactIcons.map((elm, i) => {
@@ -496,7 +537,9 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                   {/* ------------------------------------------Social icons------------------------------------  */}
 
                   <div className="mt-10">
-                    <h2 className="font-medium text-[#4F4F4F]">Social</h2>
+                    <h2 className="font-medium text-[#4F4F4F]">
+                      {t("Social")}
+                    </h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
                       {socialIcons.map((elm, i) => {
@@ -546,7 +589,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
 
                   <div className="mt-10">
                     <h2 className="font-medium text-[#4F4F4F]">
-                      Multimedia Media
+                      {t("Multimedia")}
                     </h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
@@ -595,7 +638,9 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
 
                   {/* ------------------------------------------Payment icons------------------------------------  */}
                   <div className="mt-10">
-                    <h2 className="font-medium text-[#4F4F4F]">Payment</h2>
+                    <h2 className="font-medium text-[#4F4F4F]">
+                      {t("Payment")}
+                    </h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
                       {payment?.map((elm, i) => {
@@ -643,7 +688,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
 
                   {/* ------------------------------------------More icons------------------------------------  */}
                   <div className="mt-10">
-                    <h2 className="font-medium text-[#4F4F4F]">More</h2>
+                    <h2 className="font-medium text-[#4F4F4F]">{t("More")}</h2>
                     <div className="  grid sm:grid-cols-3 grid-cols-1 gap-x-4">
                       {/* flex justify-around flex-wrap */}
                       {more?.map((elm, i) => {

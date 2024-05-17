@@ -14,6 +14,7 @@ import {
 } from "../../redux/profileInfoSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const AccountSettings = ({ companyProfile }) => {
   let [data, setData] = useState({
@@ -22,7 +23,7 @@ const AccountSettings = ({ companyProfile }) => {
     address: "",
     bio: "",
   });
-
+  const { t } = useTranslation();
   useEffect(() => {
     setData({
       name: companyProfile?.name,
@@ -65,7 +66,7 @@ const AccountSettings = ({ companyProfile }) => {
       <div className="w-[100%] flex justify-between">
         <div className="w-[47%] ">
           <div className="flex items-center">
-            <h2 className="font-[500] text-[14px] ml-2">Name</h2>
+            <h2 className="font-[500] text-[14px] ml-2">{t("Name")}</h2>
             <Switch
               size="small"
               checked={!nameLock}
@@ -83,7 +84,7 @@ const AccountSettings = ({ companyProfile }) => {
         </div>
         <div className="w-[47%] ">
           <div className="flex items-center">
-            <h2 className="font-[500] text-[14px] ml-2">Phone</h2>
+            <h2 className="font-[500] text-[14px] ml-2">{t("Phone")}</h2>
             <Switch
               size="small"
               checked={!phoneLock}
@@ -104,7 +105,7 @@ const AccountSettings = ({ companyProfile }) => {
       <div className="w-[100%] mt-3">
         <div className="w-[100%] ">
           <div className="flex items-center">
-            <h2 className="font-[500] text-[14px] ml-2">Location</h2>
+            <h2 className="font-[500] text-[14px] ml-2">{t("Location")}</h2>
             <Switch
               size="small"
               checked={!locationLock}
@@ -126,7 +127,7 @@ const AccountSettings = ({ companyProfile }) => {
       <div className="w-[100%] mt-3">
         <div className="w-[100%] ">
           <div className="flex items-center">
-            <h2 className="font-[500] text-[14px] ml-2">Bio</h2>
+            <h2 className="font-[500] text-[14px] ml-2">{t("Bio")}</h2>
             <Switch
               size="small"
               checked={!bioLock}
@@ -145,7 +146,7 @@ const AccountSettings = ({ companyProfile }) => {
 
       <div className="w-[100%] mt-7">
         <h2 className="font-[500] text-[14px] ml-2 text-gray-500">
-          Account Settings
+          {t("Account Settings")}
         </h2>
         <div className="w-[99%] pl-[4%] sm:h-[46px] h-[30px] outline-none bg-white rounded-[36px] mt-1 flex justify-end">
           <div
@@ -161,7 +162,7 @@ const AccountSettings = ({ companyProfile }) => {
               })
             }
           >
-            Save
+            {t("Save")}
           </div>
         </div>
       </div>

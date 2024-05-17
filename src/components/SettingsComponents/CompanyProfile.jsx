@@ -28,6 +28,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { CiLock } from "react-icons/ci";
 import { BiLockAlt } from "react-icons/bi";
 import { Switch } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const CompanyProfile = ({ uid }) => {
   var screen = window.innerWidth;
@@ -164,6 +165,8 @@ const CompanyProfile = ({ uid }) => {
 
   let shareUrl = `profile.connexcard.com/${uid}`;
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-[100%]  mt-7 flex flex-col ml-[30px]">
       {/* --------------------------------------------croper for logo image------------------------------------------------  */}
@@ -209,15 +212,18 @@ const CompanyProfile = ({ uid }) => {
       <MobilePreviewModal modal={modal} handleModal={handleModal} />
       <div className="sm:w-[600px] w-[100%]">
         <h2 className="font-[600] sm:text-[20px] text-[16px] text-[#625F5F]">
-          Cover Image
+          {t("Cover Image")}
         </h2>
         <p className="font-[400] text-[14px] text-[#707070]">
-          Choose an image to display at the top of cardholder profile pages.
+          {t(
+            "Choose an image to display at the top of cardholder profile pages."
+          )}
         </p>
         <div className="w-[100%] flex cursor-pointer mt-[20px]">
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px]">
             <span className="flex justify-center items-center mb-1  ">
-              Logo {"\u00A0"}
+              {t("Logo")}
+              {"\u00A0"}
               {/* <RiErrorWarningLine /> */}
               <Switch
                 size="small"
@@ -265,7 +271,8 @@ const CompanyProfile = ({ uid }) => {
           {"\u00A0"}
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%] ">
             <span className="flex justify-center items-center mb-1 ">
-              Profile Picture {"\u00A0"}
+              {t("Profile Picture")}
+              {"\u00A0"}
               <Switch
                 size="small"
                 checked={!profilePictureLock}
@@ -316,7 +323,7 @@ const CompanyProfile = ({ uid }) => {
           {"\u00A0"}
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%]">
             <span className="flex justify-center items-center mb-1 ">
-              Cover Picture {"\u00A0"}
+              {t("Cover Picture")} {"\u00A0"}
               <Switch
                 size="small"
                 checked={!coverLock}
@@ -361,28 +368,29 @@ const CompanyProfile = ({ uid }) => {
         </div>
         <div className="mt-7">
           <h2 className="font-[600] sm:text-[20px] text-[16px] text-[#625F5F]">
-            Profile page appearance
+            {t("Profile page appearance")}
           </h2>
           <p className="font-[400] text-[14px] text-[#707070]">
-            Customise the look of the profile pages of your cardholders. Changes
-            will apply to all profile pages belonging to your organisation.
+            {t(
+              "Customise the look of the profile pages of your cardholders. Changes will apply to all profile pages belonging to your organisation."
+            )}
           </p>
         </div>
         <div className="w-[100%] flex justify-center items-center mt-6">
           <div className="sm:w-[95%] w-[100%]">
             <h2 className="font-[600] sm:text-[20px] text-[16px] text-[#625F5F]">
-              Colors
+              {t("Colors")}
             </h2>
             <p className="font-[400] text-[14px] text-[#707070]">
-              Create a custom theme for cardholder profile pages. Maintain good
-              readability by ensuring there is sufficient contrast between text
-              and background colours.
+              {t(
+                "Create a custom theme for cardholder profile pages. Maintain good readability by ensuring there is sufficient contrast between text and background colours."
+              )}
             </p>
             <div className="w-[100%] mt-7">
               <div className="w-[100%] flex justify-between items-center">
                 <div>
                   <h2 className="font-[600] sm:text-[15px] text-[12px]">
-                    Page background color
+                    {t("Page background color")}
                   </h2>
                   <div className="sm:w-[254px] w-[70%] sm:h-[61px] h-[46px] rounded-[36px] bg-white mt-1 flex items-center justify-between">
                     <div className="sm:h-[61px] h-[33px] w-[61px] rounded-full bg-[black]">
@@ -422,7 +430,7 @@ const CompanyProfile = ({ uid }) => {
 
                 <div>
                   <h2 className="font-[600] sm:text-[15px] text-[12px]">
-                    Text color
+                    {t("Text color")}
                   </h2>
                   <div className="sm:w-[254px] w-[70%] sm:h-[61px] h-[46px] rounded-[36px] bg-white mt-1 flex items-center justify-between">
                     <div className="sm:h-[61px] h-[33px] w-[61px] rounded-full bg-[black]">
@@ -510,7 +518,7 @@ const CompanyProfile = ({ uid }) => {
                       toast.success("Copied to clipboard");
                   }}
                 >
-                  <p className="font-[500] text-[16px] mr-1">Copy</p>
+                  <p className="font-[500] text-[16px] mr-1">{t("Copy")}</p>
                   <IoIosCopy className="ml-1" />
                 </div>
 
@@ -523,7 +531,7 @@ const CompanyProfile = ({ uid }) => {
                   }
                   onClick={() => handleModal()}
                 >
-                  <p className="font-[500] text-[16px] mr-1">Preview</p>
+                  <p className="font-[500] text-[16px] mr-1">{t("Preview")}</p>
                   <FaEye className="ml-1" />
                 </div>
 
@@ -542,7 +550,9 @@ const CompanyProfile = ({ uid }) => {
                     })
                   }
                 >
-                  <p className="font-[500] text-[16px] text-white">Save</p>
+                  <p className="font-[500] text-[16px] text-white">
+                    {t("Save")}
+                  </p>
                   {/* <IoIosCopy /> */}
                 </div>
               </div>

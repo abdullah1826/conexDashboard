@@ -47,9 +47,11 @@ import { CiLock } from "react-icons/ci";
 import HelpModal from "../components/Modals/HelpModal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const Company = () => {
   let [value, setValue] = useState(0);
+  const { t } = useTranslation();
 
   let handleTabs = (e, val) => {
     setValue(val);
@@ -142,7 +144,9 @@ const Company = () => {
         <div className="sm:w-[90%] w-[100%] ">
           <div className="w-[100%] flex justify-between h-[50px]  mt-[30px]">
             <div className="sm:w-[15%] w-[35%] h-[100%] flex items-center">
-              <p className="font-[600] sm:text-[20px] text-[16px]">Company </p>
+              <p className="font-[600] sm:text-[20px] text-[16px]">
+                {t("Company")}
+              </p>
             </div>
             <div
               className="w-[80%] h-[100%] flex justify-end"
@@ -202,7 +206,9 @@ const Company = () => {
                   )
                 }
               >
-                <p className="font-[500] sm:text-[15px] text-[12px] ">Help ?</p>
+                <p className="font-[500] sm:text-[15px] text-[12px] ">
+                  {t("Help")} ?
+                </p>
                 {/* <MdArrowDropDown className="text-2xl ml-1" /> */}
               </div>
             </div>
@@ -216,7 +222,7 @@ const Company = () => {
             // sx={{ border: "1px solid black", pl: 3 }}
           >
             <Tab
-              label="Account Settings"
+              label={t("Account Settings")}
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
@@ -228,7 +234,7 @@ const Company = () => {
             />
             {/* <div className="w-[10px]"></div> */}
             <Tab
-              label="Account Links"
+              label={t("Account Links")}
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
@@ -240,7 +246,7 @@ const Company = () => {
             />
             {/* <div className="w-[10px]"></div> */}
             <Tab
-              label="Organization"
+              label={t("Organization")}
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
@@ -252,7 +258,7 @@ const Company = () => {
             />
             {/* <div className="w-[10px]"></div> */}
             <Tab
-              label="Company Profile"
+              label={t("Company Profile")}
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",

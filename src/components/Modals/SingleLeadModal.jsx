@@ -19,6 +19,7 @@ import zap from "../../imgs/zap.png";
 import { TfiDownload } from "react-icons/tfi";
 import { FaRegMessage } from "react-icons/fa6";
 import DownloadCsv from "../DownloadCsv";
+import { useTranslation } from "react-i18next";
 
 const SingleLeadModal = ({ leadModal, handleLeadModal, singleLead }) => {
   const style2 = {
@@ -37,6 +38,7 @@ const SingleLeadModal = ({ leadModal, handleLeadModal, singleLead }) => {
     // p: "32px",
   };
 
+  const { t } = useTranslation();
   return (
     <div>
       <Modal
@@ -110,15 +112,14 @@ const SingleLeadModal = ({ leadModal, handleLeadModal, singleLead }) => {
                     </div>
                     <div className="w-[80%]">
                       <p className="text-[#818181] text-[12px] font-[400] ml-2">
-                        {singleLead?.message} skdksjdks ldklskdl lklk lklklkl
-                        ;lklklkl lkl lklklk lk;klklk lklk kaj lklklknlk lklk
+                        {singleLead?.message}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className=" w-[40%]">
                   <div className="w-[100%] flex justify-center">
-                    <h2 className="font-[400] text-[18px]">Export as</h2>
+                    <h2 className="font-[400] text-[18px]">{t("Export as")}</h2>
                   </div>
                   {/* <div className="h-[113px] rounded-[18px] border shadow-lg mt-2 flex justify-center flex-col items-center cursor-pointer">
                     <img src={zap} alt="" className="h-[35px] w-[35px]" />

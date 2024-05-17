@@ -12,6 +12,7 @@ import {
 } from "../redux/profileInfoSlice";
 import { BsGlobe2 } from "react-icons/bs";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Mobile = ({ linkInfo, ifAdded }) => {
   const name = useSelector((state) => state.profileInfoSlice.name);
@@ -126,6 +127,8 @@ const Mobile = ({ linkInfo, ifAdded }) => {
 
   console.log(textColor);
 
+  const { t } = useTranslation();
+
   return (
     <div
       className="w-[253px] h-[455px] rounded-[35px] border mt-2 overflow-y-scroll relative"
@@ -140,44 +143,44 @@ const Mobile = ({ linkInfo, ifAdded }) => {
               </div>
               {nameVisible && (
                 <div className="mt-[10px] h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Name
+                  {t("Name")}
                 </div>
               )}
               {emailVisible && (
                 <div className="mt-[10px] h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Email
+                  {t("Email")}
                 </div>
               )}
               {phoneVisible && (
                 <div className="mt-[10px] h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Phone
+                  {t("Phone")}
                 </div>
               )}
               {companyVisible && (
                 <div className="mt-[10px] h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Company
+                  {t("Company")}
                 </div>
               )}
 
               {jobVisible && (
                 <div className="mt-[10px] h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Job
+                  {t("Job")}
                 </div>
               )}
               {noteVisible && (
                 <div className="mt-3 h-[37px] w-[97%] pl-[3%] text-[12px] border border-black rounded-lg flex items-center ">
-                  Note
+                  {t("Note")}
                 </div>
               )}
               <div className="w-[100%] flex justify-center items-center mt-2">
                 <div className="w-[70px] h-[30px] border rounded-full flex justify-center items-center text-xs mr-1">
-                  Cancel
+                  {t("Cancel")}
                 </div>
                 <div
                   className="w-[70px] h-[30px] border rounded-full flex justify-center items-center text-white text-xs ml-1"
-                  style={{ backgroundColor: color }}
+                  style={{ backgroundColor: color ? color : "black" }}
                 >
-                  Submit
+                  {t("Submit")}
                 </div>
               </div>
             </div>
@@ -242,7 +245,9 @@ const Mobile = ({ linkInfo, ifAdded }) => {
         style={{ color: textColor ? textColor : companyProfile?.textColor }}
       >
         {!nameLock && (
-          <h2 className="font-[500] text-[16px] text-center">{name}</h2>
+          <h2 className="font-[500] text-[16px] text-center">
+            {splitString(name, 23)}
+          </h2>
         )}
         {/* <p className="text-[#656363] font-[400] text-[11px] w-[90%] text-center">
           Mern Stack developer at avicenne
@@ -314,7 +319,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
           className="w-[65%] h-[36px]  rounded-2xl text-white flex justify-center items-center text-[12px] mt-3"
           style={{ backgroundColor: color ? color : companyProfile?.color }}
         >
-          Let's Connect
+          {t("Let's Connect")}
         </div>
         {returnWeblink() && (
           <div
@@ -356,7 +361,9 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                 />
                 <p
                   className="text-[8px] mt-[2px] text-center"
-                  style={{ color: textColor }}
+                  style={{
+                    color: textColor ? textColor : companyProfile?.textColor,
+                  }}
                 >
                   {elm?.name}
                 </p>

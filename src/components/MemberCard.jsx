@@ -15,6 +15,7 @@ import lgoplchldr from "../imgs/lgoplchldr.jpg";
 import { changeProfileStatus, deleteSingleChild } from "../Services";
 import ShareCardModal from "./Modals/ShareCardModal";
 import DeleteModal from "./Modals/DeleteModal";
+import { useTranslation } from "react-i18next";
 
 const MemberCard = ({ profile, companyProfile }) => {
   let navigate = useNavigate();
@@ -30,6 +31,7 @@ const MemberCard = ({ profile, companyProfile }) => {
     setdeleteModal(!deleteModal);
   };
   let conexParent = localStorage.getItem("conexParent");
+  const { t } = useTranslation();
   return (
     <div className="sm:w-[265px] w-[100%] sm:h-[290px] h-[300px]  rounded-3xl mt-[20px] bg-[white]">
       <ShareCardModal
@@ -40,7 +42,7 @@ const MemberCard = ({ profile, companyProfile }) => {
       <DeleteModal
         deleteModal={deleteModal}
         handledeleteModal={handledeleteModal}
-        text="Are you sure to delete this profile?"
+        text={t("Are you sure to delete this profile?")}
         func={() => deleteSingleChild(userId)}
       />
       <div className="rounded-t-3xl h-[154px]  w-[100%] relative ">
@@ -88,7 +90,9 @@ const MemberCard = ({ profile, companyProfile }) => {
         <div className="w-[90%] flex justify-between">
           <div className="h-[114px] w-[48%]  rounded-[7px] bg-[#FBFBFB] flex justify-center items-center">
             <div className="h-[85%] w-[86%]">
-              <h2 className="font-[500] text-[12px]">{profile?.name}</h2>
+              <h2 className="font-[500] text-[12px] line-clamp-2 w-[99%]">
+                {profile?.name}
+              </h2>
               <div className="flex mt-1">
                 <FaBriefcase className="text-xs text-black" />
                 <p
@@ -128,7 +132,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   )}
 
                   <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                    {profile?.profileOn === 1 ? "Lock" : "Un Lock"}
+                    {profile?.profileOn === 1 ? t("Lock") : t("Un Lock")}
                   </p>
                 </div>
 
@@ -139,7 +143,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   >
                     <FiEdit className="text-[#3D3C3C] sm:text-[14px] text-[17px]" />
                     <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C] mt-1">
-                      Edit
+                      {t("Edit")}
                     </p>
                   </div>
                 ) : (
@@ -151,7 +155,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   >
                     <FiShare2 className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
                     <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                      Share
+                      {t("Share")}
                     </p>
                   </div>
                 )}
@@ -167,7 +171,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   >
                     <FiShare2 className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
                     <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                      Share
+                      {t("Share")}
                     </p>
                   </div>
                 ) : (
@@ -179,7 +183,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   >
                     <IoTrashOutline className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
                     <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                      Delete
+                      {t("Delete")}
                     </p>
                   </div>
                 )}
@@ -193,7 +197,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   >
                     <IoTrashOutline className="text-[#3D3C3C] sm:text-[16px] text-[21px]" />
                     <p className="font-[500] sm:text-[9px] text-[12px] text-[#3D3C3C]">
-                      Delete
+                      {t("Delete")}
                     </p>
                   </div>
                 )}

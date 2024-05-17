@@ -24,10 +24,12 @@ import SingleLeadModal from "../components/Modals/SingleLeadModal";
 // import DeleteContact from "../components/Modals/DeleteContactModal";
 import DeleteContactModal from "../components/Modals/DeleteContactModal";
 import DownloadCsv from "../components/DownloadCsv";
+import { useTranslation } from "react-i18next";
 
 const Leads = () => {
   let [leads, setLeads] = useState([]);
   var screen = window.innerWidth;
+  const { t } = useTranslation();
 
   let connexUid = localStorage.getItem("connexUid");
   useEffect(() => {
@@ -208,7 +210,7 @@ const Leads = () => {
 
             <div className="w-[100%] h-[100%] flex justify-between items-end">
               <div className="h-[50px] mb-[20px]">
-                <p className="text-sm">Start Date</p>
+                <p className="text-sm">{t("Start Date")}</p>
                 <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                   <input
                     type="date"
@@ -219,7 +221,7 @@ const Leads = () => {
                 </div>
               </div>
               <div className="h-[50px] mb-[20px]">
-                <p className="text-sm">End Date</p>
+                <p className="text-sm">{t("End Date")}</p>
                 <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
                   <input
                     type="date"
@@ -287,7 +289,7 @@ const Leads = () => {
                   type="text"
                   className="h-[100%] sm:w-[77%] w-[40px] outline-none rounded-[36px] sm:pl-[10px] pl-[0px] sm:ml-2 "
                   style={screen <= 450 ? { fontSize: "11px" } : null}
-                  placeholder="Search"
+                  placeholder={t("Search")}
                   onChange={(e) => setsearch(e.target.value)}
                   value={search}
                 />
@@ -311,7 +313,7 @@ const Leads = () => {
                       : null
                   }
                 >
-                  {filtered ? <DownloadCsv data={filtered} /> : "Export CSV"}
+                  {filtered ? <DownloadCsv data={filtered} /> : t("Export CSV")}
                 </p>
                 {screen >= 450 ? (
                   <TfiDownload className="text-lg mr-2" />
@@ -326,7 +328,9 @@ const Leads = () => {
             </div> */}
 
             <div className="w-[15%] ml-5">
-              <p className="font-[500] sm:text-[16px] text-[12px]">Contact</p>
+              <p className="font-[500] sm:text-[16px] text-[12px]">
+                {t("End Date")}
+              </p>
             </div>
             {screen >= 450 ? (
               <div className="w-[15%] ">
@@ -342,16 +346,18 @@ const Leads = () => {
                     : null
                 }
               >
-                Connected with
+                {t("Connected with")}
               </p>
             </div>
             {screen >= 450 ? (
               <div className="w-[15%] ">
-                <p className="font-[500] text-[16px]">Date</p>
+                <p className="font-[500] text-[16px]">{t("Date")}</p>
               </div>
             ) : null}
             <div className="w-[15%] flex">
-              <p className="font-[500] sm:text-[16px] text-[12px]">Actions</p>
+              <p className="font-[500] sm:text-[16px] text-[12px]">
+                {t("Actions")}
+              </p>
             </div>
           </div>
           {filtered?.map((contact) => {

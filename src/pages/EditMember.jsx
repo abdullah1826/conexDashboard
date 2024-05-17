@@ -60,6 +60,7 @@ import "react-toastify/dist/ReactToastify.css";
 import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import QrContainer from "../components/EditComponents/QrContainer.jsx";
 import ShareCardModal from "../components/Modals/ShareCardModal.jsx";
+import { useTranslation } from "react-i18next";
 
 const EditMember = () => {
   let navigate = useNavigate();
@@ -215,6 +216,7 @@ const EditMember = () => {
   let handleShareModal = () => {
     setshareModal(!shareModal);
   };
+  const { t } = useTranslation();
   return (
     <div
       className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh]"
@@ -229,7 +231,7 @@ const EditMember = () => {
         />
         <div className="sm:w-[90%] w-[100%] ">
           <div className="w-[100%] flex justify-between   mt-[30px]  items-center">
-            <div className="sm:w-[27%] w-[70%] h-[65px] flex justify-evenly items-center">
+            <div className="sm:w-[37%] w-[70%] h-[65px] flex justify-evenly items-center">
               <SlArrowLeft
                 className="text-2xl cursor-pointer"
                 onClick={() => navigate("/home")}
@@ -240,7 +242,9 @@ const EditMember = () => {
                 alt=""
                 className="sm:h-[65px] sm:w-[65px] h-[55px] w-[55px] rounded-full object-cover"
               />
-              <p className="font-[600] text-[16px]">{name}</p>
+              <p className="font-[600] text-[16px] w-[50%] line-clamp-1">
+                {name}
+              </p>
             </div>
 
             <div
@@ -252,7 +256,7 @@ const EditMember = () => {
                 style={screen <= 450 ? { marginTop: "8px" } : null}
                 onClick={() => handleShareModal()}
               >
-                <p className="sm:text-[17px] text-[12px] ">share</p>
+                <p className="sm:text-[17px] text-[12px] ">{t("share")}</p>
                 {"\u00A0"}{" "}
                 <RiShareFill
                   style={screen <= 450 ? { fontSize: "12px" } : null}
@@ -285,9 +289,9 @@ const EditMember = () => {
                     <IoMdMenu className="text-[16px] ml-2 " />
                     <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
                       {screen <= 450 && route?.isContent === true
-                        ? "Content"
+                        ? t("Content")
                         : null}
-                      {screen >= 450 ? "Content" : null}
+                      {screen >= 450 ? t("Content") : null}
                     </p>
                   </div>
                   <div
@@ -296,8 +300,10 @@ const EditMember = () => {
                   >
                     <BsQrCode className="text-[16px] ml-2 " />
                     <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
-                      {screen <= 450 && route?.isQr === true ? "Qr Code" : null}
-                      {screen >= 450 ? "Qr Code" : null}
+                      {screen <= 450 && route?.isQr === true
+                        ? t("Qr Code")
+                        : null}
+                      {screen >= 450 ? t("Qr Code") : null}
                     </p>
                   </div>
                   <div
@@ -306,8 +312,10 @@ const EditMember = () => {
                   >
                     <FaFilter className="text-[16px] ml-2 " />
                     <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
-                      {screen <= 450 && route?.isLead === true ? "Leads" : null}
-                      {screen >= 450 ? "Leads" : null}
+                      {screen <= 450 && route?.isLead === true
+                        ? t("Leads")
+                        : null}
+                      {screen >= 450 ? t("Leads") : null}
                     </p>
                   </div>
                 </div>
@@ -327,8 +335,10 @@ const EditMember = () => {
                   <FaUser className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
                     {" "}
-                    {screen <= 450 && route?.isAbout === true ? "About" : null}
-                    {screen >= 450 ? "About" : null}
+                    {screen <= 450 && route?.isAbout === true
+                      ? t("About")
+                      : null}
+                    {screen >= 450 ? t("About") : null}
                   </p>
                 </div>
 
@@ -344,9 +354,9 @@ const EditMember = () => {
                   <IoMdMenu className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
                     {screen <= 450 && route?.isContent === true
-                      ? "Content"
+                      ? t("Content")
                       : null}
-                    {screen >= 450 ? "Content" : null}
+                    {screen >= 450 ? t("Content") : null}
                   </p>
                 </div>
                 <div
@@ -360,8 +370,10 @@ const EditMember = () => {
                 >
                   <BsQrCode className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
-                    {screen <= 450 && route?.isQr === true ? "Qr Code" : null}
-                    {screen >= 450 ? "Qr Code" : null}
+                    {screen <= 450 && route?.isQr === true
+                      ? t("Qr Code")
+                      : null}
+                    {screen >= 450 ? t("Qr Code") : null}
                   </p>
                 </div>
                 <div
@@ -375,8 +387,10 @@ const EditMember = () => {
                 >
                   <FaFilter className="text-[16px] ml-2 " />
                   <p className="font-[600] sm:text-[16px] text-[10px] ml-1">
-                    {screen <= 450 && route?.isLead === true ? "Leads" : null}
-                    {screen >= 450 ? "Leads" : null}
+                    {screen <= 450 && route?.isLead === true
+                      ? t("Leads")
+                      : null}
+                    {screen >= 450 ? t("Leads") : null}
                   </p>
                 </div>
               </div>

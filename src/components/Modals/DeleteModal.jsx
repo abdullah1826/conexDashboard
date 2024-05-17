@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import { deleteContact } from "../../Services";
+import { useTranslation } from "react-i18next";
 
 const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
@@ -25,6 +26,8 @@ const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
     // p: "32px",
   };
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <Modal
@@ -41,7 +44,7 @@ const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm mr-[5px] cursor-pointer"
                 onClick={() => handledeleteModal()}
               >
-                Cancel
+                {t("Cancel")}
               </div>
               <div
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm ml-[5px] bg-black text-white cursor-pointer"
@@ -49,7 +52,7 @@ const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
                   func(), handledeleteModal();
                 }}
               >
-                Sure
+                {t("Sure")}
               </div>
             </div>
           </div>

@@ -23,11 +23,14 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 let cnxUid = localStorage.getItem("connexUid");
 let conexParent = localStorage.getItem("conexParent");
 
 let cnxId = conexParent ? conexParent : cnxUid;
 let baseUrl = "https://apis.connexcard.com/api/";
+
+// const { t } = useTranslation();
 
 // ------------------------------------------------Login User-----------------------------------------------
 
@@ -470,7 +473,7 @@ let returnIfHttps = (string) => {
   }
 };
 
-export const updataAbout = async (id, data) => {
+export const updataAbout = async (id, data, t) => {
   let {
     name,
     job,
@@ -573,14 +576,14 @@ export const updataAbout = async (id, data) => {
           console.log(error);
         });
     }
-    toast.success("Information updated sucessfuly");
+    toast.success(t("Information updated sucessfuly"));
   });
   // }
 };
 
 // ------------------------------------------------Update Qr Data-----------------------------------------------
 
-export const updateQrInfo = async (id, qrColor, logoimg) => {
+export const updateQrInfo = async (id, qrColor, logoimg, t) => {
   // if (qrColor || qrLogo) {
   // toast.success("Information updated successfuly");
   console.log("qr testing", logoimg);
@@ -610,7 +613,7 @@ export const updateQrInfo = async (id, qrColor, logoimg) => {
           console.log(error);
         });
     }
-    toast.success("Information updated successfuly");
+    toast.success(t("Information updated sucessfuly"));
   });
   // console.log("qrrrrr");
 
@@ -627,7 +630,8 @@ export const updateLead = async (id, formHeader, leadForm) => {
 
 // ------------------------------------------------Create New Team-----------------------------------------------
 
-export const createTeam = async (data, callBack) => {
+export const createTeam = async (data, callBack, setapiWorking) => {
+  setapiWorking(true);
   if (data?.name) {
     // toast.success("Information updated successfuly");
     let pushKey = push(ref(db, `Teams/`), {
@@ -650,6 +654,7 @@ export const createTeam = async (data, callBack) => {
                 update(ref(db, `Teams/${pushKey}`), { image: URL }).then(() => {
                   toast.success("New team created successfuly");
                   callBack();
+                  setapiWorking(false);
                 });
                 // setlogoimg("");
                 // window.location.reload();
@@ -666,10 +671,12 @@ export const createTeam = async (data, callBack) => {
       } else {
         toast.success("New team created successfuly");
         callBack();
+        setapiWorking(false);
       }
     });
     // console.log("qrrrrr");
   } else {
+    setapiWorking(false);
     toast.error("Team name should not be empty");
   }
 };
@@ -841,9 +848,11 @@ export const addNewLink = async (
   allLinks,
   handleLinkEditModal,
   ifCompany,
-  allMembers
+  allMembers,
+  t
 ) => {
   console.log("add working.........");
+
   if (linkData?.value) {
     console.log("img64", linkData?.image);
     console.log(allLinks);
@@ -911,7 +920,7 @@ export const addNewLink = async (
                       );
                       console.log("Updated IDs:", updatedUserlinks);
                       // Handle success, show success message, etc.
-                      toast.success("Link added successfuly");
+                      toast.success(t("Link added successfuly"));
                       handleLinkEditModal();
                     } catch (error) {
                       console.error("Error updating objects:", error);
@@ -919,7 +928,7 @@ export const addNewLink = async (
                       toast.error("Error updating objects");
                     }
                   } else {
-                    toast.success("Link added successfuly");
+                    toast.success(t("Link added successfuly"));
                     handleLinkEditModal();
                   }
                 });
@@ -981,7 +990,7 @@ export const addNewLink = async (
               );
               console.log("Updated IDs:", updatedUserlinks);
               // Handle success, show success message, etc.
-              toast.success("Link added successfuly");
+              toast.success(t("Link added successfuly"));
               handleLinkEditModal();
             } catch (error) {
               console.error("Error updating objects:", error);
@@ -989,7 +998,7 @@ export const addNewLink = async (
               toast.error("Error updating objects");
             }
           } else {
-            toast.success("Link added successfuly");
+            toast.success(t("Link added successfuly"));
             handleLinkEditModal();
           }
         });
@@ -1057,7 +1066,7 @@ export const addNewLink = async (
                       );
                       console.log("Updated IDs:", updatedUserlinks);
                       // Handle success, show success message, etc.
-                      toast.success("Link added successfuly");
+                      toast.success(t("Link added successfuly"));
                       handleLinkEditModal();
                     } catch (error) {
                       console.error("Error updating objects:", error);
@@ -1065,7 +1074,7 @@ export const addNewLink = async (
                       toast.error("Error updating objects");
                     }
                   } else {
-                    toast.success("Link added successfuly");
+                    toast.success(t("Link added successfuly"));
                     handleLinkEditModal();
                   }
                 });
@@ -1117,7 +1126,7 @@ export const addNewLink = async (
               );
               console.log("Updated IDs:", updatedUserlinks);
               // Handle success, show success message, etc.
-              toast.success("Link added successfuly");
+              toast.success(t("Link added successfuly"));
               handleLinkEditModal();
             } catch (error) {
               console.error("Error updating objects:", error);
@@ -1125,7 +1134,7 @@ export const addNewLink = async (
               toast.error("Error updating objects");
             }
           } else {
-            toast.success("Link added successfuly");
+            toast.success(t("Link added successfuly"));
             handleLinkEditModal();
           }
         });
@@ -1142,7 +1151,8 @@ export const updateNewLink = (
   allLinks,
   handleLinkEditModal,
   ifCompany,
-  allChilds
+  allChilds,
+  t
 ) => {
   // if (linkData?.value) {
 
@@ -1195,7 +1205,7 @@ export const updateNewLink = (
                       promiseUpdatingLinkToChilds
                     );
                     handleLinkEditModal();
-                    toast.success("Link updated successfuly");
+                    toast.success(t(t("Link updated successfuly")));
                   } catch (error) {
                     console.error("Error updating objects:", error);
                     // Handle error, show error message, etc.
@@ -1250,7 +1260,7 @@ export const updateNewLink = (
             );
             console.log("Updated IDs:", updatedUserlinks);
             // Handle success, show success message, etc.
-            toast.success("Link updated successfuly");
+            toast.success(t("Link updated successfuly"));
             handleLinkEditModal();
           } catch (error) {
             console.error("Error updating objects:", error);
@@ -1286,7 +1296,7 @@ export const updateNewLink = (
                   shareable: linkData?.shareable,
                 }).then(() => {
                   handleLinkEditModal();
-                  toast.success("Link updated successfuly");
+                  toast.success(t("Link updated successfuly"));
                 });
               }
             })
@@ -1312,7 +1322,7 @@ export const updateNewLink = (
           shareable: linkData?.shareable,
         }).then(() => {
           handleLinkEditModal();
-          toast.success("Link updated successfuly");
+          toast.success(t("Link updated successfuly"));
         });
       }
     }
@@ -1696,7 +1706,8 @@ export const updateCompanyProfile = async (id, data) => {
 
 // ------------------------------------------------update Team-----------------------------------------------
 
-export const updateTeam = async (data, callBack, teamId) => {
+export const updateTeam = async (data, callBack, teamId, setapiWorking) => {
+  setapiWorking(true);
   if (data?.name) {
     update(ref(db, `Teams/${teamId}`), { teamName: data?.name }).then(() => {
       if (returnIfHttps(data?.img) === false) {
@@ -1710,12 +1721,15 @@ export const updateTeam = async (data, callBack, teamId) => {
             getDownloadURL(storageRef)
               .then((URL) => {
                 // console.log(URL)
-                update(ref(db, `Teams/${teamId}`), { image: URL });
+                update(ref(db, `Teams/${teamId}`), { image: URL }).then(() => {
+                  setapiWorking(false);
+                });
                 // setlogoimg("");
                 // window.location.reload();
               })
               .catch((error) => {
                 console.log(error);
+                setapiWorking(false);
               });
             // setimg(null)
           })
@@ -1726,10 +1740,12 @@ export const updateTeam = async (data, callBack, teamId) => {
       }
       toast.success("updated successfuly");
       callBack();
+      setapiWorking(false);
     });
     // console.log("qrrrrr");
   } else {
     toast.error("Team name should not be empty");
+    setapiWorking(false);
   }
 };
 

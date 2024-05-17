@@ -26,6 +26,7 @@ import { MdEdit } from "react-icons/md";
 import DeleteModal from "../components/Modals/DeleteModal";
 import { MoonLoader } from "react-spinners";
 import SingleTeamModal from "../components/Modals/SingleTeamMoDAL.JSX";
+import { useTranslation } from "react-i18next";
 
 const SubTeams = () => {
   var screen = window.innerWidth;
@@ -115,6 +116,7 @@ const SubTeams = () => {
     }
   };
   console.log(loading);
+  const { t } = useTranslation();
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       {screen >= 450 ? <Sidebar /> : null}
@@ -166,7 +168,7 @@ const SubTeams = () => {
                       : null
                   }
                 >
-                  Sub Teams{" "}
+                  {t("Sub Teams")}{" "}
                   <span className="font-[500] sm:text-[10px] text-[12px]  text-[#9B9B9B]">
                     {`(${teams?.length})`}
                   </span>
@@ -184,7 +186,7 @@ const SubTeams = () => {
                   <input
                     type="text"
                     className="h-[100%] sm:w-[88%] w-[70px] outline-none rounded-[36px] sm:pl-[10px] pl-[0px] ml-2 sm:text[20px] text[11px]"
-                    placeholder="Search"
+                    placeholder={t("Search")}
                     onChange={(e) => setsearch(e.target.value)}
                     value={search}
                   />
@@ -201,7 +203,7 @@ const SubTeams = () => {
                 >
                   <IoMdAdd className="text-[black] mr-1" />{" "}
                   <p className="font-[500] text-[12px] text-black mr-1">
-                    Add Sub Team
+                    {t("Add Sub Team")}
                   </p>
                 </div>
               </div>
@@ -230,7 +232,7 @@ const SubTeams = () => {
                               screen <= 450 ? { whiteSpace: "nowrap" } : null
                             }
                           >
-                            {splitString(team?.teamName, 23)}
+                            {splitString(team?.teamName, 20)}
                           </h2>
                           <div className="flex items-center text-[#7F7F7F]">
                             <GoPerson className="text-[15px]" />
@@ -239,8 +241,8 @@ const SubTeams = () => {
                                 ? `${
                                     // getAllTeamMembersLength()
                                     Object.values(team?.members)?.length
-                                  } Members`
-                                : "0 Members"}
+                                  } ${t("Members")}`
+                                : `0 ${t("Members")}`}
                             </p>
                           </div>
                           <div className="w-[100%] flex justify-between mt-1">
@@ -256,7 +258,7 @@ const SubTeams = () => {
                                   fontFamily: "inter",
                                 }}
                               >
-                                Add
+                                {t("Add")}
                               </p>
                               <div className="sm:h-[12px] sm:w-[12px] h-[10px] w-[10px] flex justify-center items-center ml-[4px]">
                                 <p style={{ marginBottom: "2px" }}>+</p>
@@ -277,7 +279,7 @@ const SubTeams = () => {
                                   fontFamily: "inter",
                                 }}
                               >
-                                View
+                                {t("View")}
                               </p>
                               <div className="sm:h-[12px] sm:w-[12px] h-[10px] w-[10px] flex justify-center items-center ml-[4px]">
                                 <IoEyeOutline />
@@ -297,7 +299,7 @@ const SubTeams = () => {
                                   fontFamily: "inter",
                                 }}
                               >
-                                Edit
+                                {t("Edit")}
                               </p>
                               <div className="sm:h-[12px] sm:w-[12px] h-[10px] w-[10px] flex justify-center items-center ml-[4px]">
                                 <MdEdit />
@@ -316,7 +318,7 @@ const SubTeams = () => {
                                   fontFamily: "inter",
                                 }}
                               >
-                                Delete
+                                {t("Delete")}
                               </p>
                               <div className="sm:h-[12px] sm:w-[12px] h-[10px] w-[10px] flex justify-center items-center ml-[4px]">
                                 <BsFillTrashFill />

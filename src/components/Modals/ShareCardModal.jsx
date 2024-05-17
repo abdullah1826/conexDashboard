@@ -20,6 +20,7 @@ import { MdEmail } from "react-icons/md";
 import { FaFacebookF } from "react-icons/fa";
 import { TiSocialLinkedin } from "react-icons/ti";
 import { FaXTwitter } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 
 const ShareCardModal = ({ shareModal, handleShareModal, userId, vizzRole }) => {
   // Modal box style
@@ -52,6 +53,7 @@ const ShareCardModal = ({ shareModal, handleShareModal, userId, vizzRole }) => {
   let shareUrl = `profile.connexcard.com/${userId}`;
   //   console.log(vizzRole);
   //   console.log(shareUrl);
+  const { t } = useTranslation();
   return (
     <>
       <Modal
@@ -68,12 +70,12 @@ const ShareCardModal = ({ shareModal, handleShareModal, userId, vizzRole }) => {
             >
               <MdArrowBackIos style={{ fontSize: "14px" }} />
               <p className="font-inter text-[12px] font-semibold leading-[8px] mr-5">
-                Go back
+                {t("Go back")}
               </p>
             </div>
 
             <h2 className="mt-[20px] font-inter text-[16px] font-semibold leading-[15px]">
-              Copy Link
+              {t("Copy Link")}
             </h2>
             <div className="mt-[12px] w-[397px] h-[37px] rounded-[36px] bg-[#f7f7f7] flex justify-between items-center">
               <p className="ml-[10px] font-inter text-[12px] font-semibold leading-[8px] text-[#898989]">
@@ -88,12 +90,12 @@ const ShareCardModal = ({ shareModal, handleShareModal, userId, vizzRole }) => {
               >
                 <BiSolidCopy style={{ color: "white", fontSize: "18px" }} />
                 <p className="font-inter text-[12px] font-semibold leading-[11px] text-white ml-2">
-                  Copy
+                  {t("Copy")}
                 </p>
               </div>
             </div>
 
-            <h2>Share Card</h2>
+            <h2>{t("Share Card")}</h2>
             <div className="w-full flex justify-between items-center mt-[15px]">
               <WhatsappShareButton
                 id="whatsapp"

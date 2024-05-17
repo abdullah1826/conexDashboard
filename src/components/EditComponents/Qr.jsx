@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateQrInfo } from "../../Services";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const Qr = ({ uid, handleCancelQr }) => {
   const qrLogo = useSelector((state) => state.profileInfoSlice.qrLogo);
@@ -52,7 +53,7 @@ const Qr = ({ uid, handleCancelQr }) => {
       });
     }
   };
-
+  const { t } = useTranslation();
   return (
     <div className="w-[90%] h-[90%] flex flex-col justify-center items-center">
       {/* --------------------------------------------croper for profile image------------------------------------------------  */}
@@ -69,7 +70,7 @@ const Qr = ({ uid, handleCancelQr }) => {
         isCircle={false}
       />
       <div className="w-[155px] h-[47px] rounded-[36px] shadow-lg font-[600] text-[16px] flex justify-center items-center">
-        QR Code
+        {t("QR Code")}
       </div>
       <div className="h-[100px] w-[100px] relative mt-[55px]">
         {qrLogo ? (
@@ -101,15 +102,15 @@ const Qr = ({ uid, handleCancelQr }) => {
       </div>
 
       <h2 className="font-[500] sm:text-[16px] text-[20px] mt-2">
-        Add Custom Logo
+        {t("Add Custom Logo")}
       </h2>
       <p className="font-[400] text-[12px] text-[#666565] text-center sm:w-[47%] w-[75%]">
-        Add custom logo to be displayed in the middle of the Qr Code.
+        {t("Add custom logo to be displayed in the middle of the Qr Code")}.
       </p>
       <div className="w-[100%] mt-5 flex justify-center">
         <div className="sm:w-[50%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2]">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center">
-            Card Color
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
+            {t("Card Color")}
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
@@ -212,7 +213,7 @@ const Qr = ({ uid, handleCancelQr }) => {
       </div>
 
       <h2 className="text-[#AEABAB] text-[12px] font-[400] mt-1">
-        Choose Color
+        {t("Choose Color")}
       </h2>
 
       <div className="w-[100%] flex justify-center items-center mt-5">
@@ -220,13 +221,13 @@ const Qr = ({ uid, handleCancelQr }) => {
           className="w-[120px] h-[40px] rounded-[15px] mr-2 font-[600] text-[12px]  shadow-md"
           onClick={() => handleCancelQr()}
         >
-          Cancel
+          {t("Cancel")}
         </button>
         <button
           className="w-[120px] h-[40px] rounded-[15px] ml-2 font-[600] text-[12px]  shadow-md bg-black text-white"
-          onClick={() => updateQrInfo(uid, qrColor, qrLogo)}
+          onClick={() => updateQrInfo(uid, qrColor, qrLogo, t)}
         >
-          Update
+          {t("Update")}
         </button>
       </div>
     </div>

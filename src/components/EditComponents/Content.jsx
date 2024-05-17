@@ -21,6 +21,7 @@ import { db } from "../../firebase";
 import { setLinks } from "../../redux/profileInfoSlice";
 import { useDispatch } from "react-redux";
 import DeleteModal from "../Modals/DeleteModal";
+import { useTranslation } from "react-i18next";
 
 const Content = ({ uid }) => {
   const IOSSwitch = styled((props) => (
@@ -125,7 +126,7 @@ const Content = ({ uid }) => {
       setItems([]);
     }
   };
-
+  const { t } = useTranslation();
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
       <div className="w-[100%] h-[100%]">
@@ -138,7 +139,7 @@ const Content = ({ uid }) => {
         <DeleteModal
           deleteModal={deleteModal}
           handledeleteModal={handledeleteModal}
-          text="Are you sure to delete this link?"
+          text={t("Are you sure to delete this link?")}
           func={() =>
             renoveLink(
               {
@@ -155,7 +156,7 @@ const Content = ({ uid }) => {
         <div className="w-[100%] flex justify-between">
           <div className="sm:w-[55%] w-[100%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center">
             <div className="flex w-[50%] items-center  justify-around ">
-              <p className="font-[500] text-[14px] ml-2">Lead Mode</p>
+              <p className="font-[500] text-[14px] ml-2">{t("Lead Mode")}</p>
               <FormControlLabel
                 control={
                   <IOSSwitch
@@ -166,7 +167,7 @@ const Content = ({ uid }) => {
               />
             </div>
             <div className="flex w-[50%] items-center  justify-around ">
-              <p className="font-[500] text-[14px] ml-2">Direct Mode</p>
+              <p className="font-[500] text-[14px] ml-2">{t("Direct Mode")}</p>
               <FormControlLabel
                 control={
                   <IOSSwitch
@@ -184,7 +185,7 @@ const Content = ({ uid }) => {
             onClick={() => handleModal()}
           >
             <p className="font-[500] sm:text-[15px] text-[8px] ">
-              Add Links & Contacts
+              {t("Add Links & Contacts")}
             </p>
           </div>
         </div>
@@ -272,7 +273,7 @@ const Content = ({ uid }) => {
                             )
                           }
                         >
-                          Make Direct
+                          {t("Make Direct")}
                         </button>
                         {/* <button className="w-[62px] h-[27px] rounded-[16px] border mr-1 text-[8px] font-[500]">
                     Remove Link
@@ -344,7 +345,7 @@ const Content = ({ uid }) => {
                                           setteamId(elm?.linkID);
                                       }}
                                     >
-                                      Remove Link
+                                      {t("Remove Link")}
                                     </button>
                                     <Switch
                                       // size="small"
@@ -380,12 +381,12 @@ const Content = ({ uid }) => {
         ) : (
           <div className="w-[100%] h-[85%] flex justify-center items-center">
             <p>
-              No links to show{" "}
+              {t("No links to show")}{" "}
               <span
                 className="font-[500] underline cursor-pointer"
                 onClick={() => handleModal()}
               >
-                Add links
+                {t("Add links")}
               </span>
             </p>
           </div>

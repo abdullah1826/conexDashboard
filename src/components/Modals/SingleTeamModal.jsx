@@ -96,7 +96,8 @@ const SingleTeamModal = ({
               <div className="h-[200px] w-[90%] border rounded-[40px] relative flex justify-center">
                 <div className="w-[300px] h-[75px] rounded-[25px] border border-black absolute bottom-[-40px] bg-white flex justify-center items-center">
                   <p className="text-[32px] font-[500]">
-                    {singleTeam?.teamName}
+                    {splitString(singleTeam?.teamName, 15)}
+                    {/* {singleTeam?.teamName} */}
                   </p>
                 </div>
                 <img

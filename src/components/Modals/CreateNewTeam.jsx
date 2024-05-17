@@ -12,10 +12,11 @@ import { createNewCard, createTeam, updateTeam } from "../../Services";
 import { GrAddCircle } from "react-icons/gr";
 import Cropper from "../Cropper";
 import bgplhldr from "../../imgs/bgplhldr.png";
+import { useTranslation } from "react-i18next";
 
 const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
-
+  const { t } = useTranslation();
   const style2 = {
     position: "absolute",
     top: "50%",
@@ -31,6 +32,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
     borderRadius: "18px",
     // p: "32px",
   };
+  const [apiWorking, setapiWorking] = useState(false);
 
   let [imgKey, setImgKey] = useState(0);
   console.log(singleTeam);
@@ -119,7 +121,9 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
               isNotRedux={true}
             />
             <h2 className="text-center font-medium text-lg">
-              {singleTeam?.teamName === "" ? "Create new team" : "Edit team"}
+              {singleTeam?.teamName === ""
+                ? t("Create new team")
+                : t("Edit team")}
             </h2>
             <div className="w-[90%] h-[80%] flex flex-col items-center justify-around">
               <div className="h-[150px] w-[90%] rounded-[45px] relative">
@@ -147,7 +151,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
               <input
                 type="text"
                 className="w-[100%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-                placeholder="Name*"
+                placeholder={`${t("Name")}*`}
                 onChange={(e) => setData({ ...data, name: e.target.value })}
                 value={data?.name}
               />
@@ -156,23 +160,31 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                   className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                   onClick={() => callBack()}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 {singleTeam?.teamName === "" ? (
                   <button
                     className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                    onClick={() => createTeam(data, callBack)}
+                    onClick={() =>
+                      !apiWorking && createTeam(data, callBack, setapiWorking)
+                    }
                   >
-                    Create
+                    {apiWorking ? " Creating..." : t("Create")}
                   </button>
                 ) : (
                   <button
                     className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                     onClick={() =>
-                      updateTeam(data, callBack, singleTeam?.teamId)
+                      !apiWorking &&
+                      updateTeam(
+                        data,
+                        callBack,
+                        singleTeam?.teamId,
+                        setapiWorking
+                      )
                     }
                   >
-                    Update
+                    {apiWorking ? "Updating..." : t("Update")}
                   </button>
                 )}
               </div>

@@ -16,6 +16,7 @@ import { setLinks } from "../../redux/profileInfoSlice";
 import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const AccountLinks = ({ uid }) => {
   let [modal, setmodal] = useState(false);
@@ -75,7 +76,7 @@ const AccountLinks = ({ uid }) => {
       setItems([]);
     }
   };
-
+  const { t } = useTranslation();
   return (
     <div className="h-[400px] w-[100%]  mt-7 flex flex-col  relative">
       <SocialLinkModal
@@ -87,7 +88,7 @@ const AccountLinks = ({ uid }) => {
       <DeleteModal
         deleteModal={deleteModal}
         handledeleteModal={handledeleteModal}
-        text="Are you sure to delete this link?"
+        text={t("Are you sure to delete this link?")}
         func={() =>
           renoveLink(
             {
@@ -159,7 +160,7 @@ const AccountLinks = ({ uid }) => {
                                     handledeleteModal(), setteamId(elm?.linkID);
                                   }}
                                 >
-                                  Remove Link
+                                  {t("Remove Link")}
                                 </div>
                                 {/* <div className="w-[74px] h-[30px] rounded-[36px] shadow-lg bg-black text-white font-[600] text-[8px] flex justify-center items-center cursor-pointer border">
                   Open Link
@@ -240,7 +241,7 @@ const AccountLinks = ({ uid }) => {
       >
         <IoMdAdd className="text-[#878787] " />
         <p className="text-[12px] font-[500] text-[#878787] ml-[2px]">
-          Add Links and Contacts
+          {t("Add Links and Contacts")}
         </p>
       </div>
     </div>

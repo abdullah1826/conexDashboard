@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import { deleteContact } from "../../Services";
+import { useTranslation } from "react-i18next";
 
 const DeleteContactModal = ({ deleteModal, handledeleteModal, lead, cb }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
@@ -24,6 +25,7 @@ const DeleteContactModal = ({ deleteModal, handledeleteModal, lead, cb }) => {
     borderRadius: "18px",
     // p: "32px",
   };
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -36,14 +38,14 @@ const DeleteContactModal = ({ deleteModal, handledeleteModal, lead, cb }) => {
         <Box sx={style2}>
           <div className="h-[100%] w-[100%]">
             <p className="text-center font-[500] mt-[30px]">
-              Are you sure you want to delete this contact?
+              {t("Are you sure you want to delete this contact?")}
             </p>
             <div className="w-[100%] flex justify-center items-center mt-2">
               <div
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm mr-[5px] cursor-pointer"
                 onClick={() => handledeleteModal()}
               >
-                Cancel
+                {t("Cancel")}
               </div>
               <div
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm ml-[5px] bg-black text-white cursor-pointer"
@@ -51,7 +53,7 @@ const DeleteContactModal = ({ deleteModal, handledeleteModal, lead, cb }) => {
                   deleteContact(lead?.id, cb), handledeleteModal();
                 }}
               >
-                Sure
+                {t("Sure")}
               </div>
             </div>
           </div>

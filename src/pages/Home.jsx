@@ -26,6 +26,8 @@ import {
 } from "../Services";
 import ShareCardModal from "../components/Modals/ShareCardModal";
 import { MoonLoader } from "react-spinners";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 // import { changeLanguage } from "i18next";
 
 const Home = () => {
@@ -96,6 +98,12 @@ const Home = () => {
 
     setfiltered(result);
   }, [search]);
+  const { i18n, t } = useTranslation();
+  const i18Change = (lang) => {
+    i18n.changeLanguage(lang?.toLowerCase());
+  };
+
+  const language = localStorage.getItem("connexLanguage");
 
   return (
     <div
@@ -126,7 +134,7 @@ const Home = () => {
                       : null
                   }
                 >
-                  Members{" "}
+                  {t("Members")}{" "}
                   <span className="font-[500] sm:text-[10px] text-[15px] text-[#9B9B9B]">
                     ({allProfiles?.length})
                   </span>
@@ -138,7 +146,7 @@ const Home = () => {
                     <input
                       type="text"
                       className="h-[100%] w-[77%] outline-none rounded-[36px] pl-[10px] ml-2"
-                      placeholder={screen >= 450 ? "Search" : null}
+                      placeholder={screen >= 450 ? t("Search") : null}
                       onChange={(e) => setsearch(e.target.value)}
                       value={search}
                     />
@@ -157,11 +165,13 @@ const Home = () => {
                         className="w-[129px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer"
                       >
                         <img
-                          src={uk}
+                          src={language === "fr" ? fr : uk}
                           alt=""
                           className="h-[30px] w-[30px] object-cover"
                         />
-                        <p className="font-[500] text-[15px]">English</p>
+                        <p className="font-[500] text-[15px]">
+                          {language === "fr" ? "French" : "English"}
+                        </p>
                         <MdArrowDropDown className="text-2xl" />
                       </div>
                       <Menu
@@ -180,7 +190,9 @@ const Home = () => {
                           // selected={index === selectedIndex}
                           // onClick={(event) => handleMenuItemClick(event, index)}
                           onClick={() => {
-                            changeLanguage(companyId, "en", handleClose);
+                            changeLanguage(companyId, "en", () =>
+                              i18Change("en")
+                            );
                           }}
                           sx={{ display: "flex" }}
                         >
@@ -197,7 +209,9 @@ const Home = () => {
                           // selected={index === selectedIndex}
                           // onClick={(event) => handleMenuItemClick(event, index)}
                           onClick={() => {
-                            changeLanguage(companyId, "fr", handleClose);
+                            changeLanguage(companyId, "fr", () =>
+                              i18Change("fr")
+                            );
                           }}
                           sx={{ display: "flex" }}
                         >
@@ -219,10 +233,13 @@ const Home = () => {
                     className="w-[185px] h-[100%] rounded-[36px] bg-black shadow-xl flex justify-center items-center cursor-pointer"
                     onClick={() => handleModal()}
                   >
-                    <p className="font-[400] text-[14px] text-white mr-1">
-                      Add New Member
+                    <p className="font-[400] text-[14px] text-white mr-1 text-center">
+                      {t("Add New Member")}
                     </p>
-                    <FaSquarePlus className="text-[white] ml-1" />
+
+                    {language === "en" && (
+                      <FaSquarePlus className="text-[white] ml-1" />
+                    )}
                   </div>
                 </div>
               ) : null}
@@ -245,7 +262,7 @@ const Home = () => {
                   {"\u00A0"}
 
                   <div className="member">
-                    <p>Members</p>
+                    <p>{t("Members")}</p>
                     <IoMdArrowDropdown />
                   </div>
                 </div>

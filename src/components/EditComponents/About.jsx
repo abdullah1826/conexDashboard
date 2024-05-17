@@ -37,6 +37,7 @@ import {
   updateLeadMode,
 } from "../../Services.jsx";
 import SocialLinkModal from "../Modals/SocialLinkModal.jsx";
+import { useTranslation } from "react-i18next";
 
 const About = ({ uid, handleCancelAbout }) => {
   const IOSSwitch = styled((props) => (
@@ -286,6 +287,8 @@ const About = ({ uid, handleCancelAbout }) => {
     getSingleChild(companyId, getCompanyData);
   }, [companyId]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-[90%] h-[90%] overflow-y-scroll">
       {/* --------------------------------------------croper for logo image------------------------------------------------  */}
@@ -334,7 +337,7 @@ const About = ({ uid, handleCancelAbout }) => {
         <div className="sm:w-[55%] w-[70%] h-[50px]  rounded-[36px] shadow-lg flex justify-center items-center ">
           <div className="flex w-[50%] items-center  justify-around ">
             <p className="font-[500] sm:text-[14px] text-[10px] whitespace-nowrap ml-2">
-              Lead Mode {"\u00A0"} {"\u00A0"} {"\u00A0"}
+              {t("Lead Mode")} {"\u00A0"} {"\u00A0"} {"\u00A0"}
             </p>
             <FormControlLabel
               control={
@@ -348,7 +351,7 @@ const About = ({ uid, handleCancelAbout }) => {
 
           <div className="flex w-[50%] items-center  justify-around ">
             <p className="font-[500]  sm:text-[14px] text-[10px] whitespace-nowrap ml-2">
-              Direct Mode {"\u00A0"}
+              {t("Direct Mode")} {"\u00A0"}
             </p>
             <FormControlLabel
               control={
@@ -367,15 +370,15 @@ const About = ({ uid, handleCancelAbout }) => {
           onClick={() => handleModal()}
         >
           <p className="font-[500] sm:text-[15px] text-[8px] ">
-            Add Links & Contacts
+            {t("Add Links & Contacts")}
           </p>
         </div>
       </div>
 
       <div className="w-[100%] mt-5">
         <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center">
-            Card Color
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
+            {t("Card Color")}
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
@@ -534,8 +537,8 @@ const About = ({ uid, handleCancelAbout }) => {
         </div>
 
         <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center">
-            Text Color
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
+            {t("Text Color")}
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center ">
@@ -698,7 +701,7 @@ const About = ({ uid, handleCancelAbout }) => {
         <div className="w-[100%] flex cursor-pointer">
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px]">
             <span className="flex justify-center items-center mb-1  ">
-              Logo {"\u00A0"}
+              {t("Logo")} {"\u00A0"}
               <RiErrorWarningLine />
             </span>
             {logo || organizationLogo ? (
@@ -742,7 +745,7 @@ const About = ({ uid, handleCancelAbout }) => {
           {"\u00A0"}
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%] ">
             <span className="flex justify-center items-center mb-1 ">
-              Profile Picture {"\u00A0"}
+              {t("Profile Picture")} {"\u00A0"}
               <RiErrorWarningLine />
             </span>
 
@@ -788,7 +791,7 @@ const About = ({ uid, handleCancelAbout }) => {
           {"\u00A0"}
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%]">
             <span className="flex justify-center items-center mb-1 ">
-              Cover Picture {"\u00A0"}
+              {t("Cover Picture")} {"\u00A0"}
               <RiErrorWarningLine />
             </span>
             {cover || organizationCover ? (
@@ -888,16 +891,16 @@ const About = ({ uid, handleCancelAbout }) => {
               className="w-[120px] h-[40px] border rounded-[16px] text-[12px] font-[600]"
               onClick={() => handleCancelAbout()}
             >
-              Cancel
+              {t("Cancel")}
             </button>
             <button
               className="w-[120px] h-[40px] border rounded-[16px] bg-black text-[12px] font-[600] text-white"
               onClick={() => {
-                updataAbout(uid, data),
+                updataAbout(uid, data, t),
                   getSingleChild(companyId, getCompanyData);
               }}
             >
-              Update
+              {t("Update")}
             </button>
           </div>
         </div>

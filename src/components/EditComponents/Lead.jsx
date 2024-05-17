@@ -15,6 +15,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { updateLead, updateLeadMode } from "../../Services";
+import { useTranslation } from "react-i18next";
 const Lead = ({ uid }) => {
   const IOSSwitch = styled((props) => (
     <Switch
@@ -131,17 +132,19 @@ const Lead = ({ uid }) => {
     note: noteVisible,
     phone: phoneVisible,
   };
+  const { t } = useTranslation();
   return (
     <div className="w-[85%] h-[95%]">
       <div className="w-[159px] h-[47px] rounded-[36px] shadow-lg font-[600] text-[16px] flex justify-center items-center">
-        Lead Capture
+        {t("Lead Capture")}
       </div>
       <div className="w-[100%] flex justify-between mt-4">
         <div className="w-[75%]">
-          <h2 className="text-[15px] font-[500]">Lead Capture Mode</h2>
+          <h2 className="text-[15px] font-[500]">{t("Lead Capture Mode")}</h2>
           <p className="font-[400] text-[11px] text-[#7D7C7C] sm:w-[90%] w-[100%]">
-            When lead capture mode is enabled, the lead form will popup as soon
-            as your profile is shared
+            {t(
+              "When lead capture mode is enabled, the lead form will popup as soon as your profile is shared"
+            )}
           </p>
         </div>
         <div className="sm:w-[15%] w-[2%]  flex justify-center items-center">
@@ -156,7 +159,7 @@ const Lead = ({ uid }) => {
         </div>
       </div>
       <div className="mt-5">
-        <h2 className="font-[600] text-[12px]">Form Header</h2>
+        <h2 className="font-[600] text-[12px]">{t("Form Header")}</h2>
         <input
           type="text"
           name=""
@@ -169,10 +172,11 @@ const Lead = ({ uid }) => {
 
       <div className="w-[100%] mt-5">
         <div className="w-[75%]">
-          <h2 className="text-[15px] font-[500]">Input Fields</h2>
+          <h2 className="text-[15px] font-[500]">{t("Input Fields")}</h2>
           <p className="font-[400] text-[11px] text-[#7D7C7C] sm:w-[90%] w-[127%]">
-            Select or unselect the fields that you want your leads to complete
-            on your lead capture form
+            {t(
+              "Select or unselect the fields that you want your leads to complete on your lead capture form"
+            )}
           </p>
 
           <div className="sm:w-[429px] w-[132%] h-[163px] border rounded-[26px] shadow-xl mt-3 flex flex-col justify-center items-center">
@@ -187,7 +191,7 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Full Name
+                  {t("Full Name")}
                 </div>
                 <div
                   className="w-[30%] h-[48px] rounded-[36px] border border-[#737373] font-[500] sm:text-[12px] text-[10px] hover:bg-black flex justify-center items-center hover:text-white cursor-pointer"
@@ -200,10 +204,10 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Email
+                  {t("Email")}
                 </div>
                 <div
-                  className="w-[30%] h-[48px] rounded-[36px] border border-[#737373] font-[500] sm:text-[12px] text-[10px] hover:bg-black flex justify-center items-center hover:text-white cursor-pointer"
+                  className="w-[30%] h-[48px] rounded-[36px] border border-[#737373] font-[500] sm:text-[12px] text-[10px] hover:bg-black flex justify-center items-center hover:text-white cursor-pointer text-center"
                   onClick={() =>
                     changeVisibility(setPhoneVisible, phoneVisible)
                   }
@@ -213,7 +217,7 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Phone Number
+                  {t("Phone Number")}
                 </div>
               </div>
 
@@ -227,7 +231,7 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Job Title
+                  {t("Job Title")}
                 </div>
                 <div
                   className="w-[30%] h-[48px] rounded-[36px] border border-[#737373] font-[500] sm:text-[12px] text-[10px] hover:bg-black flex justify-center items-center hover:text-white cursor-pointer"
@@ -240,7 +244,7 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Company
+                  {t("Company")}
                 </div>
                 <div
                   className="w-[30%] h-[48px] rounded-[36px] border border-[#737373] font-[500] sm:text-[12px] text-[10px] hover:bg-black flex justify-center items-center hover:text-white cursor-pointer"
@@ -251,7 +255,7 @@ const Lead = ({ uid }) => {
                       : null
                   }
                 >
-                  Note
+                  {t("Note")}
                 </div>
               </div>
             </div>
@@ -264,13 +268,13 @@ const Lead = ({ uid }) => {
           className="w-[120px] h-[40px] rounded-[15px] mr-2 font-[600] text-[12px]  shadow-md"
           // onClick={() => handleCancelQr()}
         >
-          Cancel
+          {t("Cancel")}
         </button>
         <button
           className="w-[120px] h-[40px] rounded-[15px] ml-2 font-[600] text-[12px]  shadow-md bg-black text-white"
-          onClick={() => updateLead(uid, formHeader, leadForm)}
+          onClick={() => updateLead(uid, formHeader, leadForm, t)}
         >
-          Update
+          {t("Update")}
         </button>
       </div>
 

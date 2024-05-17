@@ -9,8 +9,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { RxCross2 } from "react-icons/rx";
 import { createNewCard } from "../../Services";
+import { useTranslation } from "react-i18next";
 
 const CreateNewCard = ({ modal, handleModal }) => {
+  const { t } = useTranslation();
   // --------------------------------------------------Create Single self profile----------------------------------
 
   const style2 = {
@@ -54,12 +56,14 @@ const CreateNewCard = ({ modal, handleModal }) => {
       >
         <Box sx={style2}>
           <div className="w-[100%] h-[100%] flex flex-col justify-evenly items-center">
-            <h2 className="text-center font-medium text-lg">Create new card</h2>
+            <h2 className="text-center font-medium text-lg">
+              {t("Create new card")}
+            </h2>
             <div className="w-[90%] h-[80%] flex flex-col justify-around">
               <input
                 type="text"
                 className="w-[100%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-                placeholder="Name*"
+                placeholder={`${t("Name")}*`}
                 onChange={(e) => setData({ ...data, name: e.target.value })}
                 value={data?.name}
               />
@@ -67,7 +71,7 @@ const CreateNewCard = ({ modal, handleModal }) => {
               <input
                 type="text"
                 className="w-[100%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-                placeholder="Email*"
+                placeholder={`${t("Email")}*`}
                 onChange={(e) => setData({ ...data, email: e.target.value })}
                 value={data?.email}
               />
@@ -75,7 +79,7 @@ const CreateNewCard = ({ modal, handleModal }) => {
               <input
                 type="text"
                 className="w-[100%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-                placeholder="Password*"
+                placeholder={`${t("Password")}*`}
                 onChange={(e) => setData({ ...data, password: e.target.value })}
                 value={data?.password}
               />
@@ -84,13 +88,13 @@ const CreateNewCard = ({ modal, handleModal }) => {
                   className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                   onClick={() => createNewCard(data, callBack)}
                 >
-                  Create
+                  {t("Create")}
                 </button>
                 <button
                   className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                   onClick={() => handleModal()}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
               </div>
             </div>

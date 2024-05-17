@@ -18,6 +18,7 @@ import prsnPlshldr from "../imgs/prsnPlshldr.png";
 import CompanyProfile from "../components/SettingsComponents/CompanyProfile";
 import { MdOutlineFilterList } from "react-icons/md";
 import { MoonLoader } from "react-spinners";
+import { useTranslation } from "react-i18next";
 
 const Analytics = () => {
   ChartJs.register(ArcElement);
@@ -176,6 +177,7 @@ const Analytics = () => {
   }, []);
 
   const [team, setTeam] = useState("All");
+  const { t } = useTranslation();
 
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
@@ -185,7 +187,7 @@ const Analytics = () => {
           <div className="w-[100%] flex justify-between h-[50px]  mt-[30px]">
             <div className="w-[15%] h-[100%] flex items-center">
               <p className="font-[600] sm:text-[20px] text-[16px]">
-                Analytics{" "}
+                {t("Analytics")}
               </p>
             </div>
             <div
@@ -401,7 +403,11 @@ const Analytics = () => {
                       xAxis={[
                         {
                           id: "barCategories",
-                          data: ["Total Clicks", "Total Views", "Total Leads"],
+                          data: [
+                            t("Total Clicks"),
+                            t("Total Views"),
+                            t("Total Leads"),
+                          ],
                           scaleType: "band",
                         },
                       ]}
@@ -432,7 +438,7 @@ const Analytics = () => {
                   <Tooltip title="The number of times people submit the form">
                     <div className="w-[100%] h-[25%]  flex items-end">
                       <p className="flex font-[500] text-[16] ml-4 items-center">
-                        Leads Generated
+                        {t("Leads Generated")}
                         <FiInfo className="ml-1 text-[11px] cursor-pointer" />
                       </p>
                     </div>
@@ -471,7 +477,7 @@ const Analytics = () => {
                   <Tooltip title="The total number of times someone open your links">
                     <div className="w-[100%] h-[25%]  flex items-end">
                       <p className="flex font-[500] text-[16] ml-4 items-center">
-                        Link taps
+                        {t("Link taps")}
                         <FiInfo className="ml-1 text-[11px] cursor-pointer" />
                       </p>
                     </div>
@@ -510,7 +516,7 @@ const Analytics = () => {
                   <Tooltip title="The Total number of times someone land on your Connex Profile">
                     <div className="w-[100%] h-[25%]  flex items-end">
                       <p className="flex font-[500] text-[16] ml-4 items-center">
-                        Card Views
+                        {t("Card Views")}
                         <FiInfo className="ml-1 text-[11px] cursor-pointer" />
                       </p>
                     </div>
