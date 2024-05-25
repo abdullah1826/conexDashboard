@@ -48,6 +48,19 @@ import HelpModal from "../components/Modals/HelpModal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import { styled } from "@mui/system";
+
+const CustomTabs = styled(Tabs)({
+  "& .MuiTab-root": {
+    color: "#707070", // default tab color
+  },
+  "& .Mui-selected": {
+    color: "black", // active tab color
+  },
+  "& .MuiTabs-indicator": {
+    backgroundColor: "black", // indicator color
+  },
+});
 
 const Company = () => {
   let [value, setValue] = useState(0);
@@ -202,7 +215,7 @@ const Company = () => {
                 // onClick={() => handlehelpModal()}
                 onClick={() =>
                   window.open(
-                    "https://connexcard.store/pages/support-contactus"
+                    "https://connexcard.store/pages/support-contact-us"
                   )
                 }
               >
@@ -216,9 +229,16 @@ const Company = () => {
         </div>
 
         <div className="w-[90%] mt-10">
-          <Tabs
+          <CustomTabs
             value={value}
             onChange={handleTabs}
+            TabIndicatorProps={{
+              style: {
+                backgroundColor: "black",
+                padding: "0px",
+                color: "black",
+              },
+            }}
             // sx={{ border: "1px solid black", pl: 3 }}
           >
             <Tab
@@ -258,7 +278,7 @@ const Company = () => {
             />
             {/* <div className="w-[10px]"></div> */}
             <Tab
-              label={t("Company Profile")}
+              label={t("COMPANY PROFILE")}
               sx={{
                 fontSize: "16px",
                 fontWeight: "600",
@@ -268,7 +288,7 @@ const Company = () => {
                   : {}),
               }}
             />
-          </Tabs>
+          </CustomTabs>
           <Tabpanel value={value} index={0}>
             {companyProfile && (
               <AccountSettings companyProfile={companyProfile[companyId]} />

@@ -2,6 +2,7 @@ import React from "react";
 import InputComponent from "../components/SignComponents/InputComponent";
 import ImageContainer from "../components/SignComponents/ImageContainer";
 import signup from "../imgs/signin.png";
+import { ToastContainer } from "react-toastify";
 
 const SignUp = () => {
   var screen = window.innerWidth;
@@ -11,6 +12,12 @@ const SignUp = () => {
         <InputComponent type="signup" />
         {screen >= 450 ? <ImageContainer type="signup" img={signup} /> : null}
       </div>
+      {/* <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      /> */}
     </div>
   );
 };

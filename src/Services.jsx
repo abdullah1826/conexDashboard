@@ -133,21 +133,24 @@ export const handleLogin = (data, navigate) => {
 
 // ------------------------------------------------Forget Password-----------------------------------------------
 
-export const forgetPassword = (email) => {
+export const forgetPassword = (email, setEmail, navigate) => {
   if (!email) {
     toast.error("Email is required");
   } else {
     sendPasswordResetEmail(auth, email)
       .then(() => {
+        setEmail("");
         toast.success(
           "An email have been sent to you, please verify to change password"
         );
+        navigate("/signin");
         // ..
       })
       .catch((error) => {
         console.log(error.message);
         if (error.message === "Firebase: Error (auth/user-not-found).") {
           toast.error("User not found!");
+          setEmail("");
         }
       });
   }
@@ -158,7 +161,7 @@ let randNum = () => {
   let val = Math.floor(1000 + Math.random() * 9000);
   return val;
 };
-export const createNewCard = async (data, callBack) => {
+export const createNewCard = async (data, callBack, companyProfile) => {
   if (data.name && data.email && data.password) {
     await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
@@ -169,6 +172,12 @@ export const createNewCard = async (data, callBack) => {
         let cnxId = localStorage.getItem("connexUid");
         let conexParent = localStorage.getItem("conexParent");
         if (conexParent != "superAdmin") {
+          console.log(companyProfile?.links);
+          const companyLinks =
+            typeof companyProfile?.links === "object"
+              ? Object.values(companyProfile?.links)
+              : "";
+          console.log(companyLinks);
           update(ref(db, `Users/${user.uid}`), {
             platform: "web",
             address: "",
@@ -199,6 +208,7 @@ export const createNewCard = async (data, callBack) => {
             isSubscribe: false,
             job: "",
             language: "en",
+            links: companyLinks,
             logoUrl: "",
             name: data?.name,
             parentID: cnxId,
@@ -224,10 +234,19 @@ export const createNewCard = async (data, callBack) => {
               phone: true,
             },
             isAdmin: false,
+            companyId: cnxId,
             isCompany: false,
             qrLogoUrl: "",
+            qrColor: "#000000",
             leadMode: false,
             textColor: "",
+            profilePictureLock: false,
+            logoLock: false,
+            nameLock: false,
+            phoneLock: false,
+            bioLock: false,
+            locationLock: false,
+            coverLock: false,
           }).then(() => {
             axios
               .post(`${baseUrl}createAccount`, {
@@ -301,9 +320,18 @@ export const createNewCard = async (data, callBack) => {
               phone: true,
             },
             isAdmin: true,
+            companyId: "",
             isCompany: true,
             qrLogoUrl: "",
+            qrColor: "#000000",
             leadMode: false,
+            profilePictureLock: false,
+            logoLock: false,
+            nameLock: false,
+            phoneLock: false,
+            bioLock: false,
+            locationLock: false,
+            coverLock: false,
           }).then(() => {
             axios
               .post(`${baseUrl}createAccount`, {
@@ -387,16 +415,16 @@ export const getAllCompanies = async (callBackFunc, setloading) => {
   );
   onValue(starCountRef, async (snapshot) => {
     const data = await snapshot.val();
-    callBackFunc(data);
-    console.log(data);
-    setloading(false);
-    console.log("testing data");
+    if (data) {
+      callBackFunc(data);
+      console.log(data);
+      setloading(false);
+      console.log("testing data");
+    } else {
+      setloading(false);
+    }
+
     MediaKeyStatusMap;
-    // setmylist(Object.values(data));
-
-    // setfiltered(Object.values(data));
-
-    // updateStarCount(postElement, data);
   });
 };
 
@@ -463,7 +491,11 @@ export const deleteSingleChild = (id, companyId) => {
 let returnIfHttps = (string) => {
   console.log("the string", string?.slice(0, 4));
   if (string != "" && string) {
-    if ((string?.slice(0, 4) === "http") | (string?.slice(0, 4) === "/src")) {
+    if (
+      (string?.slice(0, 4) === "http") |
+      (string?.slice(0, 4) === "/src") |
+      (string?.slice(0, 7) === "/assets")
+    ) {
       return true;
     } else {
       return false;
@@ -588,7 +620,11 @@ export const updateQrInfo = async (id, qrColor, logoimg, t) => {
   // toast.success("Information updated successfuly");
   console.log("qr testing", logoimg);
   console.log("qrlogo", logoimg);
-  update(ref(db, `Users/${id}`), { qrColor, qrLogoUrl: logoimg }).then(() => {
+  const colorOfQr = qrColor ? qrColor : "#000000";
+  update(ref(db, `Users/${id}`), {
+    qrColor: colorOfQr,
+    qrLogoUrl: logoimg,
+  }).then(() => {
     if (returnIfHttps(logoimg) === false) {
       let name = new Date().getTime() + id;
       const storageRef = sRef(storage, name);
@@ -630,7 +666,13 @@ export const updateLead = async (id, formHeader, leadForm) => {
 
 // ------------------------------------------------Create New Team-----------------------------------------------
 
-export const createTeam = async (data, callBack, setapiWorking) => {
+export const createTeam = async (
+  data,
+  callBack,
+  setapiWorking,
+  success,
+  er
+) => {
   setapiWorking(true);
   if (data?.name) {
     // toast.success("Information updated successfuly");
@@ -652,7 +694,7 @@ export const createTeam = async (data, callBack, setapiWorking) => {
               .then((URL) => {
                 // console.log(URL)
                 update(ref(db, `Teams/${pushKey}`), { image: URL }).then(() => {
-                  toast.success("New team created successfuly");
+                  toast.success(success);
                   callBack();
                   setapiWorking(false);
                 });
@@ -669,7 +711,7 @@ export const createTeam = async (data, callBack, setapiWorking) => {
             callBack();
           });
       } else {
-        toast.success("New team created successfuly");
+        toast.success(success);
         callBack();
         setapiWorking(false);
       }
@@ -677,7 +719,7 @@ export const createTeam = async (data, callBack, setapiWorking) => {
     // console.log("qrrrrr");
   } else {
     setapiWorking(false);
-    toast.error("Team name should not be empty");
+    toast.error(er);
   }
 };
 
@@ -1315,7 +1357,7 @@ export const updateNewLink = (
         });
 
         update(ref(db, `Users/${id}/links/${index}`), {
-          image: "",
+          image: linkData?.image,
           linkID: linkData?.linkID,
           name: linkData?.name,
           value: linkData?.value,
@@ -1351,15 +1393,19 @@ export const renoveLink = (
       if (remainingLinks?.length === 0) {
         remove(ref(db, `Users/${id}/links/`)).then(async () => {
           const removelinkpromise = allChilds?.map((elm) => {
-            let remainingUserLinks = Object.values(elm?.links)?.filter(
-              (elm) => {
-                return elm?.linkID != linkData?.linkID;
+            if (typeof elm?.links === "object") {
+              let remainingUserLinks = Object.values(elm?.links)?.filter(
+                (elm) => {
+                  return elm?.linkID != linkData?.linkID;
+                }
+              );
+              if (remainingUserLinks?.length === 0) {
+                remove(ref(db, `Users/${elm?.id}/links/`));
+              } else {
+                set(ref(db, `Users/${elm?.id}/links/`), [
+                  ...remainingUserLinks,
+                ]);
               }
-            );
-            if (remainingUserLinks?.length === 0) {
-              remove(ref(db, `Users/${elm?.id}/links/`));
-            } else {
-              set(ref(db, `Users/${elm?.id}/links/`), [...remainingUserLinks]);
             }
           });
 
@@ -1615,9 +1661,10 @@ export const updateCompanyProfile = async (id, data) => {
     profilePictureLock,
   } = data;
   // if (name || location || job || company || bio || colorCode) {
+  const coloroftext = textColor ? textColor : "#000000";
   update(ref(db, `Users/${id}`), {
     color,
-    textColor,
+    textColor: coloroftext,
     profileUrl,
     logoUrl,
     coverUrl,
@@ -1709,7 +1756,10 @@ export const updateCompanyProfile = async (id, data) => {
 export const updateTeam = async (data, callBack, teamId, setapiWorking) => {
   setapiWorking(true);
   if (data?.name) {
-    update(ref(db, `Teams/${teamId}`), { teamName: data?.name }).then(() => {
+    const dataToUpdate = data?.img
+      ? { teamName: data?.name }
+      : { teamName: data?.name, image: "" };
+    update(ref(db, `Teams/${teamId}`), dataToUpdate).then(() => {
       if (returnIfHttps(data?.img) === false) {
         let name = new Date().getTime() + teamId;
         const storageRef = sRef(storage, name);
@@ -1791,7 +1841,13 @@ export const splitString = (str, num) => {
 
 // ----------------------------------------------------Split String---------------------------------------------
 
-export const updateLinkShareAble = async (id, linkID, shareable, link) => {
+export const updateLinkShareAble = async (
+  id,
+  linkID,
+  shareable,
+  link,
+  allChilds
+) => {
   // shareable,allLinks
   // Find the index of the object with the given ID
   const objectIndex = link?.findIndex((obj) => obj.linkID === linkID);
@@ -1807,7 +1863,36 @@ export const updateLinkShareAble = async (id, linkID, shareable, link) => {
     // Create a new array with the updated object
     const updatedArray = [...link];
     updatedArray[objectIndex] = updatedObject;
-    set(ref(db, `Users/${id}/links/`), [...updatedArray]);
+    set(ref(db, `Users/${id}/links/`), [...updatedArray]).then(async () => {
+      const updatelinkpromise = allChilds?.map((elm) => {
+        if (typeof elm?.links === "object") {
+          const objectIndex = elm?.links?.findIndex(
+            (obj) => obj.linkID === linkID
+          );
+
+          // Check if the object exists
+          if (objectIndex !== -1) {
+            // Create a copy of the object
+            const updatedObject = { ...elm?.links[objectIndex] };
+
+            // Update the value of the desired property
+            updatedObject.shareable = !shareable;
+
+            // Create a new array with the updated object
+            const updatedArray = [...elm?.links];
+            updatedArray[objectIndex] = updatedObject;
+            set(ref(db, `Users/${elm?.id}/links/`), [...updatedArray]);
+          }
+        }
+      });
+
+      try {
+        const deleteUserlinks = await Promise.all(updatelinkpromise);
+      } catch (error) {
+        console.error("Error updating objects:", error);
+        toast.error("Error updating objects");
+      }
+    });
   }
 
   // const starCountRef = query(

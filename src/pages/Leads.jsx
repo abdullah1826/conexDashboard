@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { BiSearchAlt } from "react-icons/bi";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown, MdOutlineFilterList } from "react-icons/md";
 import { Checkbox, Menu, Tooltip } from "@mui/material";
 import { FaEye, FaSquarePlus } from "react-icons/fa6";
 import csv from "../imgs/csv.png";
@@ -162,6 +162,17 @@ const Leads = () => {
     }
   }, [startDate, endDate]);
 
+  const [anchorEl2, setAnchorEl2] = useState(null);
+
+  const open2 = Boolean(anchorEl2);
+
+  const handleClickListItem2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       <DeleteContactModal
@@ -179,14 +190,14 @@ const Leads = () => {
       {screen >= 450 ? <Sidebar /> : null}
 
       <div className="sm:w-[80%] w-[100%] flex justify-center overflow-y-scroll">
-        <div className="w-[90%] ">
+        <div className="w-[97%] ">
           <div
-            className="w-[100%] flex justify-between h-[80px]  mt-[30px]  "
+            className="w-[100%] flex justify-between items-center h-[80px]  mt-[30px] "
             style={
               screen <= 450 ? { alignItems: "center", height: "42px" } : null
             }
           >
-            {/* <div className="w-[25%] h-[100%] flex items-center">
+            <div className="w-[25%] h-[100%] flex items-center">
               <p
                 className="font-[600] sm:text-[20px] text-[11px]"
                 style={
@@ -206,81 +217,99 @@ const Leads = () => {
                   ({leads?.length})
                 </span>
               </p>
-            </div> */}
+            </div>
 
-            <div className="w-[100%] h-[100%] flex justify-between items-end">
-              <div className="h-[50px] mb-[20px]">
-                <p className="text-sm">{t("Start Date")}</p>
-                <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
-                  <input
-                    type="date"
-                    className="h-[90%] w-[90%] text-xs rounded-[36px]"
-                    onChange={(e) => setStartDate(e.target.value)}
-                    value={startDate}
-                  />
-                </div>
+            <div className="w-[100%] h-[100%] flex justify-end items-center gap-3">
+              <div
+                component="nav"
+                aria-label="Device settings"
+                id="lang-button2"
+                aria-haspopup="listbox"
+                aria-controls="filter"
+                onClick={handleClickListItem2}
+                className="w-[154px] h-[50px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer"
+              >
+                <p className="font-[500] text-[16px]">Filter</p>
+                <MdOutlineFilterList className="text-2xl" />
               </div>
-              <div className="h-[50px] mb-[20px]">
-                <p className="text-sm">{t("End Date")}</p>
-                <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
-                  <input
-                    type="date"
-                    className="h-[90%] w-[90%] text-xs rounded-[36px]"
-                    onChange={(e) => setEndDate(e.target.value)}
-                    value={endDate}
-                  />
-                </div>
-              </div>
-              {/* <p>End Date</p>
-              <div className="sm:w-[130px] sm:h-[100%] p-2  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
-                <input
-                  type="date"
-                  className="h-[90%] w-[90%] text-xs rounded-[36px]"
-                />
-              </div> */}
+              <Menu
+                id="filter"
+                anchorEl={anchorEl2}
+                open={open2}
+                onClose={handleClose2}
+                sx={{ marginTop: 1 }}
+                MenuListProps={{
+                  "aria-labelledby": "lang-button2",
+                  role: "listbox",
+                }}
+              >
+                <div className="w-[310px] h-[170px] bg-white flex flex-col justify-arround">
+                  <div className="w-[100%] flex justify-around">
+                    <div>
+                      <p className="text-sm">By Team</p>
+                      <div className="sm:w-[130px] sm:h-[50px]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer border">
+                        <select
+                          name=""
+                          id=""
+                          className="w-[90%] outline-none"
+                          onChange={(e) => setTeamId(e.target.value)}
+                        >
+                          <option value="all">All</option>
+                          {Object.values(teams)?.map((elm) => {
+                            return (
+                              <option value={elm?.teamId}>
+                                {elm?.teamName}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm">By Name</p>
+                      <div className="sm:w-[130px] sm:h-[50px]  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer border">
+                        <select
+                          name=""
+                          id=""
+                          className="w-[90%] outline-none"
+                          onChange={(e) => setUserId(e.target.value)}
+                        >
+                          <option value="all">All</option>
+                          {Object.values(allProfiles)?.map((elm) => {
+                            return <option value={elm?.id}>{elm?.name}</option>;
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
 
-              <Tooltip title="Filter by Team">
-                <div className="sm:w-[130px] sm:h-[50px]   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
-                  <select
-                    name=""
-                    id=""
-                    className="w-[90%] outline-none"
-                    onChange={(e) => setTeamId(e.target.value)}
-                  >
-                    <option
-                      value="all"
-                      // onClick={() => dispatch(getSingleLeadContacts(elm?.id))}
-                    >
-                      All
-                    </option>
-                    {Object.values(teams)?.map((elm) => {
-                      return (
-                        <option value={elm?.teamId}>{elm?.teamName}</option>
-                      );
-                    })}
-                  </select>
+                  <div className="flex justify-around w-[100%] mt-5">
+                    <div className="h-[50px]">
+                      <p className="text-sm">{t("Start Date")}</p>
+                      <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl border flex justify-around items-center cursor-pointer">
+                        <input
+                          type="date"
+                          className="h-[90%] w-[90%] text-xs rounded-[36px]"
+                          onChange={(e) => setStartDate(e.target.value)}
+                          value={startDate}
+                        />
+                      </div>
+                    </div>
+                    <div className="h-[50px] ">
+                      <p className="text-sm">{t("End Date")}</p>
+                      <div className="sm:w-[130px] sm:h-[100%] p-2   w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex border justify-around items-center cursor-pointer">
+                        <input
+                          type="date"
+                          className="h-[90%] w-[90%] text-xs rounded-[36px]"
+                          onChange={(e) => setEndDate(e.target.value)}
+                          value={endDate}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Tooltip>
-              <Tooltip title="Filter by Name">
-                <div className="sm:w-[130px] sm:h-[50px]  w-[100px] h-[33px] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer">
-                  <select
-                    name=""
-                    id=""
-                    className="w-[90%] outline-none"
-                    onChange={(e) => setUserId(e.target.value)}
-                  >
-                    <option
-                      value="all"
-                      // onClick={() => dispatch(getSingleLeadContacts(elm?.id))}
-                    >
-                      All
-                    </option>
-                    {Object.values(allProfiles)?.map((elm) => {
-                      return <option value={elm?.id}>{elm?.name}</option>;
-                    })}
-                  </select>
-                </div>
-              </Tooltip>
+              </Menu>
+
               <div className="sm:w-[254px] sm:h-[50px] w-[100px] h-[33px] flex items-center rounded-[36px] bg-white shadow-xl">
                 {screen <= 450 ? (
                   <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-2" />
@@ -321,95 +350,95 @@ const Leads = () => {
               </div>
             </div>
           </div>
-
-          <div className="w-[100%] h-[47px] rounded-[36px] bg-[#ECEBEA] mt-[50px] flex justify-around items-center">
-            {/* <div className="w-[5%]">
+          <div className="w-[100%] flex flex-col items-center">
+            <div className="w-[95%] h-[47px] rounded-[36px] bg-[#ECEBEA] mt-[50px] flex justify-around items-center">
+              {/* <div className="w-[5%]">
               <Checkbox defaultChecked color="default" />
             </div> */}
 
-            <div className="w-[15%] ml-5">
-              <p className="font-[500] sm:text-[16px] text-[12px]">
-                {t("End Date")}
-              </p>
-            </div>
-            {screen >= 450 ? (
-              <div className="w-[15%] ">
-                <p className="font-[500] text-[16px]">Email</p>
+              <div className="w-[15%] ml-5">
+                <p className="font-[500] sm:text-[16px] text-[12px]">
+                  {t("End Date")}
+                </p>
               </div>
-            ) : null}
-            <div className="w-[15%] ">
-              <p
-                className="font-[500] sm:text-[16px] text-[12px]"
-                style={
-                  screen <= 450
-                    ? { whiteSpace: "nowrap", marginLeft: "-13px" }
-                    : null
-                }
-              >
-                {t("Connected with")}
-              </p>
-            </div>
-            {screen >= 450 ? (
+              {screen >= 450 ? (
+                <div className="w-[15%] ">
+                  <p className="font-[500] text-[16px]">Email</p>
+                </div>
+              ) : null}
               <div className="w-[15%] ">
-                <p className="font-[500] text-[16px]">{t("Date")}</p>
+                <p
+                  className="font-[500] sm:text-[16px] text-[12px]"
+                  style={
+                    screen <= 450
+                      ? { whiteSpace: "nowrap", marginLeft: "-13px" }
+                      : null
+                  }
+                >
+                  {t("Connected with")}
+                </p>
               </div>
-            ) : null}
-            <div className="w-[15%] flex">
-              <p className="font-[500] sm:text-[16px] text-[12px]">
-                {t("Actions")}
-              </p>
+              {screen >= 450 ? (
+                <div className="w-[15%] ">
+                  <p className="font-[500] text-[16px]">{t("Date")}</p>
+                </div>
+              ) : null}
+              <div className="w-[15%] flex">
+                <p className="font-[500] sm:text-[16px] text-[12px]">
+                  {t("Actions")}
+                </p>
+              </div>
             </div>
-          </div>
-          {filtered?.map((contact) => {
-            return (
-              <div
-                className="w-[100%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer"
-                onClick={() => setLead(contact)}
-              >
-                <div className="flex items-center w-[16%] ">
-                  <img
-                    src={prsnPlshldr}
-                    alt=""
-                    className="h-[46px] w-[46px] rounded-full object-cover"
-                  />
-                  <p className="text-[12px] font-[500] ml-[5px]">
-                    {contact?.name}
-                  </p>
-                </div>
-                {screen >= 450 ? (
-                  <div className="w-[15%] ml-2">
-                    <p className="font-[500] text-[12px]">{contact?.email}</p>
-                  </div>
-                ) : null}
-                <div className="flex items-center w-[16%] ">
-                  <img
-                    src={prsnPlshldr}
-                    alt=""
-                    className="h-[46px] w-[46px] rounded-full object-cover"
-                  />
-                  <p className="text-[12px] font-[500] ml-[5px]">
-                    {getMemberbyId(contact?.userid)?.name}
-                  </p>
-                </div>
-                {screen >= 450 ? (
-                  <div className="w-[15%]">
-                    <p className="font-[500] text-[12px]">
-                      {returnDate(contact?.date)}
+            {filtered?.map((contact) => {
+              return (
+                <div
+                  className="w-[95%] h-[83px] rounded-[37px] bg-[white] flex justify-around items-center shadow-xl mt-4 cursor-pointer"
+                  onClick={() => setLead(contact)}
+                >
+                  <div className="flex items-center w-[16%] ">
+                    <img
+                      src={prsnPlshldr}
+                      alt=""
+                      className="h-[46px] w-[46px] rounded-full object-cover"
+                    />
+                    <p className="text-[12px] font-[500] ml-[5px]">
+                      {contact?.name}
                     </p>
                   </div>
-                ) : null}
-                <div className="flex w-[15%]">
-                  <div onClick={() => handleDeleteModal()}>
-                    <FaRegTrashCan className="text-2xl ml-3" />
+                  {screen >= 450 ? (
+                    <div className="w-[15%] ml-2">
+                      <p className="font-[500] text-[12px]">{contact?.email}</p>
+                    </div>
+                  ) : null}
+                  <div className="flex items-center w-[16%] ">
+                    <img
+                      src={prsnPlshldr}
+                      alt=""
+                      className="h-[46px] w-[46px] rounded-full object-cover"
+                    />
+                    <p className="text-[12px] font-[500] ml-[5px]">
+                      {getMemberbyId(contact?.userid)?.name}
+                    </p>
                   </div>
-                  <div className=" flex" onClick={() => handleLeadModal()}>
-                    <FaEye className="text-2xl ml-3" />
+                  {screen >= 450 ? (
+                    <div className="w-[15%]">
+                      <p className="font-[500] text-[12px]">
+                        {returnDate(contact?.date)}
+                      </p>
+                    </div>
+                  ) : null}
+                  <div className="flex w-[15%]">
+                    <div onClick={() => handleDeleteModal()}>
+                      <FaRegTrashCan className="text-2xl ml-3" />
+                    </div>
+                    <div className=" flex" onClick={() => handleLeadModal()}>
+                      <FaEye className="text-2xl ml-3" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-
+              );
+            })}
+          </div>
           <br />
         </div>
         <ToastContainer position="top-center" autoClose={2000} />

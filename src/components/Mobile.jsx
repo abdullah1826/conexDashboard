@@ -125,9 +125,15 @@ const Mobile = ({ linkInfo, ifAdded }) => {
     return web;
   };
 
+  console.log(companyProfile);
+
   console.log(textColor);
 
   const { t } = useTranslation();
+
+  const OrReturner = (val1, val2) => {
+    return val1 || val2;
+  };
 
   return (
     <div
@@ -246,7 +252,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
       >
         {!nameLock && (
           <h2 className="font-[500] text-[16px] text-center">
-            {splitString(name, 23)}
+            {name ? splitString(name, 23) : companyProfile?.name}
           </h2>
         )}
         {/* <p className="text-[#656363] font-[400] text-[11px] w-[90%] text-center">
@@ -274,7 +280,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
             className="font-[400] text-[11px] w-[90%] text-center"
             style={{ color: textColor ? textColor : companyProfile?.textColor }}
           >
-            {bio}
+            {bio ? bio : companyProfile?.bio}
           </p>
         )}
       </div>
@@ -287,10 +293,12 @@ const Mobile = ({ linkInfo, ifAdded }) => {
           >
             <i class="fa fa-users text-white"></i>
           </div>
-          {!phoneLock && phone && (
+          {!phoneLock && OrReturner(phone, companyProfile?.phone) && (
             <div
               className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
-              style={{ backgroundColor: color ? color : companyProfile?.color }}
+              style={{
+                backgroundColor: color ? color : companyProfile?.color,
+              }}
             >
               <i class="fa fa-phone text-white"></i>
             </div>
@@ -303,7 +311,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
               <i class="fa fa-envelope text-white"></i>
             </div>
           )}
-          {address && (
+          {!locationLock && OrReturner(address, companyProfile?.address) && (
             <div
               className="h-[32px] w-[32px] flex justify-center items-center rounded-full"
               style={{
@@ -365,7 +373,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                     color: textColor ? textColor : companyProfile?.textColor,
                   }}
                 >
-                  {elm?.name}
+                  {splitString(elm?.name, 15)}
                 </p>
               </div>
             ) : (
@@ -385,7 +393,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                     color: textColor ? textColor : companyProfile?.textColor,
                   }}
                 >
-                  {linkInfo?.name}
+                  {splitString(linkInfo?.name, 15)}
                 </p>
               </div>
             );
@@ -408,7 +416,7 @@ const Mobile = ({ linkInfo, ifAdded }) => {
                   color: textColor ? textColor : companyProfile?.textColor,
                 }}
               >
-                {linkInfo?.name}
+                {splitString(linkInfo?.name, 15)}
               </p>
             </div>
           )}

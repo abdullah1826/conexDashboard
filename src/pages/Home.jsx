@@ -112,7 +112,11 @@ const Home = () => {
         screen <= 450 ? { display: "flex", justifyContent: "center" } : null
       }
     >
-      <CreateNewCard modal={modal} handleModal={handleModal} />
+      <CreateNewCard
+        modal={modal}
+        handleModal={handleModal}
+        companyProfile={companyProfile}
+      />
       {screen >= 450 ? <Sidebar /> : null}
       {loading ? (
         <div className="sm:w-[80%] w-[90%] items-center flex justify-center">

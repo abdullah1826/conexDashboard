@@ -69,7 +69,7 @@ const ShareCardModal = ({ shareModal, handleShareModal, userId, vizzRole }) => {
               onClick={() => handleShareModal()}
             >
               <MdArrowBackIos style={{ fontSize: "14px" }} />
-              <p className="font-inter text-[12px] font-semibold leading-[8px] mr-5">
+              <p className="font-inter text-[12px] font-semibold leading-[8px] w-[60%] text-center">
                 {t("Go back")}
               </p>
             </div>

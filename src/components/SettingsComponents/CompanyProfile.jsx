@@ -27,11 +27,66 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CiLock } from "react-icons/ci";
 import { BiLockAlt } from "react-icons/bi";
-import { Switch } from "@mui/material";
+import { FormControlLabel, Switch, styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { FiMinusCircle } from "react-icons/fi";
 
 const CompanyProfile = ({ uid }) => {
   var screen = window.innerWidth;
+
+  // -------------------------------------------------Mui customize switch-----------------------------------
+
+  const IOSSwitch = styled((props) => (
+    <Switch focusVisibleClassName=".Mui-focusVisible" {...props} />
+  ))(({ theme }) => ({
+    width: 38,
+    height: 22,
+    padding: 0,
+    "& .MuiSwitch-switchBase": {
+      padding: 0,
+      margin: 2,
+      transitionDuration: "300ms",
+      "&.Mui-checked": {
+        transform: "translateX(16px)",
+        color: "#fff",
+        "& + .MuiSwitch-track": {
+          backgroundColor:
+            theme?.palette?.mode === "dark" ? "#2ECA45" : "#65C466",
+          opacity: 1,
+          border: 0,
+        },
+        "&.Mui-disabled + .MuiSwitch-track": {
+          opacity: 0.5,
+        },
+      },
+      "&.Mui-focusVisible .MuiSwitch-thumb": {
+        color: "#33cf4d",
+        border: "6px solid #fff",
+      },
+      "&.Mui-disabled .MuiSwitch-thumb": {
+        color:
+          theme?.palette?.mode === "light"
+            ? theme?.palette?.grey[100]
+            : theme?.palette?.grey[600],
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: theme?.palette?.mode === "light" ? 0.7 : 0.3,
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxSizing: "border-box",
+      width: 18,
+      height: 18,
+    },
+    "& .MuiSwitch-track": {
+      borderRadius: 26 / 2,
+      backgroundColor: theme?.palette?.mode === "light" ? "#E9E9EA" : "#BBBBBB",
+      opacity: 1,
+      transition: theme?.transitions?.create(["background-color"], {
+        duration: 500,
+      }),
+    },
+  }));
 
   // ----------------------------------------------------State setup for profile img crop---------------------------------------------
   let [prflimg, setprflimg] = useState(null);
@@ -225,16 +280,26 @@ const CompanyProfile = ({ uid }) => {
               {t("Logo")}
               {"\u00A0"}
               {/* <RiErrorWarningLine /> */}
-              <Switch
+              {/* <Switch
                 size="small"
                 checked={!logoLock}
                 onChange={() => dispatch(setlogoLock(!logoLock))}
-                // inputProps={{ 'aria-label': 'controlled' }}
+              
+              /> */}
+
+              <FormControlLabel
+                control={
+                  <IOSSwitch
+                    checked={!logoLock}
+                    onChange={() => dispatch(setlogoLock(!logoLock))}
+                    className="ml-5"
+                  />
+                }
               />
             </span>
             {logo ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
                   className="absolute right-[15px] top-0"
                   onClick={() => dispatch(setLogoUrl(""))}
@@ -273,20 +338,32 @@ const CompanyProfile = ({ uid }) => {
             <span className="flex justify-center items-center mb-1 ">
               {t("Profile Picture")}
               {"\u00A0"}
-              <Switch
+              {/* <Switch
                 size="small"
                 checked={!profilePictureLock}
                 onChange={() =>
                   dispatch(setProfilePictureLock(!profilePictureLock))
                 }
-                // inputProps={{ 'aria-label': 'controlled' }}
+              
+              /> */}
+
+              <FormControlLabel
+                control={
+                  <IOSSwitch
+                    checked={!profilePictureLock}
+                    onChange={() =>
+                      dispatch(setProfilePictureLock(!profilePictureLock))
+                    }
+                    className="ml-5"
+                  />
+                }
               />
               {/* <RiErrorWarningLine /> */}
             </span>
 
             {profile ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
                   className="absolute right-[15px] top-0"
                   onClick={() => dispatch(setProfileurl(""))}
@@ -324,17 +401,25 @@ const CompanyProfile = ({ uid }) => {
           <div className=" flex flex-col whitespace-nowrap  items-center sm:text-[13px] text-[8px] ml-[9%]">
             <span className="flex justify-center items-center mb-1 ">
               {t("Cover Picture")} {"\u00A0"}
-              <Switch
+              {/* <Switch
                 size="small"
                 checked={!coverLock}
                 onChange={() => dispatch(setcoverLock(!coverLock))}
-                // inputProps={{ 'aria-label': 'controlled' }}
+              /> */}
+              <FormControlLabel
+                control={
+                  <IOSSwitch
+                    checked={!coverLock}
+                    onChange={() => dispatch(setcoverLock(!coverLock))}
+                    className="ml-5"
+                  />
+                }
               />
               {/* <RiErrorWarningLine /> */}
             </span>
             {cover ? (
               <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
                   className="absolute right-[0px] top-[-3px]"
                   onClick={() => dispatch(setCoverUrl(""))}
@@ -390,7 +475,7 @@ const CompanyProfile = ({ uid }) => {
               <div className="w-[100%] flex justify-between items-center">
                 <div>
                   <h2 className="font-[600] sm:text-[15px] text-[12px]">
-                    {t("Page background color")}
+                    {t("Icons Color")}
                   </h2>
                   <div className="sm:w-[254px] w-[70%] sm:h-[61px] h-[46px] rounded-[36px] bg-white mt-1 flex items-center justify-between">
                     <div className="sm:h-[61px] h-[33px] w-[61px] rounded-full bg-[black]">
@@ -430,7 +515,7 @@ const CompanyProfile = ({ uid }) => {
 
                 <div>
                   <h2 className="font-[600] sm:text-[15px] text-[12px]">
-                    {t("Text color")}
+                    {t("Text Color")}
                   </h2>
                   <div className="sm:w-[254px] w-[70%] sm:h-[61px] h-[46px] rounded-[36px] bg-white mt-1 flex items-center justify-between">
                     <div className="sm:h-[61px] h-[33px] w-[61px] rounded-full bg-[black]">

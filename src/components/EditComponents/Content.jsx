@@ -184,7 +184,7 @@ const Content = ({ uid }) => {
             className="sm:w-[40%] w-[29%] h-[50px]  rounded-[36px] shadow-lg  flex justify-center items-center cursor-pointer"
             onClick={() => handleModal()}
           >
-            <p className="font-[500] sm:text-[15px] text-[8px] ">
+            <p className="font-[500] sm:text-[15px] text-[8px] text-center">
               {t("Add Links & Contacts")}
             </p>
           </div>
@@ -256,7 +256,7 @@ const Content = ({ uid }) => {
                             }}
                           />
                           <h2 className="font-[500] text-[15px] mt-2">
-                            {elm?.name}
+                            {t(elm?.name)}
                           </h2>
                         </div>
                       </div>
@@ -333,7 +333,7 @@ const Content = ({ uid }) => {
                                       className="h-[45px] w-[45px] object-cover"
                                     />
                                     <h2 className="font-[500] text-[15px] mt-2">
-                                      {elm?.name}
+                                      {t(elm?.name)}
                                     </h2>
                                   </div>
 

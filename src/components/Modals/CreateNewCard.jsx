@@ -11,7 +11,7 @@ import { RxCross2 } from "react-icons/rx";
 import { createNewCard } from "../../Services";
 import { useTranslation } from "react-i18next";
 
-const CreateNewCard = ({ modal, handleModal }) => {
+const CreateNewCard = ({ modal, handleModal, companyProfile }) => {
   const { t } = useTranslation();
   // --------------------------------------------------Create Single self profile----------------------------------
 
@@ -86,7 +86,13 @@ const CreateNewCard = ({ modal, handleModal }) => {
               <div className="w-[100%] h-[45px] flex justify-evenly items-center">
                 <button
                   className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
-                  onClick={() => createNewCard(data, callBack)}
+                  onClick={() =>
+                    createNewCard(
+                      data,
+                      callBack,
+                      Object.values(companyProfile)?.[0]
+                    )
+                  }
                 >
                   {t("Create")}
                 </button>

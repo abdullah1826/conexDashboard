@@ -408,7 +408,7 @@ const EditMember = () => {
               </div>
               {screen >= 450 ? (
                 <div className="w-[30%] h-[100%] border-l">
-                  {route?.isQr ? <QrContainer /> : <MobileContainer />}
+                  {route?.isQr ? <QrContainer /> : <MobileContainer id={uid} />}
                 </div>
               ) : null}
             </div>

@@ -37,8 +37,8 @@ const DeleteModal = ({ deleteModal, handledeleteModal, text, func }) => {
         aria-describedby="deleteModal-deleteModal-description"
       >
         <Box sx={style2}>
-          <div className="h-[100%] w-[100%]">
-            <p className="text-center font-[500] mt-[30px]">{text}</p>
+          <div className="h-[100%] w-[100%] flex flex-col items-center">
+            <p className="text-center font-[500] mt-[30px] w-[90%] ">{text}</p>
             <div className="w-[100%] flex justify-center items-center mt-2">
               <div
                 className="h-[30px] w-[70px] rounded-full border flex justify-center items-center text-sm mr-[5px] cursor-pointer"

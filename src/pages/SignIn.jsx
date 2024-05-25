@@ -3,6 +3,7 @@ import InputComponent from "../components/SignComponents/InputComponent";
 import ImageContainer from "../components/SignComponents/ImageContainer";
 import signin from "../imgs/signin.png";
 import { handleLogin } from "../Services";
+import { ToastContainer } from "react-toastify";
 
 const SignIn = () => {
   var screen = window.innerWidth;
@@ -13,6 +14,12 @@ const SignIn = () => {
         <InputComponent type="signin" handleSubmit={handleLogin} />
         {screen >= 450 ? <ImageContainer type="signin" img={signin} /> : null}
       </div>
+      {/* <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        theme="colored"
+        hideProgressBar
+      /> */}
     </div>
   );
 };

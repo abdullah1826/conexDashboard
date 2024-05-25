@@ -16,6 +16,7 @@ import {
 } from "../../Services";
 import bgplhldr from "../../imgs/bgplhldr.png";
 import { MdOutlineCancel } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 const SingleTeamModal = ({
   teamModal,
@@ -24,13 +25,14 @@ const SingleTeamModal = ({
   singleTeamMembers,
   setSingleTeamMembers,
 }) => {
+  const { t } = useTranslation();
   const style2 = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 800,
-    height: 530,
+    height: 570,
     bgcolor: "white",
     // border: '2px solid #000',
     boxShadow: 24,
@@ -74,6 +76,22 @@ const SingleTeamModal = ({
     }
   };
 
+  // ---------------------------------------Search functionality--------------------------------------------
+
+  let [filtered, setfiltered] = useState([]);
+  useEffect(() => {
+    setfiltered(members);
+  }, [members]);
+  let [search, setsearch] = useState("");
+
+  useEffect(() => {
+    const result = members?.filter((contact) => {
+      return contact?.name.toLowerCase().match(search.toLowerCase());
+    });
+
+    setfiltered(result);
+  }, [search]);
+
   return (
     <div>
       <Modal
@@ -85,15 +103,15 @@ const SingleTeamModal = ({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style2}>
-          <div className="h-[100%] w-[100%]">
-            <div className="w-[99%] flex justify-end mt-1">
+          <div className="h-[100%] w-[100%] relative">
+            <div className="w-[99%] flex justify-end absolute top-1 z-10">
               <MdOutlineCancel
                 className="text-2xl cursor-pointer"
                 onClick={() => onCloseAction()}
               />
             </div>
-            <div className="w-[100%] flex justify-center mt-1">
-              <div className="h-[200px] w-[90%] border rounded-[40px] relative flex justify-center">
+            <div className="w-[100%] flex flex-col items-center mt-3">
+              <div className="h-[250px] w-[90%] rounded-[40px] relative flex justify-center">
                 <div className="w-[300px] h-[75px] rounded-[25px] border border-black absolute bottom-[-40px] bg-white flex justify-center items-center">
                   <p className="text-[32px] font-[500]">
                     {splitString(singleTeam?.teamName, 15)}
@@ -107,33 +125,48 @@ const SingleTeamModal = ({
                 />
               </div>
             </div>
-            <div className="h-[250px] w-[100%] mt-[50px] flex justify-evenly items-center flex-wrap overflow-y-scroll">
-              {members?.map((elm) => {
+            {/* <div className="h-[40px] w-[200px] border ml-3 mt-4"></div> */}
+            {members?.length > 0 && (
+              <div className="w-[100%] flex justify-center mt-12">
+                <div className="w-[320px] h-[40px] flex items-center rounded-[36px] bg-white shadow-xl border mr-3 ">
+                  <input
+                    type="text"
+                    className="h-[100%] w-[77%] outline-none rounded-[36px] pl-[10px] ml-2"
+                    placeholder={t("Search")}
+                    onChange={(e) => setsearch(e.target.value)}
+                    value={search}
+                  />
+                  <BiSearchAlt className="text-[22px] text-[#9B9B9B] ml-6" />
+                </div>
+              </div>
+            )}
+            <div className="h-[200px] w-[100%] mt-[10px] flex justify-evenly  flex-wrap overflow-y-scroll">
+              {filtered?.map((elm) => {
                 return (
-                  <div className="w-[30%] h-[240px] rounded-[50px] border mt-5 relative">
-                    <div className="w-[100%] rounded-t-[50px] h-[40%] relative flex justify-center">
+                  <div className="w-[21%] h-[160px] rounded-[22px] border mt-3 relative">
+                    <div className="w-[100%] rounded-t-[22px] h-[40%] relative flex justify-center">
                       <img
                         src={elm?.profileUrl ? elm?.profileUrl : prsnPlshldr}
                         alt=""
-                        className="h-[70px] w-[70px] rounded-full absolute bottom-[-30px]"
+                        className="h-[45px] w-[45px] rounded-full absolute bottom-[-20px]"
                       />
                       <img
                         src={elm?.coverUrl ? elm?.coverUrl : bgplhldr}
                         alt=""
-                        className="w-[100%] rounded-t-[50px] h-[100%]"
+                        className="w-[100%] rounded-t-[22px] h-[100%] object-cover"
                       />
                     </div>
 
-                    <div className="w-[100%] flex items-center flex-col mt-9">
+                    <div className="w-[100%] flex items-center flex-col mt-7">
                       <h2 className="text-[12px] font-[500]">{elm?.name}</h2>
-                      <p className="text-[10px] font-[400] w-[90%] text-center">
+                      {/* <p className="text-[10px] font-[400] w-[90%] text-center">
                         {splitString(elm?.bio, 70)}
-                      </p>
+                      </p> */}
                     </div>
 
-                    <div className="w-[100%] flex justify-center items-center absolute bottom-3 ">
+                    <div className="w-[100%] flex justify-center items-center absolute bottom-2 gap-3">
                       <div
-                        className="h-[30px] w-[70px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white mr-1"
+                        className="h-[23px] w-[55px] bg-black rounded-[7px] cursor-pointer font-[400] text-[10px] flex justify-center items-center text-white"
                         onClick={() =>
                           removeTeamMember(
                             elm,
@@ -146,7 +179,14 @@ const SingleTeamModal = ({
                       >
                         Delete
                       </div>
-                      <div className="h-[30px] w-[70px] bg-black rounded-[10px] cursor-pointer font-[600] text-[12px] flex justify-center items-center text-white">
+                      <div
+                        className="h-[23px] w-[55px] bg-black rounded-[7px] cursor-pointer font-[400] text-[10px] flex justify-center items-center text-white"
+                        onClick={() =>
+                          window.open(
+                            `https://www.profile.connexcard.com/${elm?.id}`
+                          )
+                        }
+                      >
                         Open
                       </div>
                     </div>

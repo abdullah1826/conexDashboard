@@ -38,6 +38,7 @@ import {
 } from "../../Services.jsx";
 import SocialLinkModal from "../Modals/SocialLinkModal.jsx";
 import { useTranslation } from "react-i18next";
+import { FiMinusCircle } from "react-icons/fi";
 
 const About = ({ uid, handleCancelAbout }) => {
   const IOSSwitch = styled((props) => (
@@ -369,7 +370,7 @@ const About = ({ uid, handleCancelAbout }) => {
           className="sm:w-[40%] w-[29%] h-[50px]  rounded-[36px] shadow-lg  flex justify-center items-center cursor-pointer"
           onClick={() => handleModal()}
         >
-          <p className="font-[500] sm:text-[15px] text-[8px] ">
+          <p className="font-[500] sm:text-[15px] text-[8px] text-center">
             {t("Add Links & Contacts")}
           </p>
         </div>
@@ -377,8 +378,8 @@ const About = ({ uid, handleCancelAbout }) => {
 
       <div className="w-[100%] mt-5">
         <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
-            {t("Card Color")}
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center leading-3 pl-1">
+            {t("Icons Color")}
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
@@ -537,7 +538,7 @@ const About = ({ uid, handleCancelAbout }) => {
         </div>
 
         <div className="sm:w-[60%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2] mt-2">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center leading-3 pl-1">
             {t("Text Color")}
           </div>
 
@@ -706,7 +707,7 @@ const About = ({ uid, handleCancelAbout }) => {
             </span>
             {logo || organizationLogo ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
                   className="absolute right-[15px] top-0"
                   onClick={() => {
@@ -751,9 +752,9 @@ const About = ({ uid, handleCancelAbout }) => {
 
             {profile || organizationProfile ? (
               <div className="sm:w-[120px] sm:h-[120px] w-[70px] h-[70px] border rounded-full flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
-                  className="absolute right-[15px] top-0"
+                  className="absolute right-[10px] top-0"
                   onClick={() => {
                     dispatch(setProfileurl("")),
                       dispatch(setOrganizationProfile(""));
@@ -796,7 +797,7 @@ const About = ({ uid, handleCancelAbout }) => {
             </span>
             {cover || organizationCover ? (
               <div className="sm:w-[253px] w-[166px] sm:h-[150px] h-[65px] rounded-[36px]  bg-gray-100 flex justify-center items-center flex-col relative">
-                <MdOutlineCancel
+                <FiMinusCircle
                   style={{ fontSize: "25px" }}
                   className="absolute right-[0px] top-[-3px]"
                   onClick={() => {
@@ -836,7 +837,7 @@ const About = ({ uid, handleCancelAbout }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Name"
+              placeholder={t("Name")}
               onChange={(e) => dispatch(setName(e.target.value))}
               value={name}
             />
@@ -844,7 +845,7 @@ const About = ({ uid, handleCancelAbout }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Location/Address"
+              placeholder={t("Address")}
               onChange={(e) => dispatch(setAddress(e.target.value))}
               value={address}
             />
@@ -856,7 +857,7 @@ const About = ({ uid, handleCancelAbout }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Job Title"
+              placeholder={t("Job Title")}
               onChange={(e) => dispatch(setDesignation(e.target.value))}
               value={designation}
             />
@@ -864,7 +865,7 @@ const About = ({ uid, handleCancelAbout }) => {
             <input
               type="text"
               className="w-[48%] h-[38px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
-              placeholder="Phone Number"
+              placeholder={t("Phone Number")}
               onChange={(e) => dispatch(setPhone(e.target.value))}
               value={phone}
             />
@@ -878,7 +879,7 @@ const About = ({ uid, handleCancelAbout }) => {
             className="w-[100%] h-[60px] rounded-[22px] bg-[#F2F2F2] outline-none resize-none pl-2 pt-2"
             onChange={(e) => dispatch(setBio(e.target.value))}
             value={bio}
-            placeholder="bio"
+            placeholder={t("Bio")}
           ></textarea>
         </div>
 

@@ -13,6 +13,7 @@ import { GrAddCircle } from "react-icons/gr";
 import Cropper from "../Cropper";
 import bgplhldr from "../../imgs/bgplhldr.png";
 import { useTranslation } from "react-i18next";
+import { FiMinusCircle } from "react-icons/fi";
 
 const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
   // --------------------------------------------------Create Single self profile----------------------------------
@@ -127,20 +128,27 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
             </h2>
             <div className="w-[90%] h-[80%] flex flex-col items-center justify-around">
               <div className="h-[150px] w-[90%] rounded-[45px] relative">
-                <label
-                  htmlFor="prflImg"
-                  className="absolute right-[7px] top-0 cursor-pointer"
-                >
-                  <GrAddCircle style={{ fontSize: "25px" }} />
-
-                  <input
-                    type="file"
-                    id="prflImg"
-                    style={{ opacity: 0, width: "0px", height: "0px" }}
-                    onChange={handlebgImageChange}
-                    key={imgKey}
+                {data?.img ? (
+                  <FiMinusCircle
+                    className="absolute right-[7px] top-0 cursor-pointer text-[25px]"
+                    onClick={() => getImg("")}
                   />
-                </label>
+                ) : (
+                  <label
+                    htmlFor="prflImg"
+                    className="absolute right-[7px] top-0 cursor-pointer"
+                  >
+                    <GrAddCircle style={{ fontSize: "25px" }} />
+
+                    <input
+                      type="file"
+                      id="prflImg"
+                      style={{ opacity: 0, width: "0px", height: "0px" }}
+                      onChange={handlebgImageChange}
+                      key={imgKey}
+                    />
+                  </label>
+                )}
                 <img
                   src={data?.img ? data?.img : bgplhldr}
                   alt=""
@@ -150,7 +158,7 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
 
               <input
                 type="text"
-                className="w-[100%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
+                className="w-[90%] h-[45px] outline-none bg-[#F2F2F2] rounded-[36px] p-[10px] placeholder:text-xs"
                 placeholder={`${t("Name")}*`}
                 onChange={(e) => setData({ ...data, name: e.target.value })}
                 value={data?.name}
@@ -166,7 +174,14 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                   <button
                     className="w-[45%] h-[45px] outline-none bg-[black] rounded-[36px] p-[10px] placeholder:text-xs text-[white]"
                     onClick={() =>
-                      !apiWorking && createTeam(data, callBack, setapiWorking)
+                      !apiWorking &&
+                      createTeam(
+                        data,
+                        callBack,
+                        setapiWorking,
+                        t("New team created successfuly"),
+                        t("Team name should not be empty")
+                      )
                     }
                   >
                     {apiWorking ? " Creating..." : t("Create")}

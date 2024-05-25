@@ -11,13 +11,14 @@ import {
 } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCv5nByNWlWZEEws9lKk6Ytsx5cuw7uCOc",
-  authDomain: "wajjcard-c9993.firebaseapp.com",
-  databaseURL: "https://wajjcard-c9993-default-rtdb.firebaseio.com",
-  projectId: "wajjcard-c9993",
-  storageBucket: "wajjcard-c9993.appspot.com",
-  messagingSenderId: "276322309634",
-  appId: "1:276322309634:web:7971440d6c8f5a2c7a391b",
+  apiKey: "AIzaSyCqOPjdzSoBR1J0IAeng0m-6_ix4cq7qm0",
+  authDomain: "connexcard-8ad69.firebaseapp.com",
+  databaseURL: "https://connexcard-8ad69-default-rtdb.firebaseio.com",
+  projectId: "connexcard-8ad69",
+  storageBucket: "connexcard-8ad69.appspot.com",
+  messagingSenderId: "245505504615",
+  appId: "1:245505504615:web:b9f194a307d87de13cabc2",
+  measurementId: "G-WL4TRBSPH3",
 };
 
 const app = initializeApp(firebaseConfig);

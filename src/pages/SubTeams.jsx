@@ -146,13 +146,13 @@ const SubTeams = () => {
           <DeleteModal
             deleteModal={deleteModal}
             handledeleteModal={handledeleteModal}
-            text="Are you sure to delete this Team?"
+            text={t("Are you sure to delete this Team?")}
             func={() => deleteCompany(teamId, updateTeams)}
             // id={teamId}
           />
-          <div className="w-[90%] ">
+          <div className="w-[97%] ">
             <div className="w-[100%] flex justify-between h-[50px]  mt-[30px]">
-              <div className="w-[15%] h-[100%] flex items-center">
+              <div className="w-[20%] h-[100%] flex items-center">
                 <p
                   className="font-[600] sm:text-[20px] text-[11px]"
                   style={
@@ -209,7 +209,7 @@ const SubTeams = () => {
               </div>
             </div>
 
-            <div className="w-[100%] flex justify-start gap-x-[30px] flex-wrap mt-[50px] h-[68%] overflow-y-scroll ">
+            <div className="w-[100%] flex justify-start gap-x-[30px] flex-wrap mt-[50px] h-[68%] overflow-y-scroll">
               {filtered?.map((team) => {
                 return (
                   <div className="w-[47%] sm:h-[153px] h-[100px] shadow-xl sm:rounded-[50px] rounded-[32px] bg-white flex justify-between mt-[12px]">
@@ -217,14 +217,14 @@ const SubTeams = () => {
                       className="w-[95%] h-[100%]  rounded-[50px] flex items-center justify-center  cursor-pointer"
                       style={screen <= 450 ? { alignItems: "end" } : null}
                     >
-                      <div className="w-[65%] h-[92%] rounded-[45px]  ml-[7px]">
+                      <div className="w-[70%] h-[92%] rounded-[45px]  ml-[7px]">
                         <img
                           src={team?.image ? team?.image : bgplhldr}
                           alt="team"
                           className="sm:h-[100%] sm:w-[100%] h-[83px] w-[90px] object-cover sm:rounded-[45px] rounded-[30px]"
                         />
                       </div>
-                      <div className="h-[100%] w-[35%] flex  items-center ml-2">
+                      <div className="h-[100%] w-[30%] flex  items-center ml-2">
                         <div>
                           <h2
                             className="sm:text-[14px] text-[12px] font-[400]"

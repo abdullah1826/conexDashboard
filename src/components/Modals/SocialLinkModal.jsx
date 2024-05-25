@@ -26,7 +26,12 @@ import "react-toastify/dist/ReactToastify.min.css";
 // import { setLinkDescription, setLinkHighlight } from "../Redux/UserinfoSlice";
 import { useMediaQuery } from "react-responsive";
 import { MdAddCircleOutline, MdArrowBackIosNew } from "react-icons/md";
-import { addNewLink, renoveLink, updateNewLink } from "../../Services";
+import {
+  addNewLink,
+  renoveLink,
+  splitString,
+  updateNewLink,
+} from "../../Services";
 import Mobile from "../Mobile";
 import { FaRegTrashAlt } from "react-icons/fa";
 import Cropper from "../Cropper";
@@ -119,6 +124,14 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
     }
   };
 
+  let checkIfCstmAdded = (linkid) => {
+    if (links) {
+      let ifAdded = links?.find((elm) => {
+        return elm?.linkID === linkid;
+      });
+      return ifAdded;
+    }
+  };
   let addAlreadyExist = (link, index) => {
     setLinkValue({ value: "", shareable: true });
     let addedLink = links.find((elm) => {
@@ -209,6 +222,14 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
   };
 
   const { t } = useTranslation();
+
+  const ifCustom = (id) => {
+    if (id === 49 || id === 50 || id === 51 || id === 52) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -339,7 +360,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
 
                   <div className="mt-8">
                     <h2 className="text-sm font-medium ">
-                      {linkInfo?.placeholder}
+                      {t(linkInfo?.placeholder)}
                     </h2>
                     <input
                       type={
@@ -522,7 +543,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                 className="h-[45px] w-[45px] "
                               />
                               <p className="text-sm font-medium ml-[11px]">
-                                {elm?.name}
+                                {t(elm?.name)}
                               </p>
                             </div>
                             <div className="h-[32px] w-[64px] bg-white  flex justify-center items-center border rounded-2xl hover:bg-[#f7f7f7]">
@@ -620,7 +641,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                               <div className="flex h-[100%] items-center">
                                 <img
                                   src={elm.img}
-                                  className="h-[45px] w-[45px] "
+                                  className="h-[45px] w-[45px]"
                                 />
                                 <p className="text-sm font-medium ml-[11px]">
                                   {elm.name}
@@ -717,11 +738,26 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                             <div className="flex justify-between items-center w-[100%]">
                               <div className="flex h-[100%] items-center">
                                 <img
-                                  src={elm.img}
-                                  className="h-[45px] w-[45px] "
+                                  src={
+                                    ifCustom(elm?.linkID) &&
+                                    checkAdded(elm?.linkID) &&
+                                    checkIfCstmAdded(elm?.linkID)?.image
+                                      ? checkIfCstmAdded(elm?.linkID)?.image
+                                      : elm.img
+                                  }
+                                  className="h-[45px] w-[45px] rounded-lg object-cover"
                                 />
                                 <p className="text-sm font-medium ml-[11px]">
-                                  {elm.name}
+                                  {ifCustom(elm?.linkID) &&
+                                  checkAdded(elm?.linkID) &&
+                                  checkIfCstmAdded(elm?.linkID)?.name
+                                    ? splitString(
+                                        t(checkIfCstmAdded(elm?.linkID)?.name),
+                                        33
+                                      )
+                                    : t(elm.name)}
+
+                                  {/* {elm.name} */}
                                 </p>
                               </div>
                               <div className="h-[32px] w-[64px] bg-white  flex justify-center items-center border rounded-2xl hover:bg-[#f7f7f7]">

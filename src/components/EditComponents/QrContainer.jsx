@@ -53,7 +53,7 @@ const QrContainer = ({ uid }) => {
         </div>
 
         <div
-          className="h-[40px] w-[130px] rounded-full bg-black flex justify-center items-center text-white cursor-pointer text-center"
+          className="h-[46px] w-[135px] rounded-full bg-black flex justify-center leading-[19px] items-center text-white cursor-pointer text-center"
           onClick={() => downloadQRCode()}
         >
           {t("Download Qr")}

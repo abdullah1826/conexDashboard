@@ -72,7 +72,7 @@ const Sidebar = () => {
       <DeleteModal
         deleteModal={deleteModal}
         handledeleteModal={handledeleteModal}
-        text="Are you sure to logout ? "
+        text={t("Are you sure to logout ?")}
         func={() => handleLogout(navigate("/signin"))}
       />
       <div className="h-[94vh]  w-[100%] flex flex-col justify-between items-center">
@@ -91,9 +91,11 @@ const Sidebar = () => {
                   : null
               }
             >
-              <div className=" flex items-center rounded-md  ml-2">
+              <div className=" flex items-center rounded-md  ml-2 w-[100%]">
                 {conexParent != "superAdmin" ? (
-                  <FaUser className="text-xl ml-2 " />
+                  <div className="w-[19%]  ">
+                    <FaUser className="text-xl ml-2 " />
+                  </div>
                 ) : (
                   <BsBuildingsFill className="text-xl ml-2 " />
                 )}
@@ -115,9 +117,12 @@ const Sidebar = () => {
                       : null
                   }
                 >
-                  <div className=" flex items-center rounded-md   ml-2">
-                    <IoIosPeople className="text-3xl ml-2 " />
-                    <p className="ml-[10px] text-[13px] font-[600]">
+                  <div className=" flex items-center rounded-md   ml-2  w-[100%]">
+                    <div className="w-[19%]  ">
+                      <IoIosPeople className="text-3xl ml-2 " />
+                    </div>
+
+                    <p className="ml-[10px] text-[13px] font-[600]  w-[40%]">
                       {t("Sub Teams")}
                     </p>
                   </div>
@@ -132,8 +137,10 @@ const Sidebar = () => {
                       : null
                   }
                 >
-                  <div className=" flex items-center rounded-md ml-2">
-                    <FaFilter className=" text-xl ml-2 " />
+                  <div className=" flex items-center rounded-md ml-2 w-[100%]">
+                    <div className="w-[19%]  ">
+                      <FaFilter className=" text-xl ml-2 " />
+                    </div>
                     <p className="ml-[10px] text-[13px] font-[600]">
                       {t("Leads Generated")}
                     </p>
@@ -149,8 +156,10 @@ const Sidebar = () => {
                       : null
                   }
                 >
-                  <div className=" flex items-center rounded-md   ml-2">
-                    <SiGoogleanalytics className=" text-xl ml-2 " />
+                  <div className=" flex items-center rounded-md   ml-2 w-[100%]">
+                    <div className="w-[19%]  ">
+                      <SiGoogleanalytics className=" text-xl ml-2 " />
+                    </div>
                     <p className="ml-[10px] text-[13px] font-[600]">
                       {t("Analytics")}
                     </p>
@@ -166,8 +175,11 @@ const Sidebar = () => {
                       : null
                   }
                 >
-                  <div className=" flex items-center rounded-md   ml-2">
-                    <BsFillBuildingsFill className=" text-xl ml-2 " />
+                  <div className=" flex items-center rounded-md   ml-2 w-[100%]">
+                    <div className="w-[19%]  ">
+                      <BsFillBuildingsFill className=" text-xl ml-2 " />
+                    </div>
+
                     <p className="ml-[10px] text-[13px] font-[600]">
                       {t("Company")}
                     </p>
@@ -179,14 +191,14 @@ const Sidebar = () => {
         </div>
         <div className="h-[10%]  w-[90%] flex flex-col justify-end">
           <div
-            className="h-[36px]  w-[95px]  flex items-center justify-center rounded-[34px] cursor-pointer ml-2 border bg-black"
+            className="h-[36px]  w-[95px]  flex items-center justify-center rounded-[34px] cursor-pointer gap-2 ml-2 border bg-black"
             onClick={() => handledeleteModal()}
           >
             {" "}
             {language === "en" && (
               <RiLogoutCircleLine className="text-white text-lg " />
             )}
-            <p className="font-[600] text-[12px] text-white ml-2 text-center">
+            <p className="font-[600] text-[12px] text-white  text-center">
               {t("Logout")}
               {/* Logout */}
             </p>

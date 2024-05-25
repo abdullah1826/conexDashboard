@@ -110,7 +110,11 @@ const InputComponent = ({ type, handleSubmit }) => {
           className="sm:w-[83%] w-[90%] sm:h-[60px] h-[50px] rounded-[46px]  bg-[black] text-[white] pl-[15px] mt-4 font-[500] text-[22px] flex justify-center items-center cursor-pointer"
           onClick={() => {
             type === "forget"
-              ? handleSubmit(data?.email)
+              ? handleSubmit(
+                  data?.email,
+                  (value) => setData({ ...data, email: value }),
+                  navigate
+                )
               : handleSubmit(data, () => navigate("/"));
           }}
         >

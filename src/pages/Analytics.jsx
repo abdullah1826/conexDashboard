@@ -153,13 +153,7 @@ const Analytics = () => {
       return 0;
     }
   };
-  let filterData = [
-    "Total",
-    "Today",
-    "Past 1 week",
-    "Past 1 Month",
-    "Past 1 Year",
-  ];
+
   console.log(analytics);
 
   // -----------------------getting all subteams----------------------
@@ -178,6 +172,14 @@ const Analytics = () => {
 
   const [team, setTeam] = useState("All");
   const { t } = useTranslation();
+
+  let filterData = [
+    t("Total"),
+    t("Today"),
+    t("Past 1 week"),
+    t("Past 1 Month"),
+    t("Past 1 Year"),
+  ];
 
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
