@@ -615,7 +615,7 @@ export const updataAbout = async (id, data, t) => {
 
 // ------------------------------------------------Update Qr Data-----------------------------------------------
 
-export const updateQrInfo = async (id, qrColor, logoimg, t) => {
+export const updateQrInfo = async (id, qrColor, logoimg, success) => {
   // if (qrColor || qrLogo) {
   // toast.success("Information updated successfuly");
   console.log("qr testing", logoimg);
@@ -649,7 +649,7 @@ export const updateQrInfo = async (id, qrColor, logoimg, t) => {
           console.log(error);
         });
     }
-    toast.success(t("Information updated sucessfuly"));
+    toast.success(success);
   });
   // console.log("qrrrrr");
 
@@ -658,9 +658,9 @@ export const updateQrInfo = async (id, qrColor, logoimg, t) => {
 
 // ------------------------------------------------Update lead Data-----------------------------------------------
 
-export const updateLead = async (id, formHeader, leadForm) => {
+export const updateLead = async (id, formHeader, leadForm, success) => {
   update(ref(db, `Users/${id}`), { formHeader, leadForm }).then(() => {
-    toast.success("Information updated successfuly");
+    toast.success(success);
   });
 };
 
@@ -891,7 +891,7 @@ export const addNewLink = async (
   handleLinkEditModal,
   ifCompany,
   allMembers,
-  t
+  success
 ) => {
   console.log("add working.........");
 
@@ -1040,7 +1040,7 @@ export const addNewLink = async (
               toast.error("Error updating objects");
             }
           } else {
-            toast.success(t("Link added successfuly"));
+            toast.success(success);
             handleLinkEditModal();
           }
         });
@@ -1116,7 +1116,7 @@ export const addNewLink = async (
                       toast.error("Error updating objects");
                     }
                   } else {
-                    toast.success(t("Link added successfuly"));
+                    toast.success(success);
                     handleLinkEditModal();
                   }
                 });
@@ -1168,7 +1168,7 @@ export const addNewLink = async (
               );
               console.log("Updated IDs:", updatedUserlinks);
               // Handle success, show success message, etc.
-              toast.success(t("Link added successfuly"));
+              toast.success(success);
               handleLinkEditModal();
             } catch (error) {
               console.error("Error updating objects:", error);
@@ -1176,7 +1176,7 @@ export const addNewLink = async (
               toast.error("Error updating objects");
             }
           } else {
-            toast.success(t("Link added successfuly"));
+            toast.success(success);
             handleLinkEditModal();
           }
         });
@@ -1194,7 +1194,7 @@ export const updateNewLink = (
   handleLinkEditModal,
   ifCompany,
   allChilds,
-  t
+  success
 ) => {
   // if (linkData?.value) {
 
@@ -1247,7 +1247,7 @@ export const updateNewLink = (
                       promiseUpdatingLinkToChilds
                     );
                     handleLinkEditModal();
-                    toast.success(t(t("Link updated successfuly")));
+                    toast.success(success);
                   } catch (error) {
                     console.error("Error updating objects:", error);
                     // Handle error, show error message, etc.
@@ -1302,7 +1302,7 @@ export const updateNewLink = (
             );
             console.log("Updated IDs:", updatedUserlinks);
             // Handle success, show success message, etc.
-            toast.success(t("Link updated successfuly"));
+            toast.success(success);
             handleLinkEditModal();
           } catch (error) {
             console.error("Error updating objects:", error);
@@ -1338,7 +1338,7 @@ export const updateNewLink = (
                   shareable: linkData?.shareable,
                 }).then(() => {
                   handleLinkEditModal();
-                  toast.success(t("Link updated successfuly"));
+                  toast.success(success);
                 });
               }
             })
@@ -1364,7 +1364,7 @@ export const updateNewLink = (
           shareable: linkData?.shareable,
         }).then(() => {
           handleLinkEditModal();
-          toast.success(t("Link updated successfuly"));
+          toast.success(success);
         });
       }
     }
@@ -1753,7 +1753,14 @@ export const updateCompanyProfile = async (id, data) => {
 
 // ------------------------------------------------update Team-----------------------------------------------
 
-export const updateTeam = async (data, callBack, teamId, setapiWorking) => {
+export const updateTeam = async (
+  data,
+  callBack,
+  teamId,
+  setapiWorking,
+  success,
+  err
+) => {
   setapiWorking(true);
   if (data?.name) {
     const dataToUpdate = data?.img
@@ -1788,13 +1795,13 @@ export const updateTeam = async (data, callBack, teamId, setapiWorking) => {
             callBack();
           });
       }
-      toast.success("updated successfuly");
+      toast.success(success);
       callBack();
       setapiWorking(false);
     });
     // console.log("qrrrrr");
   } else {
-    toast.error("Team name should not be empty");
+    toast.error(err);
     setapiWorking(false);
   }
 };

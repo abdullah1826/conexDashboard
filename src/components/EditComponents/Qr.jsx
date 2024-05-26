@@ -225,7 +225,14 @@ const Qr = ({ uid, handleCancelQr }) => {
         </button>
         <button
           className="w-[120px] h-[40px] rounded-[15px] ml-2 font-[600] text-[12px]  shadow-md bg-black text-white"
-          onClick={() => updateQrInfo(uid, qrColor, qrLogo, t)}
+          onClick={() =>
+            updateQrInfo(
+              uid,
+              qrColor,
+              qrLogo,
+              t("Information updated sucessfuly")
+            )
+          }
         >
           {t("Update")}
         </button>

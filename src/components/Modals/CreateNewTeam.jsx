@@ -195,7 +195,9 @@ const CreateNewTeam = ({ modal, handleModal, singleTeam }) => {
                         data,
                         callBack,
                         singleTeam?.teamId,
-                        setapiWorking
+                        setapiWorking,
+                        t("updated successfuly"),
+                        t("Team name should not be empty")
                       )
                     }
                   >

@@ -50,12 +50,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { styled } from "@mui/system";
 
+const textColor = "#000000";
 const CustomTabs = styled(Tabs)({
   "& .MuiTab-root": {
     color: "#707070", // default tab color
   },
   "& .Mui-selected": {
-    color: "black", // active tab color
+    color: textColor, // active tab color
   },
   "& .MuiTabs-indicator": {
     backgroundColor: "black", // indicator color
@@ -228,15 +229,15 @@ const Company = () => {
           </div>
         </div>
 
-        <div className="w-[90%] mt-10">
+        <div className="w-[90%] mt-10 text-black">
           <CustomTabs
+            textColor="inherit"
             value={value}
             onChange={handleTabs}
             TabIndicatorProps={{
               style: {
                 backgroundColor: "black",
                 padding: "0px",
-                color: "black",
               },
             }}
             // sx={{ border: "1px solid black", pl: 3 }}

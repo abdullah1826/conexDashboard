@@ -272,7 +272,14 @@ const Lead = ({ uid }) => {
         </button>
         <button
           className="w-[120px] h-[40px] rounded-[15px] ml-2 font-[600] text-[12px]  shadow-md bg-black text-white"
-          onClick={() => updateLead(uid, formHeader, leadForm, t)}
+          onClick={() =>
+            updateLead(
+              uid,
+              formHeader,
+              leadForm,
+              t("Information updated sucessfuly")
+            )
+          }
         >
           {t("Update")}
         </button>

@@ -136,7 +136,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   </p>
                 </div>
 
-                {conexParent != "superAdmin" ? (
+                {conexParent != "superAdmin2" ? (
                   <div
                     className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center cursor-pointer"
                     onClick={() => navigate(`/edit/${profile?.id}`)}
@@ -162,7 +162,7 @@ const MemberCard = ({ profile, companyProfile }) => {
               </div>
 
               <div className="w-[100%] flex justify-between">
-                {conexParent != "superAdmin" ? (
+                {conexParent != "superAdmin2" ? (
                   <div
                     className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center"
                     onClick={() => {
@@ -188,7 +188,7 @@ const MemberCard = ({ profile, companyProfile }) => {
                   </div>
                 )}
 
-                {conexParent != "superAdmin" && (
+                {conexParent != "superAdmin2" && (
                   <div
                     className="h-[53px] w-[46%] bg-[#FBFBFB] rounded-[6px] flex flex-col justify-center items-center cursor-pointer"
                     onClick={() => {

@@ -419,7 +419,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                 () => setLinkEdit(false),
                                 ifCompany,
                                 allProfiles,
-                                t
+                                t("Link updated successfully")
                               )
                             }
                           >
@@ -464,7 +464,8 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                   links,
                                   handleLinkEditModal,
                                   ifCompany,
-                                  allProfiles
+                                  allProfiles,
+                                  t("Link added successfully")
                                 );
                               } else {
                                 toast.error("please enter valid email");
@@ -483,7 +484,7 @@ const SocialLinkModal = ({ modal, handleClose, uid, allProfiles }) => {
                                 handleLinkEditModal,
                                 ifCompany,
                                 allProfiles,
-                                t
+                                t("Link added successfully")
                               );
                             }
                           }}
