@@ -519,6 +519,7 @@ export const updataAbout = async (id, data, t) => {
     textColor,
   } = data;
   // if (name || location || job || company || bio || colorCode) {
+  const colorOfText = textColor ? textColor : "#000000";
   update(ref(db, `Users/${id}`), {
     name,
     job,
@@ -532,7 +533,7 @@ export const updataAbout = async (id, data, t) => {
     logoUrl,
     coverUrl,
     color,
-    textColor,
+    textColor: colorOfText,
   }).then(() => {
     if (returnIfHttps(profileUrl) === false) {
       let name = new Date().getTime() + id;
@@ -1926,7 +1927,7 @@ export const updateLinkShareAble = async (
   // });
 };
 
-// ------------------------------------------------Get single child profile-----------------------------------------------
+// ------------------------------------------------Get single child analytics-----------------------------------------------
 
 export const getSingleChildAnalytics = (id, callBackFunc, setloading) => {
   setloading(true);
@@ -1949,6 +1950,133 @@ export const getSingleChildAnalytics = (id, callBackFunc, setloading) => {
 
     // updateStarCount(postElement, data);
   });
+};
+
+// ------------------------------------------------Get team analytics-----------------------------------------------
+
+export const getTeamAnalytics = async (Ids, callBackFunc, setloading) => {
+  setloading(true);
+  console.log(Ids);
+  if (typeof Ids === "object") {
+    const userIds = Object.values(Ids);
+    if (userIds && userIds?.length > 0) {
+      console.log("yes");
+      let membersArray = [];
+      const teamAnalyticsPromise = userIds?.map((elm) => {
+        const starCountRef = query(
+          ref(db, "/Analytic"),
+          orderByChild("userid"),
+          equalTo(elm)
+        );
+        onValue(starCountRef, async (snapshot) => {
+          const data = await snapshot.val();
+          if (data) {
+            membersArray?.push(Object.values(data)?.[0]);
+          }
+
+          // callBackFunc(prev=>[...prev,Object.values(data)]);
+        });
+      });
+      try {
+        const updated = await Promise.all(teamAnalyticsPromise);
+
+        if (membersArray?.length > 0) {
+          const summedData = {};
+          console.log(membersArray);
+          membersArray?.forEach((obj) => {
+            // Iterate over each key in the object
+            for (let key in obj) {
+              // Add the value to the summedData object, initializing if necessary
+              if (summedData[key] === undefined) {
+                summedData[key] = 0;
+              }
+              summedData[key] += obj[key];
+            }
+          });
+          callBackFunc({ analyticsObject: summedData });
+          setloading(false);
+        } else {
+          callBackFunc({
+            analyticsObject: {
+              currentDay: 0,
+              currentMonth: 0,
+              linksEngCrntMnth: 0,
+              linksEngCrntWk: 0,
+              linksEngCrntYear: 0,
+              linksEngPastWk: 0,
+              linksEngToday: 0,
+              overallClicks: 0,
+              overallContactsMe: 0,
+              overallLinksEng: 0,
+              tContactsMeCrntMnth: 0,
+              tContactsMeCrntWk: 0,
+              tContactsMeCrntYear: 0,
+              tContactsMePastWk: 0,
+              tContactsMeToday: 0,
+              totalClicks: 0,
+              totalClicksCrntMnth: 0,
+              totalClicksCrntYear: 0,
+              totalClicksToday: 0,
+            },
+          });
+          setloading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("no");
+      callBackFunc({
+        analyticsObject: {
+          currentDay: 0,
+          currentMonth: 0,
+          linksEngCrntMnth: 0,
+          linksEngCrntWk: 0,
+          linksEngCrntYear: 0,
+          linksEngPastWk: 0,
+          linksEngToday: 0,
+          overallClicks: 0,
+          overallContactsMe: 0,
+          overallLinksEng: 0,
+          tContactsMeCrntMnth: 0,
+          tContactsMeCrntWk: 0,
+          tContactsMeCrntYear: 0,
+          tContactsMePastWk: 0,
+          tContactsMeToday: 0,
+          totalClicks: 0,
+          totalClicksCrntMnth: 0,
+          totalClicksCrntYear: 0,
+          totalClicksToday: 0,
+        },
+      });
+      setloading(false);
+    }
+  } else {
+    callBackFunc({
+      analyticsObject: {
+        currentDay: 0,
+        currentMonth: 0,
+        linksEngCrntMnth: 0,
+        linksEngCrntWk: 0,
+        linksEngCrntYear: 0,
+        linksEngPastWk: 0,
+        linksEngToday: 0,
+        overallClicks: 0,
+        overallContactsMe: 0,
+        overallLinksEng: 0,
+        tContactsMeCrntMnth: 0,
+        tContactsMeCrntWk: 0,
+        tContactsMeCrntYear: 0,
+        tContactsMePastWk: 0,
+        tContactsMeToday: 0,
+        totalClicks: 0,
+        totalClicksCrntMnth: 0,
+        totalClicksCrntYear: 0,
+        totalClicksToday: 0,
+      },
+    });
+    setloading(false);
+  }
 };
 
 // ------------------------------------------------Get single child profile-----------------------------------------------

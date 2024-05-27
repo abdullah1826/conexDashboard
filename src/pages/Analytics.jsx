@@ -11,6 +11,7 @@ import {
   getAllTeams,
   getSingleChild,
   getSingleChildAnalytics,
+  getTeamAnalytics,
   splitString,
 } from "../Services";
 import { Menu, MenuItem, Tooltip } from "@mui/material";
@@ -84,6 +85,7 @@ const Analytics = () => {
   let [analytics, setAnalytics] = useState(null);
   let [filter, setfilter] = useState("Total");
 
+  console.log(analytics);
   useEffect(() => {
     if (conexParent) {
       setCompanyId(conexParent);
@@ -114,39 +116,39 @@ const Analytics = () => {
       let data = Object.values(analyticdata)?.[0];
       if (value === "leads") {
         if (filter === "Total") {
-          return data?.totalContactsMe;
+          return data?.overallContactsMe;
         } else if (filter === "Past 1 week") {
-          return data?.tContactsMePastWk;
+          return data?.tContactsMeCrntWk;
         } else if (filter === "Past 1 Month") {
-          return data?.tContactsMePastMonth;
+          return data?.tContactsMeCrntMnth;
         } else if (filter === "Past 1 Year") {
           return data?.tContactsMePastYear;
         } else if (filter === "Today") {
-          return data?.tContactsMeCrntDay;
+          return data?.tContactsMeToday;
         }
       } else if (value === "views") {
         if (filter === "Total") {
-          return data?.totalClicks;
+          return data?.overallClicks;
         } else if (filter === "Past 1 week") {
-          return data?.tViewsPastWk;
+          return data?.totalClicks;
         } else if (filter === "Past 1 Month") {
-          return data?.tViewsPastMonth;
+          return data?.totalClicksCrntMnth;
         } else if (filter === "Past 1 Year") {
-          return data?.tViewsPastYear;
+          return data?.totalClicksCrntYear;
         } else if (filter === "Today") {
-          return data?.tContactsMeCrntDay;
+          return data?.totalClicksToday;
         }
       } else if (value === "links") {
         if (filter === "Total") {
-          return data?.totalLinksEng;
+          return data?.overallLinksEng;
         } else if (filter === "Past 1 week") {
-          return data?.linksEngPastWk;
+          return data?.linksEngCrntWk;
         } else if (filter === "Past 1 Month") {
-          return data?.linksEngPastMonth;
+          return data?.linksEngCrntMnth;
         } else if (filter === "Past 1 Year") {
-          return data?.linksEngPastYear;
+          return data?.linksEngCrntYear;
         } else if (filter === "Today") {
-          return data?.linksEngCrntDay;
+          return data?.linksEngToday;
         }
       }
     } else {
@@ -170,7 +172,7 @@ const Analytics = () => {
     getAllTeams(getTeams, setloading);
   }, []);
 
-  const [team, setTeam] = useState("All");
+  const [team, setTeam] = useState("Select Team");
   const { t } = useTranslation();
 
   let filterData = [
@@ -181,6 +183,7 @@ const Analytics = () => {
     t("Past 1 Year"),
   ];
 
+  console.log(teams);
   return (
     <div className="w-[100%] flex bg-[#F8F8F8] h-[100vh] max-h-[100vh] relative">
       {screen >= 450 ? <Sidebar /> : null}
@@ -202,11 +205,9 @@ const Analytics = () => {
                 id="lang-button2"
                 aria-haspopup="listbox"
                 aria-controls="filter"
-                // aria-expanded={openMenu ? "true" : undefined}
                 onClick={handleClickListItem2}
                 className="w-[154px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-around items-center cursor-pointer mr-4"
               >
-                {/* <img src={uk} alt="" className="h-[30px] w-[30px]" /> */}
                 <p className="font-[500] text-[14px]">{filter}</p>
                 <MdOutlineFilterList className="text-2xl" />
               </div>
@@ -245,16 +246,14 @@ const Analytics = () => {
 
               <div
                 component="nav"
-                // aria-label="Device settings"
                 id="company-menu"
                 aria-haspopup="listbox"
                 aria-controls="company-menu"
-                // aria-expanded={openMenu ? "true" : undefined}
                 onClick={handleClickListItem3}
                 className="w-[140px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer mr-4"
               >
                 <p className="font-[500] text-[15px]">
-                  {team ? splitString(team, 11) : "Select User"}
+                  {team ? splitString(team, 11) : "Select Team"}
                 </p>
                 <MdArrowDropDown className="text-2xl" />
               </div>
@@ -269,44 +268,27 @@ const Analytics = () => {
                 }}
               >
                 <MenuItem
-                  // key={index}
-                  // disabled={index === 0}
-                  // selected={index === selectedIndex}
-                  // onClick={(event) => handleMenuItemClick(event, index)}
                   onClick={() => {
                     handleClose3();
                   }}
                   sx={{ display: "flex" }}
                 >
-                  {/* <img
-                    src={
-                      companyProfile?.[companyId]?.profileUrl
-                        ? companyProfile?.[companyId]?.profileUrl
-                        : prsnPlshldr
-                    }
-                    alt=""
-                    className="h-[27px] w-[27px] object-cover"
-                  /> */}
-                  <p className="font-[500] ml-2 text-base">All</p>
+                  <p className="font-[500] ml-2 text-base">Select Team</p>
                 </MenuItem>
                 {Object.values(teams)?.map((elm, index) => {
                   return (
                     <MenuItem
-                      key={index}
-                      // disabled={index === 0}
-                      // selected={index === selectedIndex}
-                      // onClick={(event) => handleMenuItemClick(event, index)}
                       onClick={() => {
+                        getTeamAnalytics(
+                          elm?.members,
+                          setAnalytics,
+                          setloading
+                        );
                         setTeam(elm?.teamName);
                         handleClose3();
                       }}
                       sx={{ display: "flex" }}
                     >
-                      {/* <img
-                        src={elm?.profileUrl ? elm?.profileUrl : prsnPlshldr}
-                        alt=""
-                        className="h-[27px] w-[27px] object-cover"
-                      /> */}
                       <p className="font-[500] ml-2 text-base">
                         {elm?.teamName}
                       </p>
@@ -317,11 +299,9 @@ const Analytics = () => {
 
               <div
                 component="nav"
-                // aria-label="Device settings"
                 id="lang-button"
                 aria-haspopup="listbox"
                 aria-controls="lang-menu"
-                // aria-expanded={openMenu ? "true" : undefined}
                 onClick={handleClickListItem}
                 className="w-[179px] h-[100%] rounded-[36px] bg-white shadow-xl flex justify-evenly items-center cursor-pointer"
               >
@@ -343,10 +323,6 @@ const Analytics = () => {
                 }}
               >
                 <MenuItem
-                  // key={index}
-                  // disabled={index === 0}
-                  // selected={index === selectedIndex}
-                  // onClick={(event) => handleMenuItemClick(event, index)}
                   onClick={() => {
                     setSelectedUser(companyProfile?.[companyId]), handleClose();
                   }}
@@ -373,9 +349,13 @@ const Analytics = () => {
                       // selected={index === selectedIndex}
                       // onClick={(event) => handleMenuItemClick(event, index)}
                       onClick={() => {
-                        setSelectedUser(elm),
-                          handleClose(),
-                          getSingleChildAnalytics(elm?.id, setAnalytics);
+                        // setSelectedUser(elm),
+                        //   handleClose(),
+                        getSingleChildAnalytics(
+                          elm?.id,
+                          setAnalytics,
+                          setloading
+                        );
                       }}
                       sx={{ display: "flex" }}
                     >
@@ -393,14 +373,11 @@ const Analytics = () => {
           </div>
 
           <div className="h-[500px] w-[100%] flex justify-between  mt-[40px]">
-            {screen >= 450 ? (
-              loading ? (
-                <div className="h-[100%] w-[64%] shadow-xl rounded-[37px] bg-white items-center flex justify-center">
-                  <MoonLoader />
-                </div>
-              ) : (
-                <div className="h-[100%] w-[64%] shadow-xl rounded-[37px] bg-white">
-                  <div className="h-[100%] w-[100%] flex justify-center items-center">
+            {/* {screen >= 450 ? ( */}
+            <div className="w-[64%] h-[100%] flex flex-col justify-between">
+              <div className="h-[67%] w-[100%] shadow-xl rounded-[37px] bg-white flex justify-center items-center">
+                {!loading ? (
+                  <div className="h-[90%] w-[90%] flex justify-center items-center">
                     <BarChart
                       xAxis={[
                         {
@@ -424,12 +401,36 @@ const Analytics = () => {
                       ]}
                       colors={(["#0f42d1"], ["#d10f25"], ["#2cf525"])}
                       width={600}
-                      height={400}
+                      height={350}
+                      // sx={{ marginTop: 5, marginLeft: 8 }}
                     />
                   </div>
-                </div>
-              )
-            ) : null}
+                ) : (
+                  <MoonLoader />
+                )}
+              </div>
+
+              <div className="h-[31%] w-[100%] shadow-xl rounded-[37px] bg-white flex justify-around items-center flex-wrap overflow-y-scroll">
+                {/* <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div>
+                <div className="w-[21%] h-[45px] rounded-lg border"></div> */}
+                <p>{t("No links to show")}</p>
+              </div>
+            </div>
+            {/* ) : null} */}
             <div className="h-[100%] sm:w-[34%] w-[100%] flex flex-col justify-between">
               {loading ? (
                 <div className="h-[31%] w-[100%] bg-white rounded-[37px] shadow-xl flex justify-center items-center">
@@ -450,7 +451,7 @@ const Analytics = () => {
                       {returnAnalyticsData(filter, "leads", analytics)}
                     </h2>
 
-                    <div className="w-[30%]">
+                    <div className="w-[35%]">
                       <div
                         className="h-[75px]  w-[75px] mt-1"
                         style={{

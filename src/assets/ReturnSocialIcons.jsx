@@ -451,7 +451,8 @@ export const more = [
 //   }
 // };
 
-export const returnIcons = (linkID) => {
+export const returnIcons = (linkid) => {
+  const linkID = parseInt(linkid);
   if (linkID === 10) {
     return call;
   } else if (linkID === 6) {

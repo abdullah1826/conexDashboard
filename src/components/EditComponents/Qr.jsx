@@ -109,17 +109,17 @@ const Qr = ({ uid, handleCancelQr }) => {
       </p>
       <div className="w-[100%] mt-5 flex justify-center">
         <div className="sm:w-[50%] w-[100%] h-[35px]  rounded-[36px] flex  items-center bg-[#F2F2F2]">
-          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center">
+          <div className="w-[22%] h-[100%] font-[500] text-[11px] flex justify-center items-center text-center leading-3 ml-1">
             {t("Card Color")}
           </div>
 
           <div className="w-[78%] h-[100%] flex justify-evenly items-center">
             <label
               htmlFor="bgclr"
-              className="h-[18px] w-[18px] rounded-full bg-black flex justify-center items-center"
+              className="h-[16px] w-[16px] rounded-full bg-black flex justify-center items-center"
             >
               <div>
-                <MdColorize className="text-[white] text-[14px] cursor-pointer" />
+                <MdColorize className="text-[white] text-[12px] cursor-pointer" />
               </div>
               <input
                 type="color"

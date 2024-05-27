@@ -119,7 +119,7 @@ const Sidebar = () => {
                 >
                   <div className=" flex items-center rounded-md   ml-2  w-[100%]">
                     <div className="w-[19%]  ">
-                      <IoIosPeople className="text-3xl ml-2 " />
+                      <IoIosPeople className="text-3xl ml-1 " />
                     </div>
 
                     <p className="ml-[10px] text-[13px] font-[600]  w-[40%]">
